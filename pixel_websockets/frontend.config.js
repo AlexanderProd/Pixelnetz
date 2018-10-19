@@ -6,7 +6,7 @@ module.exports = {
   entry: './frontend/src/index.js',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './frontend/dist',
+    contentBase: './dist_frontend',
   },
   module: {
     rules: [{
@@ -15,7 +15,7 @@ module.exports = {
     }],
   },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin(['dist_frontend']),
     new HtmlWebpackPlugin({
       template: 'frontend/public/index.html',
     }),
@@ -23,6 +23,6 @@ module.exports = {
   output: {
     filename: '[name].[chunkhash].bundle.js',
     chunkFilename: '[name].[chunkhash].chunk.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist_frontend'),
   },
 };

@@ -4,9 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build:frontend": "webpack --mode=production",
+    "build:frontend": "webpack --mode=production --config frontend.config.js",
+    "build:master": "webpack --mode=production --config master.config.js",
     "start:frontend": "webpack-dev-server --open --mode=development",
-    "start:server": "node server/src/index.js"
+    "start:server": "node server/src/index.js",
+    "start": "yarn build:frontend && yarn build:master && yarn start:server"
   },
   "dependencies": {
     "express": "^4.16.3",
