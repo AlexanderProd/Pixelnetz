@@ -6,19 +6,20 @@ const wsServer = new WebSocket.Server({ port: 8888 });
 module.exports = clients => wsServer.on('connection', (ws) => {
   const id = keyGen.generate();
   
-  ws.send(JSON.stringify({ id, t: Date.now() }));
+  ws.isOpen = true;
+  ws.send(JSON.stringify({ id }));
 
   ws.on('message', (message) => {
-    const { x, y, t } = JSON.parse(message);
-    console.log(x, y, t);
+    const { x, y } = JSON.parse(message);
+    console.log(`${id} x=${x}, y=${y}`);
 
-    clients.set(`${x},${y}`, {
-      id,
-      ws,
-      x,
-      y,
-      dt: Date.now() - t,
-    });
+    clients.set(id, { id, ws, x, y });
+  });
+
+  ws.on('close', () => {
+    ws.isOpen = false;
+    const del = clients.delete(id);
+    console.log('close connection', id);
   });
 });
  
