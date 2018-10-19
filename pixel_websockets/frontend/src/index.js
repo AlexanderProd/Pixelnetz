@@ -10,20 +10,23 @@ const extractPosition = () => window.location.search
     [key]: val,
   }), {});
 
-const { x, y } = extractPosition();
-const wsUrl = `ws://localhost:8888`;
-const socket = new WebSocket(wsUrl);
-
-socket.onmessage = ({ data }) => {
-  const res = JSON.parse(data);
-  if (res.id) {
-    socket.send(JSON.stringify({ x, y }));
-  }
-
-  if (res.animation) {
-    if (res.on) on();
-    else off();
-  }
-
-  console.log(res);
-};
+(async () => {
+  const { x, y } = extractPosition();
+  const { hostname } = await (fetch('/wshost').then(r => r.json()));
+  const wsUrl = `ws://${hostname}:8888`;
+  const socket = new WebSocket(wsUrl);
+  
+  socket.onmessage = ({ data }) => {
+    const res = JSON.parse(data);
+    if (res.id) {
+      socket.send(JSON.stringify({ x, y }));
+    }
+  
+    if (res.animation) {
+      if (res.on) on();
+      else off();
+    }
+  
+    console.log(res);
+  };
+})();
