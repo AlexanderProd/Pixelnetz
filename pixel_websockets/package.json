@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "^4.16.3",
+    "my-local-ip": "^1.0.0",
     "ws": "^6.1.0"
   },
   "devDependencies": {
