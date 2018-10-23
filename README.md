@@ -1,4 +1,4 @@
-#AWS Instanz
+# AWS Instanz
 
 SSH Verbindung mit Server herstellen:
 *Anleitung nur für macOS/Linux gülitg.*
