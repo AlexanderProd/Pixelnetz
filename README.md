@@ -10,3 +10,4 @@ SSH Verbindung mit Server herstellen:
 
 - WebSocket Performance Testen
 - GPS Werte zu 2D Pixelnetz konvertieren [Hilfreicher Thread](https://stackoverflow.com/questions/2651099/convert-long-lat-to-pixel-x-y-on-a-given-picture)
+- [Scaling...](https://blog.jayway.com/2015/04/13/600k-concurrent-websocket-connections-on-aws-using-node-js/)
