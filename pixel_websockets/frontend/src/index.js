@@ -1,5 +1,9 @@
 const on = () => document.body.style = 'background: white;';
 const off = () => document.body.style = 'background: black;';
+const time = () => {
+  var d = new Date();
+  return d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+":"+d.getMilliseconds();
+}
 
 const extractPosition = () => window.location.search
   .substring(1)
@@ -15,18 +19,18 @@ const extractPosition = () => window.location.search
   const { hostname } = await (fetch('/wshost').then(r => r.json()));
   const wsUrl = `ws://${hostname}:8888`;
   const socket = new WebSocket(wsUrl);
-  
+
   socket.onmessage = ({ data }) => {
     const res = JSON.parse(data);
     if (res.id) {
       socket.send(JSON.stringify({ x, y }));
     }
-  
+
     if (res.animation) {
       if (res.on) on();
       else off();
     }
-  
-    console.log(res);
+
+    console.log(time()+res);
   };
 })();
