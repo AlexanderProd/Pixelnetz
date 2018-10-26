@@ -17,7 +17,7 @@ const extractPosition = () => window.location.search
 (async () => {
   const { x, y } = extractPosition();
   const { hostname } = await (fetch('/wshost').then(r => r.json()));
-  const wsUrl = `ws://${hostname}:8888`;
+  const wsUrl = `ws://${hostname}:8888`; //needs to be ws://3.120.26.9:8888 on server.
   const socket = new WebSocket(wsUrl);
 
   socket.onmessage = ({ data }) => {
@@ -31,6 +31,12 @@ const extractPosition = () => window.location.search
       else off();
     }
 
-    console.log(time()+res);
+    if (res.serverTime) {
+      var serverTime = res.serverTime;
+      var localTime = Date.now();
+      console.log(localTime-serverTime+" seconds behind server.")
+    }
+
+    console.log(res);
   };
 })();

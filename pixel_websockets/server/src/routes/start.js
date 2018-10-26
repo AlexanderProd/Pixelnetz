@@ -1,4 +1,5 @@
 const ANIM_SPEED = 1000;
+const d = new Date();
 
 module.exports = (app, clients) => {
   let intervals = [];
@@ -20,6 +21,7 @@ module.exports = (app, clients) => {
             ws.send(JSON.stringify({
               animation: true,
               on: sequence[i % sequence.length],
+              serverTime: Date.now(),
             }));
           }
           i++;
