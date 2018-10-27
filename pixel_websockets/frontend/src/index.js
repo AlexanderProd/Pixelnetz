@@ -1,9 +1,5 @@
 const on = () => document.body.style = 'background: white;';
 const off = () => document.body.style = 'background: black;';
-const time = () => {
-  var d = new Date();
-  return d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+":"+d.getMilliseconds();
-}
 
 const extractPosition = () => window.location.search
   .substring(1)
@@ -34,7 +30,7 @@ const extractPosition = () => window.location.search
     if (res.serverTime) {
       var serverTime = res.serverTime;
       var localTime = Date.now();
-      console.log(localTime-serverTime+" milliseconds behind server.")
+      console.log(localTime-serverTime+" milliseconds behind server.");
     }
 
     console.log(res);

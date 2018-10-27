@@ -1,5 +1,4 @@
 const ANIM_SPEED = 1000;
-const d = new Date();
 
 module.exports = (app, clients) => {
   let intervals = [];
