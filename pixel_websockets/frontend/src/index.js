@@ -1,4 +1,5 @@
 import '../../polyfills';
+import baseUrl from '../../util/baseUrl';
 
 const on = () => document.body.style = 'background: white;';
 const off = () => document.body.style = 'background: black;';
@@ -14,7 +15,7 @@ const extractPosition = () => window.location.search
 
 const main = async () => {
   const { x, y } = extractPosition();
-  const { hostname } = await (fetch('/wshost').then(r => r.json()));
+  const { hostname } = await (fetch(`${baseUrl()}/wshost`).then(r => r.json()));
   const wsUrl = `ws://${hostname}:8888`;
   const socket = new WebSocket(wsUrl);
 
