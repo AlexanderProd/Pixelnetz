@@ -1,14 +1,14 @@
 class UniqueKeyGenerator {
   constructor() {
-    this.chars = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
+    this.chars = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
     this.keys = new Set();
     this.keyLength = 10;
   }
 
   generate() {
-    let key = "";
+    let key = '';
     while (key.length === 0) {
-      let tmp = "";
+      let tmp = '';
       for (let i = 0; i < this.keyLength; i++) {
         tmp += this.chars.charAt(Math.floor(Math.random() * this.chars.length));
       }
