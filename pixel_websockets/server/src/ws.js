@@ -5,7 +5,7 @@ const wsServer = new WebSocket.Server({ port: 8888 });
 
 module.exports = clients => wsServer.on('connection', (ws) => {
   const id = keyGen.generate();
-  
+
   ws.isOpen = true;
   ws.send(JSON.stringify({ id }));
 
@@ -18,8 +18,7 @@ module.exports = clients => wsServer.on('connection', (ws) => {
 
   ws.on('close', () => {
     ws.isOpen = false;
-    const del = clients.delete(id);
+    clients.delete(id);
     console.log('close connection', id);
   });
 });
- 

@@ -15,7 +15,7 @@ const extractPosition = () => window.location.search
 (async () => {
   const { x, y } = extractPosition();
   const { hostname } = await (fetch('/wshost').then(r => r.json()));
-  const wsUrl = `ws://${hostname}:8888`; //needs to be ws://3.120.26.9:8888 on server.
+  const wsUrl = `ws://${hostname}:8888`; // needs to be ws://3.120.26.9:8888 on server.
   const socket = new WebSocket(wsUrl);
 
   socket.onmessage = ({ data }) => {

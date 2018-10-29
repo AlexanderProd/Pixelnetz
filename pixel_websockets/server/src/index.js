@@ -15,6 +15,6 @@ app.listen(PORT, async () => {
   console.log(
     '\n' +
     `Client Seite auf http://${localHostname}:${PORT} aufrufen.\n` +
-    `Steuerung der Animation unter http://${localHostname}:${PORT}/master.\n`
+    `Steuerung der Animation unter http://${localHostname}:${PORT}/master.\n`,
   );
 });
