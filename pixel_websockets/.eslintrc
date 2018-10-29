@@ -1,6 +1,9 @@
 {
   "extends": "eslint:recommended",
   "rules": {
+    "no-var": "error",
+    "prefer-const": "error",
+    "keyword-spacing": "error",
     "semi": ["error", "always"],
     "quotes": ["error", "single"],
     "comma-dangle": ["error", {
