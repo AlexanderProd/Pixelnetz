@@ -30,9 +30,9 @@ const extractPosition = () => window.location.search
     }
 
     if (res.serverTime) {
-      var serverTime = res.serverTime;
-      var localTime = Date.now();
-      console.log(localTime-serverTime+" milliseconds behind server.");
+      const serverTime = res.serverTime;
+      const localTime = Date.now();
+      console.log(`${localTime - serverTime} milliseconds behind server.`);
     }
 
     console.log(res);
