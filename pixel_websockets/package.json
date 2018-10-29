@@ -7,8 +7,10 @@
     "build:frontend": "webpack --mode=production --config frontend.config.js",
     "build:master": "webpack --mode=production --config master.config.js",
     "start:frontend": "webpack-dev-server --open --mode=development",
-    "start:server": "node server/src/index.js",
-    "start": "yarn build:frontend && yarn build:master && yarn start:server"
+    "start:server:prod": "PRODUCTION=true node server/src/index.js",
+    "start:server:dev": "PRODUCTION=false node server/src/index.js",
+    "start:prod": "yarn build:frontend && yarn build:master && yarn start:server:prod",
+    "start:dev": "yarn build:frontend && yarn build:master && yarn start:server:dev"
   },
   "dependencies": {
     "es6-promise": "^4.2.5",

@@ -2,7 +2,7 @@ const express = require('express');
 const localIP = require('my-local-ip');
 
 const PORT = 3000;
-const localHostname = localIP();
+const localHostname = process.env.PRODUCTION === 'true' ? '3.120.26.9' : localIP();
 const app = express();
 const clients = new Map();
 
