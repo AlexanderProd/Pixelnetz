@@ -1,5 +1,5 @@
 import P from 'es6-promise';
-import f from 'whatwg-fetch';
+import { fetch as f } from 'whatwg-fetch';
 
 if (Promise in window) {
   window.Promise = P;
