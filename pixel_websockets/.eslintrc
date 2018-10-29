@@ -1,0 +1,58 @@
+{
+  "extends": "eslint:recommended",
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "always-multiline"
+    }],
+    "no-console": "warn",
+    "no-trailing-spaces": "error",
+    "eol-last": ["error", "always"],
+    "object-curly-spacing": ["error", "always"],
+    "operator-linebreak": [
+      "error",
+      "after",
+      {
+        "overrides": { "?": "before", ":": "before" }
+      }
+    ],
+    "no-prototype-builtins": 0,
+    "max-len": [
+      "error",
+      140
+    ],
+    "arrow-body-style": [
+      "error",
+      "as-needed"
+    ],
+    "linebreak-style": "off",
+    "prefer-promise-reject-errors": "off",
+    "import/no-named-as-default": "false",
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": {
+          "minProperties": 7,
+          "multiline": true,
+          "consistent": true
+        },
+        "ObjectPattern": {
+          "minProperties": 7,
+          "multiline": true,
+          "consistent": true
+        }
+      }
+    ]
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "parser": "babel-eslint"
+}

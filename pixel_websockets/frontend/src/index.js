@@ -1,3 +1,5 @@
+import '../../polyfills';
+
 const on = () => document.body.style = 'background: white;';
 const off = () => document.body.style = 'background: black;';
 

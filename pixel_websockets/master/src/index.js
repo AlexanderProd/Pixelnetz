@@ -1,3 +1,5 @@
+import '../../polyfills';
+
 const start = document.createElement('button');
 start.innerHTML = 'start';
 start.onclick = () => fetch('/start')
