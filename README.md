@@ -25,3 +25,4 @@ SSH Verbindung mit Server herstellen:
 - Server und Client synchronisieren Startzeitpunkt (WebSocket Performance Testen)
 - Test Umgebung einrichten
 - Tollen Namen überlegen
+- Bild und Ton Effekt 
