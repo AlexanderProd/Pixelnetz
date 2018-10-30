@@ -14,12 +14,12 @@ const createPingAndSaveTime = send => (initCounter, timeStamp) => {
   return { serverStart: timeStamp };
 };
 
-module.exports = clients => wsServer.on('connection', (ws) => {
-  const send = createSender(ws);
+module.exports = clients => wsServer.on('connection', (socket) => {
+  const send = createSender(socket);
   const pingAndSaveTime = createPingAndSaveTime(send);
   const id = keyGen.generate();
 
-  ws.isOpen = true;
+  socket.isOpen = true;
 
   const timeStamps = [];
   let initCounter = 0;
@@ -28,7 +28,7 @@ module.exports = clients => wsServer.on('connection', (ws) => {
   timeStamps.push(pingAndSaveTime(initCounter, Date.now()));
   initCounter += 1;
 
-  ws.on('message', (jsonMessage) => {
+  socket.on('message', (jsonMessage) => {
     // JSON.parse: js object from json string
     const message = JSON.parse(jsonMessage);
 
@@ -53,7 +53,7 @@ module.exports = clients => wsServer.on('connection', (ws) => {
 
       const deltaTime = sum / timeStamps.length;
 
-      clients.set(id, { id, deltaTime, ws });
+      clients.set(id, { id, deltaTime, socket });
 
       send({ actionType: POSITION });
     } else {
@@ -65,8 +65,8 @@ module.exports = clients => wsServer.on('connection', (ws) => {
     }
   });
 
-  ws.on('close', () => {
-    ws.isOpen = false;
+  socket.on('close', () => {
+    socket.isOpen = false;
     clients.delete(id);
     console.log('close connection', id);
   });

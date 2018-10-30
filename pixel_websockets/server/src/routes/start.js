@@ -5,8 +5,8 @@ const ANIM_SPEED = 1000;
 
 module.exports = (app, clients) => {
   app.get('/start', (req, res) => {
-    for (const { id, ws } of clients.values()) {
-      const send = createSender(ws);
+    for (const { id, socket } of clients.values()) {
+      const send = createSender(socket);
       setTimeout(() => {
         console.log('starting: ', id);
         send({
