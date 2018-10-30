@@ -1,12 +1,16 @@
 const WebSocket = require('ws');
 const keyGen = require('./util/keyGen.js');
 const { createSender } = require('../../util/createSender');
+const {
+  INIT_TIME_SYNC,
+  POSITION,
+} = require('../../util/socketActionTypes');
 
 const MAX_INIT_COUNTER = 10;
 const wsServer = new WebSocket.Server({ port: 8888 });
 
 const createPingAndSaveTime = send => (initCounter, timeStamp) => {
-  send({ initCounter });
+  send({ initCounter, actionType: INIT_TIME_SYNC });
   return { serverStart: timeStamp };
 };
 
@@ -51,7 +55,7 @@ module.exports = clients => wsServer.on('connection', (ws) => {
 
       clients.set(id, { id, deltaTime, ws });
 
-      send({ position: true });
+      send({ actionType: POSITION });
     } else {
       const { x, y } = message;
       const client = clients.get(id);

@@ -1,3 +1,5 @@
+const { ANIMATION } = require('../../../util/socketActionTypes');
+
 const ANIM_SPEED = 1000;
 
 module.exports = (app, clients) => {
@@ -18,7 +20,7 @@ module.exports = (app, clients) => {
           console.log(id, sequence[i % sequence.length]);
           if (ws.isOpen) {
             ws.send(JSON.stringify({
-              animation: true,
+              actionType: ANIMATION,
               on: sequence[i % sequence.length],
             }));
           }
