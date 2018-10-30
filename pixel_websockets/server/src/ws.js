@@ -6,7 +6,7 @@ const {
   POSITION,
 } = require('../../util/socketActionTypes');
 
-const MAX_INIT_COUNTER = 10;
+const MAX_INIT_COUNTER = 16;
 const wsServer = new WebSocket.Server({ port: 8888 });
 
 const createPingAndSaveTime = send => (initCounter, timeStamp) => {
