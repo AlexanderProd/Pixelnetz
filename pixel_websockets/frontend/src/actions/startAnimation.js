@@ -1,60 +1,58 @@
+import 'array-reverse-polyfill';
 import { sosAnimation } from '../../../util/sequence';
 
 const setColor = col => document.body.style = `background: ${col};`;
 
-const expandSequence = sequence => sequence
-  .reduce((acc, [col, duration]) => ([
+const expandSequence = (sequence, stepLength) => sequence
+  .reduce((acc, [col, duration]) => [
     ...acc,
-    ...([...new Array(duration)].map(() => [col, false])),
-  ]), []);
+    ...([...new Array(duration)].map((x, i) => [col, stepLength * (acc.length + i), false])),
+  ], []);
+
+const createSequenceStack = (sequence, stepLength) => expandSequence([...sequence], stepLength).reverse();
 
 const startAnimation = (message) => {
   const {
     stepLength,
     repeat,
+    sequence,
   } = sosAnimation;
-  const sequence = expandSequence(sosAnimation.sequence);
+
+  let sequenceStack = createSequenceStack(sequence, stepLength);
   let { startTime } = message;
 
-  console.log(Date.now() - startTime);
-
-  let stepCount = 0;
-  let [currentStep] = sequence;
+  let currentStep = sequenceStack.pop();
 
   let running = true;
 
   const loop = () => {
     const deltaTime = Date.now() - startTime;
-    const currentStepTime = stepCount * stepLength;
-    const nextStepTime = (stepCount + 1) * stepLength;
 
-    console.log(stepCount);
+    while (currentStep && currentStep[1] < deltaTime) {
+      currentStep = sequenceStack.pop();
+    }
 
-    if (deltaTime >= currentStepTime && deltaTime < nextStepTime) {
-      const [col, executed] = currentStep;
+    if (currentStep && sequenceStack.length > 0) {
+      const [col,, executed] = currentStep;
 
       if (!executed) {
         setColor(col);
         currentStep.executed = false;
-
-        if (stepCount === sequence.length - 1) {
-          if (repeat) {
-            stepCount = 0;
-            startTime = Date.now();
-            [currentStep] = sequence;
-          } else {
-            running = false;
-          }
-        } else {
-          stepCount += 1;
-          currentStep = sequence[stepCount];
-        }
+      }
+    } else {
+      if (repeat) {
+        startTime = Date.now();
+        sequenceStack = createSequenceStack(sequence, stepLength);
+        currentStep = sequenceStack.pop();
+      } else {
+        running = false;
       }
     }
 
     if (running) {
       requestAnimationFrame(loop);
     }
+
   };
 
   // start loop
