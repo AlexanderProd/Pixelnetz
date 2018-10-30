@@ -8,6 +8,7 @@ const clients = new Map();
 
 require('./appConfig.js')(app, express);
 require('./routes/start.js')(app, clients);
+require('./routes/stop.js')(app, clients);
 require('./routes/wshost.js')(app, localHostname);
 require('./ws.js')(clients);
 

@@ -1,11 +1,13 @@
-import startAnimation from './startAnimation';
 import initTimeSync from './initTimeSync';
+import startAnimation from './startAnimation';
+import stopAnimation from './stopAnimation';
 import position from './position';
 
 const getActions = (send) => {
   const actions = {
-    START_ANIMATION: startAnimation,
     INIT_TIME_SYNC: initTimeSync(send),
+    START_ANIMATION: startAnimation,
+    STOP_ANIMATION: stopAnimation,
     POSITION: position(send),
   };
 
