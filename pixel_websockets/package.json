@@ -10,14 +10,19 @@
     "start:frontend": "webpack-dev-server --config frontend.config.js --open --mode=development",
     "start:master": "webpack-dev-server --config master.config.js --open --mode=development",
     "start:server:prod": "PRODUCTION=true node server/src/index.js",
-    "start:server:dev": "PRODUCTION=false node server/src/index.js",
+    "start:server:dev": "PRODUCTION=false nodemon server/src/index.js",
     "start:prod": "yarn build:frontend && yarn build:master && yarn start:server:prod",
     "start:dev": "yarn build:frontend && yarn build:master && yarn start:server:dev"
   },
   "dependencies": {
     "array-reverse-polyfill": "^1.0.9",
+    "bcrypt": "^3.0.2",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^6.1.0",
     "es6-promise": "^4.2.5",
     "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
     "my-local-ip": "^1.0.0",
     "whatwg-fetch": "^3.0.0",
     "ws": "^6.1.0"
@@ -32,6 +37,7 @@
     "css-loader": "^1.0.0",
     "eslint": "^5.8.0",
     "html-webpack-plugin": "^3.2.0",
+    "nodemon": "^1.18.5",
     "style-loader": "^0.23.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
