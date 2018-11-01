@@ -12,7 +12,7 @@ require('./routes/stop.js')(app, clients);
 require('./routes/wshost.js')(app, localHostname);
 require('./ws.js')(clients);
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(
     '\n' +
     `Client Seite auf http://${localHostname}:${PORT} aufrufen.\n` +

@@ -34,20 +34,17 @@ export const start = (animation, startTime) => {
         setColor(col);
         currentStep.executed = false;
       }
+    } else if (repeat) {
+      startTime = Date.now();
+      sequenceStack = createSequenceStack(sequence, stepLength);
+      currentStep = sequenceStack.pop();
     } else {
-      if (repeat) {
-        startTime = Date.now();
-        sequenceStack = createSequenceStack(sequence, stepLength);
-        currentStep = sequenceStack.pop();
-      } else {
-        continueSequence = false;
-      }
+      continueSequence = false;
     }
 
     if (continueSequence && animationRunning) {
       requestAnimationFrame(loop);
     }
-
   };
 
   // start loop
