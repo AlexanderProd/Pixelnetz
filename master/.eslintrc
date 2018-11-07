@@ -1,5 +1,5 @@
 {
-  "extends": "eslint:recommended",
+  "extends": "airbnb",
   "rules": {
     "no-var": "error",
     "prefer-const": "error",
@@ -81,6 +81,15 @@
     "linebreak-style": "off",
     "prefer-promise-reject-errors": "off",
     "import/no-named-as-default": "false",
+    "react/jsx-filename-extension": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "false",
+    "jsx-a11y/no-autofocus": [
+      0,
+      {
+        "ignoreNonDOM": true
+      }
+    ],
     "object-curly-newline": [
       "error",
       {
