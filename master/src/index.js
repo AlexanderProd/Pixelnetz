@@ -86,7 +86,7 @@ uploadForm.encType = 'multipart/form-data';
 
 const file = document.createElement('input');
 file.type = 'file';
-file.name = 'upload-file';
+file.name = 'sampleFile';
 
 const upload = document.createElement('input');
 upload.type = 'submit';
