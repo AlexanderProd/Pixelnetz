@@ -6,7 +6,6 @@ import store, { persistor } from './redux/config';
 import App from './App';
 import './index.sass';
 import { useState } from 'react';
-import axios from 'axios';
 
 import getBaseUrl from '../../shared/util/baseUrl';
 
@@ -78,31 +77,23 @@ stop.onclick = () => fetch(`${baseUrl}/stop`, { headers: { 'x-access-token': tok
   .then(r => console.log(r))
   .catch(err => console.error(err));
 
-const [file, setFile] = useState(null);
+const uploadForm = document.createElement('form');
+uploadForm.id = 'uploadForm';
+uploadForm.ref = 'uploadForm';
+uploadForm.action = `${baseUrl}/upload`;
+uploadForm.method = 'POST';
+uploadForm.encType = 'multipart/form-data';
 
 const file = document.createElement('input');
 file.type = 'file';
-file.onchange = this.handleselectedFile();
+file.name = 'upload-file';
 
-const upload = document.createElement('button');
-upload.innerHTML = 'Upload';
-upload.onclick = () => {
-  const data = new FormData();
-  data.append('file', file.selectedFile, file.selectedFile.name);
-  axios.post(`${baseUrl}/upload`, data)
-  .then(res => {
-    console.log(res.statusText)
-  });
-};
-
-handleselectedFile = event => {
-  setFile({
-    selectedFile: event.target.files[0],
-    loaded: 0,
-  })
-};
+const upload = document.createElement('input');
+upload.type = 'submit';
+upload.value = 'upload';
 
 document.body.appendChild(start);
 document.body.appendChild(stop);
-document.body.appendChild(upload);
-document.body.appendChild(file);
+uploadForm.appendChild(file);
+uploadForm.appendChild(upload);
+document.body.appendChild(uploadForm);

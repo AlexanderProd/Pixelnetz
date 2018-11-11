@@ -8,8 +8,10 @@ import configureApp from './appConfig';
 import authenticate from './routes/authenticate';
 import start from './routes/start';
 import stop from './routes/stop';
+import upload from './routes/upload';
 import wshost from './routes/wshost';
 import startWebSocket from './ws';
+import fileUpload from 'express-fileupload';
 
 // Check for errors parsing .env file
 envResult.load();
@@ -28,6 +30,9 @@ start(app, clients);
 stop(app, clients);
 wshost(app, localHostname);
 startWebSocket(clients);
+
+app.use(fileUpload());
+upload(app);
 
 app.listen(PORT, () => console.log(
   '\n' +
