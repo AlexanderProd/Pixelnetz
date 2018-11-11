@@ -1,18 +1,17 @@
-const upload = (app) => app.post('/upload', (req, res, next) => {
-  let uploadFile = req.files.file;
-  const fileName = req.files.file.name;
-  uploadFile.mv(
-    `${__dirname}/files/${fileName}`,
-    function (err) {
-      if (err) {
-        return res.status(500).send(err)
-      }
+const upload = (app) => app.post('/upload', function(req, res) {
+  if (Object.keys(req.files).length == 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
 
-      res.json({
-        file: `public/${req.files.file.name}`,
-      })
-    },
-  );
+  let sampleFile = req.files.sampleFile;
+  let uploadPath = __dirname + '/uploads/' + sampleFile.name;
+
+  sampleFile.mv(uploadPath, function(err) {
+    if (err){
+      return res.status(500).send(err);
+    }
+    res.send('File uploaded!');
+  });
 });
 
 export default upload;
