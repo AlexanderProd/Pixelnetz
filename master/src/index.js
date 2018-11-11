@@ -78,7 +78,7 @@ stop.onclick = () => fetch(`${baseUrl}/stop`, { headers: { 'x-access-token': tok
   .then(r => console.log(r))
   .catch(err => console.error(err));
 
-const [count, setCount] = useState(null);
+const [file, setFile] = useState(null);
 
 const file = document.createElement('input');
 file.type = 'file';
@@ -88,7 +88,7 @@ const upload = document.createElement('button');
 upload.innerHTML = 'Upload';
 upload.onclick = () => {
   const data = new FormData();
-  data.append('file', count.selectedFile, count.selectedFile.name);
+  data.append('file', file.selectedFile, file.selectedFile.name);
   axios.post(`${baseUrl}/upload`, data)
   .then(res => {
     console.log(res.statusText)
@@ -96,7 +96,7 @@ upload.onclick = () => {
 };
 
 handleselectedFile = event => {
-  setCount({
+  setFile({
     selectedFile: event.target.files[0],
     loaded: 0,
   })
