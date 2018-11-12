@@ -18,13 +18,7 @@ module.exports = (env, argv) => {
     module: {
       rules: [{
         test: /\.js$/,
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-syntax-dynamic-import'],
-          },
-        }],
+        use: ['babel-loader'],
       }, {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],

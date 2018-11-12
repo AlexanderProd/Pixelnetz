@@ -1,4 +1,4 @@
-const extractPosition = () => window.location.search
+const extractPosition = (query = window.location.search) => query
   .substring(1)
   .split('&')
   .map(x => x.split('='))
