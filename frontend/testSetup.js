@@ -6,3 +6,8 @@ require('@babel/register')();
 
 require.extensions['.sass'] = function () { return null ;};
 require.extensions['.css'] = function () { return null ;};
+
+var chai = require('chai');
+var sinonChai = require('sinon-chai');
+
+chai.use(sinonChai);

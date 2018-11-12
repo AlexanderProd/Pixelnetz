@@ -27,7 +27,9 @@ documentRef = document;
 
 var chai = require('chai')
 var chaiEnzyme = require('chai-enzyme');
- 
+var sinonChai = require('sinon-chai');
+
+chai.use(sinonChai);
 chai.use(chaiEnzyme);
 
 var enzyme = require('enzyme');
