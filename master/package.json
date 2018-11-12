@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "start": "webpack-dev-server --open --mode development",
-    "test": "mocha --reporter spec testSetup.js \"src/**/*.test.js\""
+    "test": "mocha --reporter spec testSetup.js \"src/**/*.test.js\"",
+    "test:watch": "mocha --reporter spec testSetup.js \"src/**/*.test.js\" --watch"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
