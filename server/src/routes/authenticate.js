@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const authenticate = (app, userDB) => app.post('/authenticate', (req, res) => {
+const authenticate = userDB => (req, res) => {
   const { username, password } = req.body;
 
   if (!userDB.userExists(username)) {
@@ -34,6 +34,6 @@ const authenticate = (app, userDB) => app.post('/authenticate', (req, res) => {
         });
       });
   }
-});
+};
 
 export default authenticate;

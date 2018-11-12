@@ -1,8 +1,7 @@
 import { START_ANIMATION } from '../../../shared/util/socketActionTypes';
 import createSender from '../../../shared/util/createSender';
-import withAuth from '../util/authMiddleware';
 
-const start = (app, clients) => app.get('/start', withAuth, (req, res) => {
+const start = clients => (req, res) => {
   for (const { id, socket, deltaTime } of clients.values()) {
     const send = createSender(socket);
     setTimeout(() => {
@@ -15,6 +14,6 @@ const start = (app, clients) => app.get('/start', withAuth, (req, res) => {
   }
 
   res.sendStatus(200);
-});
+};
 
 export default start;
