@@ -4,6 +4,9 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const safePostCssParser = require('postcss-safe-parser');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -65,6 +68,41 @@ module.exports = (env, argv) => {
         reportFilename: '../../reports/master.html',
       }),
     ],
+    optimization: {
+      minimize: isProd,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              ecma: 8,
+            },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              comparisons: false,
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            output: {
+              ecma: 5,
+              comments: false,
+              ascii_only: true,
+            },
+          },
+          parallel: true,
+          cache: true,
+          sourceMap: false,
+        }),
+        new OptimizeCSSAssetsPlugin({
+          cssProcessorOptions: {
+            parser: safePostCssParser,
+            map: false,
+          },
+        }),
+      ],
+    },
     output: {
       filename: isDev
         ? '[name].bundle.js'
