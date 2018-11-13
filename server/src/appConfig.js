@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload';
 
 const configureApp = (app, express) => {
   app.use('/', express.static(`${__dirname}/../../dist/static/frontend/`));
@@ -11,6 +12,8 @@ const configureApp = (app, express) => {
   app.use(bodyParser.json());
 
   app.use(cookieParser());
+
+  app.use(fileUpload());
 
   if (process.env.PRODUCTION !== 'true') {
     app.use((req, res, next) => {

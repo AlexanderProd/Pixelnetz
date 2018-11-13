@@ -1,7 +1,6 @@
 import envResult from 'dotenv';
 import express from 'express';
 import localIP from 'my-local-ip';
-import fileUpload from 'express-fileupload';
 import UserDB from './UserDB';
 
 import configureUserDB from './userDBConfig';
@@ -30,12 +29,10 @@ configureApp(app, express);
 app.post('/authenticate', authenticate(userDB));
 app.get('/start', withAuth, start(clients));
 app.get('/stop', withAuth, stop(clients));
+app.post('/upload', withAuth, upload());
 app.get('/wshost', wshost(localHostname));
 
 startWebSocket(clients);
-
-app.use(fileUpload());
-upload(app);
 
 app.listen(PORT, () => console.log(
   '\n' +
