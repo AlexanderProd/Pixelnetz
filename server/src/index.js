@@ -1,6 +1,7 @@
 import envResult from 'dotenv';
 import express from 'express';
 import localIP from 'my-local-ip';
+import fileUpload from 'express-fileupload';
 import UserDB from './UserDB';
 
 import configureUserDB from './userDBConfig';
@@ -11,7 +12,7 @@ import stop from './routes/stop';
 import upload from './routes/upload';
 import wshost from './routes/wshost';
 import startWebSocket from './ws';
-import fileUpload from 'express-fileupload';
+import withAuth from './util/authMiddleware';
 
 // Check for errors parsing .env file
 envResult.load();
@@ -25,10 +26,12 @@ const userDB = new UserDB();
 
 configureUserDB(userDB);
 configureApp(app, express);
-authenticate(app, userDB);
-start(app, clients);
-stop(app, clients);
-wshost(app, localHostname);
+
+app.post('/authenticate', authenticate(userDB));
+app.get('/start', withAuth, start(clients));
+app.get('/stop', withAuth, stop(clients));
+app.get('/wshost', wshost(localHostname));
+
 startWebSocket(clients);
 
 app.use(fileUpload());

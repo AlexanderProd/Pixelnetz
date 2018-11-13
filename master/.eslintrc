@@ -1,6 +1,10 @@
 {
   "extends": "airbnb",
+  "plugins": [
+    "react-hooks"
+  ],
   "rules": {
+    "react-hooks/rules-of-hooks": "error",
     "no-var": "error",
     "prefer-const": "error",
     "default-case": "error",
@@ -108,7 +112,8 @@
   },
   "env": {
     "es6": true,
-    "browser": true
+    "browser": true,
+    "mocha": true
   },
   "parser": "babel-eslint"
 }
