@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authenticate } from '../../redux/auth';
-import { Form } from '../ui';
+import { Form, Button, Input } from '../ui';
 
 const propTypes = {
   authenticate: PropTypes.func.isRequired,
@@ -24,13 +24,13 @@ export const LoginForm = (props) => {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <input
+      <Input
         type="password"
         placeholder="Password"
         value={password}
         onChange={handleChange}
       />
-      <button type="submit">Login</button>
+      <Button type="submit">Login</Button>
     </Form>
   );
 };
