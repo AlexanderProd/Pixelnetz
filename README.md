@@ -19,20 +19,6 @@ Das Testen mit Smartphones sollte nun möglich sein.
 - node installieren https://nodejs.org/en/
 - in den drei Ordnern (frontend, master, server) "yarn install" ausführen
 - in den Ordnern können über die yarn Befehle, die in den entsprechenden READMEs angegeben sind, die einzelnen Teile der Anwendung gestartet werden
-- um alles auf einmal zu bauen und den Server im Produktionsmodus zu starten in Terminal "bash startServer.sh" ausführen
-
-# Pixelnetz ToDo
-
-- GPS Werte zu 2D Pixelnetz konvertieren [Hilfreicher Thread](https://stackoverflow.com/questions/2651099/convert-long-lat-to-pixel-x-y-on-a-given-picture)
-- [Scaling...](https://blog.jayway.com/2015/04/13/600k-concurrent-websocket-connections-on-aws-using-node-js/)
-
-- Master durch Passwort schützen
-- Eine Animationssequenz, statt an/aus Impuls von Server
-  - Client muss Sequenz verarbeiten können
-  - Server erzeugt rasterisierte Darstellung eines Bildes anhand Rastergröße aus verbundenen Clients
-- IP Untersscheidung Prod/Dev
-- Server generiert Sequenzen aus Bildern und Videos
-- Server und Client synchronisieren Startzeitpunkt (WebSocket Performance Testen)
-- Test Umgebung einrichten
-- Tollen Namen überlegen
-- Bild und Ton Effekt 
+  - Server: yarn start:dev
+  - Frontend & Master: yarn start
+- um alles auf einmal zu bauen und den Server im Produktionsmodus zu starten in Terminal "bash prodStart.sh" ausführen
