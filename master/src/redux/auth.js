@@ -1,19 +1,24 @@
-export const AUTH_REQUEST = 'playlist/AUTH_REQUEST';
-export const AUTH_SUCCESS = 'playlist/AUTH_SUCCESS';
-export const AUTH_FAILURE = 'playlist/AUTH_FAILURE';
+// ActionsTypes
+export const AUTH_REQUEST = 'auth/AUTH_REQUEST';
+export const AUTH_SUCCESS = 'auth/AUTH_SUCCESS';
+export const AUTH_FAILURE = 'auth/AUTH_FAILURE';
 
+// Reducer
 export default (state = null, action) => {
   switch (action.type) {
     case AUTH_SUCCESS:
       return action.response;
+    case AUTH_FAILURE:
+      return null;
     default:
       return state;
   }
 };
 
-export const authenticate = data => ({
+// ActionCreators
+export const authenticate = password => ({
   fetch: 'POST',
   endpoint: '/authenticate',
-  data,
+  data: { username: 'admin', password },
   types: [AUTH_REQUEST, AUTH_SUCCESS, AUTH_FAILURE],
 });

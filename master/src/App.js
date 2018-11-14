@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from './components/ui';
+import LoginForm from './components/LoginForm';
 import './App.sass';
 
 const App = () => (
@@ -14,6 +15,7 @@ const App = () => (
       <Icon name="dashboard" />
       <span>Dashboard</span>
     </a>
+    <LoginForm />
   </div>
 );
 
