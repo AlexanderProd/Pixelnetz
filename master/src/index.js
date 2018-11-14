@@ -8,7 +8,6 @@ import './index.sass';
 
 import getBaseUrl from '../../shared/util/baseUrl';
 
-
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
@@ -19,23 +18,7 @@ ReactDOM.render(
 );
 
 
-let token = null;
-
 const baseUrl = getBaseUrl();
-
-const start = document.createElement('button');
-start.innerHTML = 'start';
-start.onclick = () => fetch(`${baseUrl}/start`, { headers: { 'x-access-token': token } })
-  .then(r => r.text())
-  .then(r => console.log(r))
-  .catch(err => console.error(err));
-
-const stop = document.createElement('button');
-stop.innerHTML = 'stop';
-stop.onclick = () => fetch(`${baseUrl}/stop`, { headers: { 'x-access-token': token } })
-  .then(r => r.text())
-  .then(r => console.log(r))
-  .catch(err => console.error(err));
 
 const file = document.createElement('input');
 file.type = 'file';
@@ -66,7 +49,5 @@ upload.onclick = () => {
     .catch(e => console.log(e));
 };
 
-document.body.appendChild(start);
-document.body.appendChild(stop);
 document.body.appendChild(file);
 document.body.appendChild(upload);
