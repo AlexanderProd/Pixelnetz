@@ -9,7 +9,7 @@ const propTypes = {
   authenticate: PropTypes.func.isRequired,
 };
 
-const LoginForm = (props) => {
+export const LoginForm = (props) => {
   const [password, setPassword] = useState('');
 
   const handleChange = (e) => {
