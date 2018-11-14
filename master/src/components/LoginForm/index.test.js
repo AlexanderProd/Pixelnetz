@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { mount } from 'enzyme';
 import { LoginForm } from '.';
-import { Form } from '../ui';
+import { Form, Input, Button } from '../ui';
 
 describe('LoginForm', () => {
   const mockProps = {
@@ -15,9 +15,9 @@ describe('LoginForm', () => {
       mount(<LoginForm {...mockProps} />);
     });
 
-    it('renders a password input', () => {
+    it('renders a password Input', () => {
       const wrapper = mount(<LoginForm {...mockProps} />);
-      const input = wrapper.find('input');
+      const input = wrapper.find(Input);
       expect(input).to.have.length(1);
       expect(input.props().type).to.equal('password');
     });
@@ -28,9 +28,9 @@ describe('LoginForm', () => {
       expect(form).to.have.length(1);
     });
 
-    it('renders a button', () => {
+    it('renders a Button', () => {
       const wrapper = mount(<LoginForm {...mockProps} />);
-      const button = wrapper.find('button');
+      const button = wrapper.find(Button);
       expect(button).to.have.length(1);
     });
   });
