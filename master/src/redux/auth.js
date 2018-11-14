@@ -19,6 +19,6 @@ export default (state = null, action) => {
 export const authenticate = password => ({
   fetch: 'POST',
   endpoint: '/authenticate',
-  data: { username: 'admin', password },
+  data: { password },
   types: [AUTH_REQUEST, AUTH_SUCCESS, AUTH_FAILURE],
 });

@@ -42,7 +42,7 @@ const fetchMiddleware = ({ baseUrl }) => () => next => async (action) => {
   const response = await fetch(`${baseUrl}${endpoint}`, {
     headers: {
       'Content-Type': 'application/json',
-      ...(auth.token
+      ...(auth && auth.token
         ? { 'x-access-token': auth.token }
         : {}
       ),
