@@ -4,9 +4,10 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage/session';
 import thunk from 'redux-thunk';
 import fetchMiddleware, { setStore } from '../middleware/fetch';
-
-import auth from '../auth';
 import baseUrl from '../../../../shared/util/baseUrl';
+
+import animationControl from '../animationControl';
+import auth from '../auth';
 
 const persistConfig = {
   key: 'root',
@@ -15,6 +16,7 @@ const persistConfig = {
 };
 
 const reducer = combineReducers({
+  animationControl,
   auth,
 });
 

@@ -21,7 +21,7 @@ const defaultProps = {
 
 const Button = ({ children, type, icon, ...props }) => (
   // eslint-disable-next-line react/button-has-type
-  <button className="Button" type={type} {...props}>
+  <button className={`Button${icon ? ' icon' : ''}`} type={type} {...props}>
     {icon ? <Icon name={icon} /> : children}
   </button>
 );

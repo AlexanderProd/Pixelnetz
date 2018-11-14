@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from './components/ui';
 import LoginForm from './components/LoginForm';
+import AnimationControls from './components/AnimationControls';
 import './App.sass';
 
 const App = () => (
@@ -16,6 +17,7 @@ const App = () => (
       <span>Dashboard</span>
     </a>
     <LoginForm />
+    <AnimationControls />
   </div>
 );
 
