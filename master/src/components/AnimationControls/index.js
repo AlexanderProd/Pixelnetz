@@ -12,10 +12,10 @@ const propTypes = {
   stopError: PropTypes.bool.isRequired,
 };
 
-const AnimationControls = ({ startAnimation, stopAnimation }) => (
+export const AnimationControls = ({ startAnimation, stopAnimation }) => (
   <div className="AnimationControls">
-    <Button icon="play-arrow" onClick={startAnimation} />
-    <Button icon="pause" onClick={stopAnimation} />
+    <Button className="animation-start-button" icon="play-arrow" onClick={startAnimation} />
+    <Button className="animation-stop-button" icon="pause" onClick={stopAnimation} />
   </div>
 );
 

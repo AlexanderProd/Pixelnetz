@@ -11,17 +11,23 @@ const propTypes = {
   ]),
   children: PropTypes.node,
   icon: PropTypes.string,
+  className: PropTypes.string,
 };
 
 const defaultProps = {
   type: 'button',
   children: null,
   icon: null,
+  className: '',
 };
 
-const Button = ({ children, type, icon, ...props }) => (
+const Button = ({ children, type, icon, className, ...props }) => (
   // eslint-disable-next-line react/button-has-type
-  <button className={`Button${icon ? ' icon' : ''}`} type={type} {...props}>
+  <button
+    className={`Button ${className} ${icon ? 'icon' : ''}`}
+    type={type}
+    {...props}
+  >
     {icon ? <Icon name={icon} /> : children}
   </button>
 );
