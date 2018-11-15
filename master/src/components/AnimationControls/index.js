@@ -14,8 +14,12 @@ const propTypes = {
 
 export const AnimationControls = ({ startAnimation, stopAnimation }) => (
   <div className="AnimationControls">
-    <Button className="animation-start-button" icon="play-arrow" onClick={startAnimation} />
-    <Button className="animation-stop-button" icon="pause" onClick={stopAnimation} />
+    <Button primary className="animation-start-button" onClick={startAnimation}>
+      Start
+    </Button>
+    <Button secondary className="animation-stop-button" onClick={stopAnimation}>
+      Stop
+    </Button>
   </div>
 );
 
