@@ -4,14 +4,17 @@
   .upload-dropzone
     border: $light-text-color dashed 2px
     margin: $input-margin
+    margin-bottom: 0.4rem
     border-radius: 2px
     background: $light-blue
-    height: 25vh
+    min-height: 25vh
     display: flex
     flex-direction: column
     align-items: center
     justify-content: center
     color: $light-text-color
+    padding-top: 0.8rem
+    padding-bottom: 0.8rem
 
     .Icon
       font-size: 7rem
@@ -27,3 +30,6 @@
     color: $text-color
     margin: $input-margin
     margin-top: 0.8rem
+
+  .Button
+    width: calc(50% - (#{$input-margin} * 2))

@@ -1,19 +1,37 @@
 @import './styles/vars'
 
+\:root
+  --header-size: 26px
+
+@media (max-width: 720px)
+  \:root
+    --header-size: 23px
+
+@media (max-width: 480px)
+  \:root
+    --header-size: 20px
+
 .App
+  margin-top: calc((var(--header-size) * 2.7) + var(--card-margin))
+
   .dashboard-link
     display: inline-flex
     align-items: center
 
   .title-header
-    font-size: $header-size
+    font-size: var(--header-size)
     padding: 0
     margin: 0 3rem 0 0
 
   .titlebar
+    z-index: 100
+    position: fixed
+    left: 0
+    top: 0
     background: #fff
     width: 100vw
-    padding: 1rem 2rem
+    height: calc(var(--header-size) * 2.7)
+    padding: 0 2rem
     display: flex
     flex-direction: row
     align-items: center

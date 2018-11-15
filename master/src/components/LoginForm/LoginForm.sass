@@ -1,4 +1,14 @@
-@media (max-width: 780px)
+@import '../../styles/vars'
+
+.LoginForm
+  .Input
+    margin-bottom: 0.4rem
+    width: calc(70% - (#{$input-margin} * 2))
+  
+  .Button
+    width: calc(30% - (#{$input-margin} * 2))
+
+@media (max-width: 520px)
   .LoginForm
     .Button, .Input
-      width: 100%
+      width: calc(100% - (#{$input-margin} * 2))

@@ -49,7 +49,7 @@ const FileUpload = (props) => {
         accept=".png,.jpg,.jpeg"
         multiple={false}
       >
-        <Icon name="file-upload" />
+        <Icon name="cloud-upload" />
         <div className="d-and-d">
           DRAG
           {' & '}
