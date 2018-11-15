@@ -30,7 +30,7 @@ export const LoginForm = (props) => {
         value={password}
         onChange={handleChange}
       />
-      <Button type="submit">Login</Button>
+      <Button secondary type="submit">Login</Button>
     </Form>
   );
 };

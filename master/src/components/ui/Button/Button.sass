@@ -9,16 +9,53 @@
   margin: 0.2rem
   font-family: Roboto-Bold
   color: #fff
-  background: $blue
+  background: $button-blue
   display: inline-flex
   justify-content: center
   align-items: center
+  transition: background 50ms ease-in-out
 
-  &[type="submit"]
-    background: $green
+  &:hover
+    background: lighten($button-blue, 3)
+
+  &:active
+    background: darken($button-blue, 8)
 
   &[type="reset"]
-    background: $red
+    background: $button-red
+
+    &:hover
+      background: lighten($button-red, 3)
+
+    &:active
+      background: darken($button-red, 8)
+
+  &[type="submit"]
+    background: $button-green
+
+    &:hover
+      background: lighten($button-green, 3)
+
+    &:active
+      background: darken($button-green, 8)
+
+  &.secondary
+    background: $button-red
+
+    &:hover
+      background: lighten($button-red, 3)
+
+    &:active
+      background: darken($button-red, 8)
+
+  &.primary
+    background: $button-green
+
+    &:hover
+      background: lighten($button-green, 3)
+
+    &:active
+      background: darken($button-green, 8)
 
   &.icon
     padding: 0.4rem 0.4rem

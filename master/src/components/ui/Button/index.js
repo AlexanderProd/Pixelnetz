@@ -12,6 +12,9 @@ const propTypes = {
   children: PropTypes.node,
   icon: PropTypes.string,
   className: PropTypes.string,
+  primary: PropTypes.bool,
+  secondary: PropTypes.bool,
+  neutral: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -19,18 +22,43 @@ const defaultProps = {
   children: null,
   icon: null,
   className: '',
+  primary: false,
+  secondary: false,
+  neutral: false,
 };
 
-const Button = ({ children, type, icon, className, ...props }) => (
-  // eslint-disable-next-line react/button-has-type
-  <button
-    className={`Button ${className} ${icon ? 'icon' : ''}`}
-    type={type}
-    {...props}
-  >
-    {icon ? <Icon name={icon} /> : children}
-  </button>
-);
+const Button = ({
+  children,
+  type,
+  icon,
+  className,
+  primary,
+  secondary,
+  neutral,
+  ...props
+}) => {
+  const iconClass = icon ? 'icon ' : '';
+  const primaryClass = primary ? 'primary' : '';
+  const secondaryClass = secondary ? 'secondary' : '';
+  const neutralClass = neutral ? 'neutral' : '';
+  return (
+    // eslint-disable-next-line react/button-has-type
+    <button
+      className={
+        'Button ' +
+        `${className} ` +
+        `${iconClass} ` +
+        `${primaryClass} ` +
+        `${secondaryClass} ` +
+        `${neutralClass}`
+      }
+      type={type}
+      {...props}
+    >
+      {icon ? <Icon name={icon} /> : children}
+    </button>
+  );
+};
 
 Button.propTypes = propTypes;
 Button.defaultProps = defaultProps;
