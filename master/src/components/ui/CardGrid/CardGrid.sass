@@ -1,10 +1,14 @@
 \:root
-  --template-cols: 1fr 1fr 1fr
+  --template-cols: repeat(4, 1fr)
   --card-margin: 2rem
+
+@media (max-width: 1700px)
+  \:root
+    --template-cols: repeat(3, 1fr)
 
 @media (max-width: 1200px)
   \:root
-    --template-cols: 1fr 1fr
+    --template-cols: repeat(2, 1fr)
 
 @media (max-width: 720px)
   \:root

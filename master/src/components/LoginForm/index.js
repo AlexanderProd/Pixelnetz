@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { authenticate } from '../../redux/auth';
 import { Form, Button, Input } from '../ui';
+import './LoginForm.sass';
 
 const propTypes = {
   authenticate: PropTypes.func.isRequired,
@@ -23,7 +24,7 @@ export const LoginForm = (props) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form className="LoginForm" onSubmit={handleSubmit}>
       <Input
         type="password"
         placeholder="Password"
