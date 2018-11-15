@@ -6,7 +6,7 @@
     "build": "babel src -d dist",
     "serve": "cross-env PRODUCTION=true node dist/index.js",
     "start:prod": "yarn build && cross-env PRODUCTION=true node dist/index.js",
-    "start:dev": "yarn build && cross-env PRODUCTION=false nodemon dist/index.js",
+    "start:dev": "cross-env PRODUCTION=false nodemon --exec babel-node src/index.js",
     "test": "mocha --reporter spec testSetup.js \"src/**/*.test.js\"",
     "test:watch": "mocha --reporter spec testSetup.js \"src/**/*.test.js\" --watch"
   },
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
