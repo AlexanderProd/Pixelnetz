@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { startAnimation as start, stopAnimation as stop } from '../../redux/animationControl';
 import { Button } from '../ui';
+import './AnimationControls.sass';
 
 const propTypes = {
   startAnimation: PropTypes.func.isRequired,
