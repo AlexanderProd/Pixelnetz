@@ -4,11 +4,14 @@ $border-width: 1px
 
 .Input
   box-sizing: border-box
-  border: $border-width solid #bbb
+  border: $border-width solid $light-text-color
   border-radius: 2px
   padding: calc(0.6rem - #{$border-width}) 0.7rem
   margin: 0.2rem
-  color: $dark-grey
+  color: $text-color
 
   &:focus
     border: $border-width solid $blue
+
+  &:placeholder
+    color: $light-text-color
