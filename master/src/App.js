@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from './components/ui';
+import { Icon, Card, CardGrid } from './components/ui';
 import LoginForm from './components/LoginForm';
 import AnimationControls from './components/AnimationControls';
 import './App.sass';
@@ -16,8 +16,14 @@ const App = () => (
       <Icon name="dashboard" />
       <span>Dashboard</span>
     </a>
-    <LoginForm />
-    <AnimationControls />
+    <CardGrid>
+      <Card title="Login">
+        <LoginForm />
+      </Card>
+      <Card title="Sequence Control">
+        <AnimationControls />
+      </Card>
+    </CardGrid>
   </div>
 );
 
