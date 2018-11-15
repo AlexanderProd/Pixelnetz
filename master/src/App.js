@@ -2,7 +2,9 @@ import React from 'react';
 import { Icon, Card, CardGrid } from './components/ui';
 import LoginForm from './components/LoginForm';
 import AnimationControls from './components/AnimationControls';
+import FileUpload from './components/FileUpload';
 import './App.sass';
+import Preview from './components/Preview';
 
 const App = () => (
   <div className="App">
@@ -24,6 +26,12 @@ const App = () => (
       </Card>
       <Card title="Sequence Control">
         <AnimationControls />
+      </Card>
+      <Card title="Upload Image" spanRows={2}>
+        <FileUpload />
+      </Card>
+      <Card title="Realtime Preview" spanRows={2}>
+        <Preview />
       </Card>
     </CardGrid>
   </div>

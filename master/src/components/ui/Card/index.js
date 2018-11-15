@@ -20,8 +20,8 @@ const Card = ({ children, title, spanCols, spanRows }) => (
   <div
     className="Card"
     style={{
-      ...(spanCols ? { gridColumn: `1 / span ${spanCols}` } : {}),
-      ...(spanRows ? { gridRows: `1 / span ${spanRows}` } : {}),
+      ...(spanCols ? { gridColumn: `span ${spanCols}` } : {}),
+      ...(spanRows ? { gridRow: `span ${spanRows}` } : {}),
     }}
   >
     <div className="card-title">{title}</div>
