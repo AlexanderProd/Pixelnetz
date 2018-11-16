@@ -4,18 +4,31 @@ export const setStore = (reduxStore) => {
   store = reduxStore;
 };
 
-const prepareConfig = (method, data) => {
+const prepareConfig = (action, data) => {
   let config;
-  switch (method) {
+  switch (action.fetch) {
+    case 'POST-MULTIPART':
+      config = {
+        method: 'POST',
+        body: data,
+        'Content-Type': action.mimeType,
+      };
+      break;
     case 'POST':
       config = {
         method: 'POST',
         body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       };
       break;
     default:
       config = {
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       };
   }
 
@@ -39,15 +52,17 @@ const fetchMiddleware = ({ baseUrl }) => () => next => async (action) => {
 
   const { auth } = ((store && store.getState) || (() => {}))();
 
+  const { headers, ...config } = prepareConfig(action, data);
+
   const response = await fetch(`${baseUrl}${endpoint}`, {
     headers: {
-      'Content-Type': 'application/json',
       ...(auth && auth.token
         ? { 'x-access-token': auth.token }
         : {}
       ),
+      ...headers,
     },
-    ...prepareConfig(action.fetch, data),
+    ...config,
   });
 
   if (response.ok) {

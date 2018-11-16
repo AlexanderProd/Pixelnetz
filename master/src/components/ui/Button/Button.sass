@@ -1,6 +1,7 @@
 @import '../../../styles/vars'
 
 .Button
+  position: relative
   cursor: pointer
   box-sizing: border-box
   border: none
@@ -59,3 +60,48 @@
 
   &.icon
     padding: 0.4rem 0.4rem
+
+  &:disabled
+    cursor: default
+
+    &:after
+      border-radius: 2px
+      position: absolute
+      content: ""
+      background: rgba(240, 240, 240, 0.7)
+      width: 100%
+      height: 100%
+
+    &:hover
+      background: $button-blue
+
+    &:active
+      background: $button-blue
+
+  &[type="reset"]:disabled
+    &:hover
+      background: $button-red
+
+    &:active
+      background: $button-red
+
+  &[type="submit"]:disabled
+    &:hover
+      background: $button-green
+
+    &:active
+      background: $button-green
+
+  &.primary:disabled
+    &:hover
+      background: $button-green
+
+    &:active
+      background: $button-green
+
+  &.secondary:disabled
+    &:hover
+      background: $button-red
+
+    &:active
+      background: $button-red

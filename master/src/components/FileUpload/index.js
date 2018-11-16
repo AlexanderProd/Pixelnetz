@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { upload as uploadFile } from '../../redux/fileUpload';
 import { Form, Icon, Button } from '../ui';
 import './FileUpload.sass';
 
 const propTypes = {
-
+  upload: PropTypes.func.isRequired,
+  fileUpload: PropTypes.shape({
+    loading: PropTypes.bool.isRequired,
+    success: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
-const defaultProps = {
-
-};
-
-const FileUpload = (props) => {
+const FileUpload = ({ upload, fileUpload }) => {
   const [file, setFile] = useState(null);
   const [rejectedFile, setRejectedFile] = useState(null);
   const [multipleDropped, setMultipleDropped] = useState(false);
@@ -40,8 +43,15 @@ const FileUpload = (props) => {
     setMultipleDropped(false);
   };
 
+  const handleSubmit = () => {
+    console.log(file);
+    const formData = new FormData();
+    formData.append('file', file);
+    upload(formData, file.type);
+  };
+
   return (
-    <Form className="FileUpload">
+    <Form className="FileUpload" onSubmit={handleSubmit}>
       <Dropzone
         className="upload-dropzone"
         activeClassName="upload-dropzone-active"
@@ -57,8 +67,19 @@ const FileUpload = (props) => {
         </div>
         <div className="browse-for-file">or browse for file</div>
       </Dropzone>
-      <Button type="submit">Upload</Button>
-      <Button type="reset" onClick={handleCancel}>Cancel</Button>
+      <Button
+        type="submit"
+        disabled={!file}
+      >
+        Upload
+      </Button>
+      <Button
+        type="reset"
+        onClick={handleCancel}
+        disabled={!file && !rejectedFile}
+      >
+        Cancel
+      </Button>
       <div className="upload-info">
         {file && (
           <span>
@@ -85,6 +106,13 @@ const FileUpload = (props) => {
 };
 
 FileUpload.propTypes = propTypes;
-FileUpload.defaultProps = defaultProps;
 
-export default FileUpload;
+const mapStateToProps = ({ fileUpload }) => ({
+  fileUpload,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  upload: uploadFile,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(FileUpload);

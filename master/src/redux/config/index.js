@@ -8,6 +8,7 @@ import baseUrl from '../../../../shared/util/baseUrl';
 
 import animationControl from '../animationControl';
 import auth from '../auth';
+import fileUpload from '../fileUpload';
 
 const persistConfig = {
   key: 'root',
@@ -18,6 +19,7 @@ const persistConfig = {
 const reducer = combineReducers({
   animationControl,
   auth,
+  fileUpload,
 });
 
 const persistedReducer = persistReducer(
