@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { upload as uploadFile } from '../../redux/fileUpload';
-import { Form, Icon, Button } from '../ui';
+import { Form, Icon, Button, Input } from '../ui';
 import './FileUpload.sass';
 
 const propTypes = {
@@ -19,6 +19,7 @@ const FileUpload = ({ upload, fileUpload }) => {
   const [file, setFile] = useState(null);
   const [rejectedFile, setRejectedFile] = useState(null);
   const [multipleDropped, setMultipleDropped] = useState(false);
+  const [sequenceName, setSequenceName] = useState('');
 
   const handleDrop = ([accepted], rejected) => {
     if (accepted) {
@@ -41,16 +42,28 @@ const FileUpload = ({ upload, fileUpload }) => {
     setFile(null);
     setRejectedFile(null);
     setMultipleDropped(false);
+    setSequenceName('');
   };
 
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('sequenceName', sequenceName);
     upload(formData, file.type);
+  };
+
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setSequenceName(value);
   };
 
   return (
     <Form className="FileUpload" onSubmit={handleSubmit}>
+      <Input
+        placeholder="please enter sequence name"
+        onChange={handleChange}
+        value={sequenceName}
+      />
       <Dropzone
         className="upload-dropzone"
         activeClassName="upload-dropzone-active"
@@ -68,14 +81,14 @@ const FileUpload = ({ upload, fileUpload }) => {
       </Dropzone>
       <Button
         type="submit"
-        disabled={!file}
+        disabled={!file || !sequenceName}
       >
         Upload
       </Button>
       <Button
         type="reset"
         onClick={handleCancel}
-        disabled={!file && !rejectedFile}
+        disabled={!file && !rejectedFile && !sequenceName}
       >
         Cancel
       </Button>
