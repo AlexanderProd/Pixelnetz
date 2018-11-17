@@ -11,19 +11,31 @@
   \:root
     --header-size: 20px
 
+$title-bar-padding: 2rem
+
 .TitleBar
   z-index: 100
   position: fixed
   left: 0
   top: 0
   background: #fff
-  width: 100vw
+  width: calc(100vw - (#{$title-bar-padding} * 2))
   height: calc(var(--header-size) * 2.7)
-  padding: 0 2rem
+  padding: 0 $title-bar-padding
+  box-shadow: $medium-grey 0px 1px 3px -1px
   display: flex
   flex-direction: row
+  justify-content: space-between
   align-items: center
-  box-shadow: $medium-grey 0px 1px 3px -1px
+
+  .title-bar-left, .title-bar-right
+    display: flex
+    flex-direction: row
+    align-items: center
+
+  .title-menu-button
+    @media (min-width: 720px)
+      display: none
 
   .dashboard-link
     display: inline-flex

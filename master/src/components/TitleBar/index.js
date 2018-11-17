@@ -18,19 +18,24 @@ const defaultProps = {
 
 const TitleBar = ({ auth, logout }) => (
   <div className="TitleBar">
-    <h1 className="title-header">Pixelnetz Master</h1>
-    <a
-      className="dashboard-link"
-      href="http://3.120.26.9:2800"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <Icon name="dashboard" />
-      <span>Dashboard</span>
-    </a>
-    {auth && (
-      <Button basic onClick={logout}>Logout</Button>
-    )}
+    <div className="title-bar-left">
+      <h1 className="title-header">Pixelnetz Master</h1>
+      <a
+        className="dashboard-link"
+        href="http://3.120.26.9:2800"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="dashboard" />
+        <span>Dashboard</span>
+      </a>
+    </div>
+    <div className="title-bar-right">
+      <Button icon="menu" basic className="title-menu-button" />
+      {auth && (
+        <Button basic onClick={logout}>Logout</Button>
+      )}
+    </div>
   </div>
 );
 
