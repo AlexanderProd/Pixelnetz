@@ -4,13 +4,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { logout as logoutUser } from '../../redux/auth';
 import { Icon, Button } from '../ui';
+import { authType } from '../../types';
 import './TitleBar.sass';
 
 const propTypes = {
   logout: PropTypes.func.isRequired,
-  auth: PropTypes.shape({
-    token: PropTypes.string.isRequired,
-  }),
+  auth: PropTypes.shape(authType),
 };
 
 const defaultProps = {
