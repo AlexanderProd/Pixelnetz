@@ -22,6 +22,18 @@
   &:active
     background: darken($button-blue, 8)
 
+  &.basic
+    background: transparent
+    color: $text-color
+    border: $border-width solid $light-text-color
+
+    &:hover
+      border: $border-width solid $blue
+      color: $blue
+
+    &:active
+      color: darken($button-blue, 8)
+
   &[type="reset"]
     background: $button-red
 

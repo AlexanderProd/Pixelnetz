@@ -15,6 +15,7 @@ const propTypes = {
   primary: PropTypes.bool,
   secondary: PropTypes.bool,
   neutral: PropTypes.bool,
+  basic: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -25,6 +26,7 @@ const defaultProps = {
   primary: false,
   secondary: false,
   neutral: false,
+  basic: false,
 };
 
 const Button = ({
@@ -35,12 +37,14 @@ const Button = ({
   primary,
   secondary,
   neutral,
+  basic,
   ...props
 }) => {
   const iconClass = icon ? 'icon ' : '';
   const primaryClass = primary ? 'primary' : '';
   const secondaryClass = secondary ? 'secondary' : '';
   const neutralClass = neutral ? 'neutral' : '';
+  const basicClass = basic ? 'basic' : '';
   return (
     // eslint-disable-next-line react/button-has-type
     <button
@@ -50,7 +54,8 @@ const Button = ({
         `${iconClass} ` +
         `${primaryClass} ` +
         `${secondaryClass} ` +
-        `${neutralClass}`
+        `${neutralClass} ` +
+        `${basicClass}`
       }
       type={type}
       {...props}
