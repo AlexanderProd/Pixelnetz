@@ -18,7 +18,7 @@ envResult.load();
 if (envResult.error) throw envResult.error;
 
 const PORT = 3000;
-const localHostname = process.env.PRODUCTION === 'true' ? '3.120.26.9' : localIP();
+const localHostname = process.env.PRODUCTION === 'true' ? '3.121.177.95' : localIP();
 const app = express();
 const clients = new Map();
 const userDB = new UserDB();
