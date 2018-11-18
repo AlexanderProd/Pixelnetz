@@ -33,13 +33,42 @@ $title-bar-padding: 2rem
     flex-direction: row
     align-items: center
 
-  .title-menu-button
+  .title-menu
+    position: fixed
+    left: 0
+    top: calc(var(--header-size) * 2.7)
+    background: #fff
+    padding: 1rem $title-bar-padding
+    width: calc(100vw - (#{$title-bar-padding} * 2))
+    box-shadow: $medium-grey 0px 1px 3px -1px
+    text-align: right
+    max-height: 100px
+    transition: all 150ms ease-in-out
+    overflow: hidden
+
+    .title-menu-item
+      padding: 0.4rem 0
+      width: 100%
+      border-top: $border-width $light-text-color solid
+
+      &:first-child
+        border-top: none
+
+  .title-menu-button, .in-menu, .title-menu
     @media (min-width: 720px)
       display: none
+
+  .title-menu.menu-closed
+    max-height: 0
+    padding: 0  $title-bar-padding
 
   .dashboard-link
     display: inline-flex
     align-items: center
+
+  .in-title-bar
+    @media (max-width: 720px)
+      display: none
 
   .title-header
     font-size: var(--header-size)
