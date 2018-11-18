@@ -18,7 +18,7 @@ const defaultProps = {
   auth: null,
 };
 
-const TitleBar = ({ auth, logout }) => {
+export const TitleBar = ({ auth, logout }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleMenuToggle = () => {

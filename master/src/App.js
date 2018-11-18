@@ -18,7 +18,7 @@ const defaultProps = {
   auth: null,
 };
 
-const App = ({ auth }) => (
+export const App = ({ auth }) => (
   <div className="App">
     <TitleBar />
     {auth
