@@ -22,7 +22,7 @@ const TitleBar = ({ auth, logout }) => (
       <h1 className="title-header">Pixelnetz Master</h1>
       <a
         className="dashboard-link"
-        href="http://3.120.26.9:2800"
+        href="http://3.121.177.95:2800"
         target="_blank"
         rel="noopener noreferrer"
       >
