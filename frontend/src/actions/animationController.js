@@ -1,5 +1,7 @@
 import { createSequenceStack } from '../sequences';
 
+const DELTA_PADDING = 1000;
+
 const createAnimationController = (frameHandler) => {
   let _animation = null;
   let animationRunning = false;
@@ -24,13 +26,13 @@ const createAnimationController = (frameHandler) => {
     let continueSequence = true;
 
     const loop = () => {
-      const deltaTime = Date.now() - startTime;
+      const deltaTime = Date.now() - startTime - DELTA_PADDING;
 
       while (currentStep && currentStep[1] < deltaTime) {
         currentStep = sequenceStack.pop();
       }
 
-      if (currentStep && sequenceStack.length > 0) {
+      if (currentStep && sequenceStack.length >= 0) {
         const [frame,, executed] = currentStep;
 
         if (!executed) {
