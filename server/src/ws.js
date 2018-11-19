@@ -59,8 +59,8 @@ const startWebSocket = clients => wsServer.on('connection', (socket) => {
     } else {
       const { x, y } = message;
       const client = clients.get(id);
-      client.x = x;
-      client.y = y;
+      client.x = Number(x);
+      client.y = Number(y);
       console.log(`${id} x=${x}, y=${y}, deltaTime=${client.deltaTime}`);
     }
   });
