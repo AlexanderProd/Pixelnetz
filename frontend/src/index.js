@@ -11,10 +11,7 @@ const main = async () => {
 
   socket.onmessage = ({ data }) => {
     const message = JSON.parse(data);
-
     runAction(message);
-
-    // console.log(message);
   };
 };
 
