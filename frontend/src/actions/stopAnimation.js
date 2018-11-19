@@ -1,5 +1,4 @@
-import { stop } from './animationController';
-
-const stopAnimation = () => stop();
+const stopAnimation = animationController => () =>
+  animationController.stop();
 
 export default stopAnimation;

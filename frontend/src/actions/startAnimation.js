@@ -1,6 +1,4 @@
-import { sosAnimation } from '../../../shared/util/sequence';
-import { start } from './animationController';
-
-const startAnimation = ({ startTime }) => start(sosAnimation, startTime);
+const startAnimation = animationController => ({ startTime }) =>
+  animationController.start(startTime);
 
 export default startAnimation;
