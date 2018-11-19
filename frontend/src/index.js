@@ -14,7 +14,7 @@ const main = async () => {
 
     runAction(message);
 
-    console.log(message);
+    // console.log(message);
   };
 };
 

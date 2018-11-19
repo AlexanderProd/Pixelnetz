@@ -5,6 +5,9 @@ export const ANIMATION_START_FAILURE = 'animationControl/ANIMATION_START_FAILURE
 export const ANIMATION_STOP_REQUEST = 'animationControl/ANIMATION_STOP_REQUEST';
 export const ANIMATION_STOP_SUCCESS = 'animationControl/ANIMATION_STOP_SUCCESS';
 export const ANIMATION_STOP_FAILURE = 'animationControl/ANIMATION_STOP_FAILURE';
+export const ANIMATION_SET_REQUEST = 'animationControl/ANIMATION_SET_REQUEST';
+export const ANIMATION_SET_SUCCESS = 'animationControl/ANIMATION_SET_SUCCESS';
+export const ANIMATION_SET_FAILURE = 'animationControl/ANIMATION_SET_FAILURE';
 
 const initialState = {
   startError: false,
@@ -52,4 +55,11 @@ export const stopAnimation = () => ({
   endpoint: '/stop',
   expect: 'text',
   types: [ANIMATION_STOP_REQUEST, ANIMATION_STOP_SUCCESS, ANIMATION_STOP_FAILURE],
+});
+
+export const setAnimation = () => ({
+  fetch: 'GET',
+  endpoint: `/setAnimation?name=${'npm'}`,
+  expect: 'text',
+  types: [ANIMATION_SET_REQUEST, ANIMATION_SET_SUCCESS, ANIMATION_SET_FAILURE],
 });

@@ -47,8 +47,7 @@ const FileUpload = ({ upload, fileUpload }) => {
 
   const handleSubmit = () => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('sequenceName', sequenceName);
+    formData.append('file', file, sequenceName);
     upload(formData, file.type);
   };
 

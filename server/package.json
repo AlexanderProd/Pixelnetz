@@ -7,6 +7,7 @@
     "serve": "cross-env PRODUCTION=true node dist/index.js",
     "start:prod": "yarn build && cross-env PRODUCTION=true node dist/index.js",
     "start:dev": "cross-env PRODUCTION=false nodemon --exec babel-node src/index.js",
+    "start:dev:static": "yarn build && cross-env PRODUCTION=false node dist/index.js",
     "test": "mocha --reporter spec testSetup.js \"src/**/*.test.js\"",
     "test:watch": "mocha --reporter spec testSetup.js \"src/**/*.test.js\" --watch"
   },
