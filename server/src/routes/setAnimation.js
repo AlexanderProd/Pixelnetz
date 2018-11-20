@@ -63,8 +63,7 @@ const setAnimation = clients => async (req, res) => {
       send({
         actionType: SET_ANIMATION,
         animation: {
-          sequence: scaledSequence[y - offsetY][x - offsetX]
-            .map(elem => [elem, 1]),
+          sequence: scaledSequence[y - offsetY][x - offsetX],
           stepLength: 1000,
           repeat: false,
         },
