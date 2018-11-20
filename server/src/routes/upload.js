@@ -1,8 +1,12 @@
 import fs from 'fs';
 import { promisify } from 'util';
 import rasterize from '../sequences/rasterize';
-import toMatrix from '../sequences/toMatrix';
 import { isSafeFileName } from '../util/userInput';
+
+const allowedTypes = [
+  'image/png',
+  'image/jpeg',
+];
 
 const writeFile = promisify(fs.writeFile);
 
@@ -14,9 +18,14 @@ const upload = () => (req, res) => {
     return;
   }
 
-  rasterize(file.data)
+  if (!allowedTypes.includes(file.mimetype)) {
+    res.status(400).json({ error: 'Invalid file format' });
+    return;
+  }
+
+  rasterize(file.data, file.mimetype)
     .then(pixelMatrix => pixelMatrix.map(
-      row => toMatrix(row, 1),
+      row => row.map(col => [[col, 1]]),
     ))
     .then((sequenceMatrix) => writeFile(
       `${__dirname}/../sequences/db/${file.name}.json`,

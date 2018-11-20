@@ -6,10 +6,10 @@ import toMatrix from './toMatrix';
 
 const getPixels = promisify(getPixelsCB);
 
-const rasterize = buffer => sharp(buffer)
+const rasterize = (buffer, mimetype) => sharp(buffer)
   .resize(10)
   .toBuffer()
-  .then(b => getPixels(b, 'image/png'))
+  .then(b => getPixels(b, mimetype))
   .then(({ data, shape }) => {
     const [width,, channels] = shape;
     const colorStrip = toMatrix(data, channels)
