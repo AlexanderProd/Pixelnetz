@@ -1,6 +1,6 @@
 import WebSocket from 'ws';
 import keyGen from './util/keyGen.js';
-import createSender from '../../shared/util/createSender';
+import createSender from './util/createSender';
 import {
   INIT_TIME_SYNC,
   POSITION,

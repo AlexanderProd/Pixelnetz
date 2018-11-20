@@ -1,5 +1,5 @@
 import { START_ANIMATION } from '../../../shared/util/socketActionTypes';
-import createSender from '../../../shared/util/createSender';
+import createSender from '../util/createSender';
 
 const start = clients => (req, res) => {
   for (const { id, socket, deltaTime } of clients.values()) {

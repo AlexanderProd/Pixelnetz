@@ -1,5 +1,5 @@
 import { STOP_ANIMATION } from '../../../shared/util/socketActionTypes';
-import createSender from '../../../shared/util/createSender';
+import createSender from '../util/createSender';
 
 const stop = clients => (req, res) => {
   for (const { id, socket } of clients.values()) {

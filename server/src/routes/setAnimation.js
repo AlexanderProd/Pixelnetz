@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { promisify } from 'util';
 import { SET_ANIMATION } from '../../../shared/util/socketActionTypes';
-import createSender from '../../../shared/util/createSender';
+import createSender from '../util/createSender';
 import { isSafeFileName } from '../util/userInput';
 
 const readFile = promisify(fs.readFile);
