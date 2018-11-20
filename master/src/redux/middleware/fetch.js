@@ -87,7 +87,7 @@ const fetchMiddleware = ({ baseUrl }) => () => next => async (action) => {
     next({
       type: failure,
       data,
-      response,
+      response: await response.json(),
       ...rest,
     });
   }
