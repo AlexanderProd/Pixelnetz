@@ -7,7 +7,7 @@ import toMatrix from './toMatrix';
 const getPixels = promisify(getPixelsCB);
 
 const rasterize = (buffer, mimetype) => sharp(buffer)
-  .resize(10)
+  .resize(100)
   .toBuffer()
   .then(b => getPixels(b, mimetype))
   .then(({ data, shape }) => {
