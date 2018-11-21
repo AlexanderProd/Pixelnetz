@@ -1,14 +1,10 @@
 import { STOP_ANIMATION } from '../../../shared/util/socketActionTypes';
-import createSender from '../util/createSender';
 
 const stop = clients => (req, res) => {
-  for (const { id, socket } of clients.values()) {
-    const send = createSender(socket);
-    setTimeout(() => {
-      console.log('stop: ', id);
-      send({ actionType: STOP_ANIMATION });
-    }, 0);
-  }
+  clients.forEach((socket) => {
+    console.log('stop: ', socket.id());
+    socket.send({ actionType: STOP_ANIMATION });
+  });
 
   res.sendStatus(200);
 };

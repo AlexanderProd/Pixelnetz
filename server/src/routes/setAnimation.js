@@ -1,7 +1,6 @@
 import fs from 'fs';
 import { promisify } from 'util';
 import { SET_ANIMATION } from '../../../shared/util/socketActionTypes';
-import createSender from '../util/createSender';
 import { isSafeFileName } from '../util/userInput';
 
 const readFile = promisify(fs.readFile);
@@ -38,12 +37,12 @@ const setAnimation = clients => async (req, res) => {
     maxY: -Infinity,
   };
 
-  for (const { x, y } of clients.values()) {
+  clients.forEachSync(({ properties: { x, y } }) => {
     if (x < dimensions.minX) dimensions.minX = x;
     if (y < dimensions.minY) dimensions.minY = y;
     if (x > dimensions.maxX) dimensions.maxX = x;
     if (y > dimensions.maxY) dimensions.maxY = y;
-  }
+  });
 
   const offsetX = dimensions.minX;
   const offsetY = dimensions.minY;
@@ -56,20 +55,18 @@ const setAnimation = clients => async (req, res) => {
     .filter((elem, i) => i % scaleHeight === 0)
     .map(row => row.filter((elem, i) => i % scaleWidth === 0));
 
-  for (const { id, socket, x, y } of clients.values()) {
-    const send = createSender(socket);
-    setTimeout(() => {
-      console.log('set: ', id);
-      send({
-        actionType: SET_ANIMATION,
-        animation: {
-          sequence: scaledSequence[y - offsetY][x - offsetX],
-          stepLength: 1000,
-          repeat: false,
-        },
-      });
-    }, 0);
-  }
+  clients.forEach((socket) => {
+    console.log('set: ', socket.id());
+    const { x, y } = socket.properties;
+    socket.send({
+      actionType: SET_ANIMATION,
+      animation: {
+        sequence: scaledSequence[y - offsetY][x - offsetX],
+        stepLength: 1000,
+        repeat: false,
+      },
+    });
+  });
 
   res.sendStatus(200);
 };

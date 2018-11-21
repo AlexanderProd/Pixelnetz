@@ -12,7 +12,7 @@ import stop from './routes/stop';
 import setAnimation from './routes/setAnimation';
 import upload from './routes/upload';
 import wshost from './routes/wshost';
-import startWebSocket from './ws/client';
+import createClientPool from './ws/client';
 import withAuth from './util/authMiddleware';
 
 // Check for errors parsing .env file
@@ -22,7 +22,7 @@ if (envResult.error) throw envResult.error;
 const PORT = 3000;
 const localHostname = process.env.PRODUCTION === 'true' ? '3.121.177.95' : localIP();
 const app = express();
-const clients = new Map();
+const clients = createClientPool();
 const userDB = new UserDB();
 
 configureUserDB(userDB);
@@ -34,8 +34,6 @@ app.get('/stop', withAuth, stop(clients));
 app.get('/setAnimation', withAuth, setAnimation(clients));
 app.post('/upload', withAuth, upload());
 app.get('/wshost', wshost(localHostname));
-
-startWebSocket(clients);
 
 app.listen(PORT, () => console.log(
   '\n' +

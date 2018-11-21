@@ -1,17 +1,13 @@
 import { START_ANIMATION } from '../../../shared/util/socketActionTypes';
-import createSender from '../util/createSender';
 
 const start = clients => (req, res) => {
-  for (const { id, socket, deltaTime } of clients.values()) {
-    const send = createSender(socket);
-    setTimeout(() => {
-      console.log('start: ', id);
-      send({
-        actionType: START_ANIMATION,
-        startTime: Date.now() + 3000 + deltaTime,
-      });
-    }, 0);
-  }
+  clients.forEach((socket) => {
+    console.log('start: ', socket.id());
+    socket.send({
+      actionType: START_ANIMATION,
+      startTime: Date.now() + 3000 + socket.deltaTime(),
+    });
+  });
 
   res.sendStatus(200);
 };
