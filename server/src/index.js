@@ -12,7 +12,7 @@ import stop from './routes/stop';
 import setAnimation from './routes/setAnimation';
 import upload from './routes/upload';
 import wshost from './routes/wshost';
-import startWebSocket from './ws';
+import startWebSocket from './ws/client';
 import withAuth from './util/authMiddleware';
 
 // Check for errors parsing .env file

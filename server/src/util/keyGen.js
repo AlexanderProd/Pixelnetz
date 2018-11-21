@@ -1,26 +1,26 @@
-class UniqueKeyGenerator {
-  constructor() {
-    this.chars = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
-    this.keys = new Set();
-    this.keyLength = 10;
-  }
+const CHARS = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
 
-  generate() {
+const createKeyGenerator = (keyLength = 10) => {
+  const keys = new Set();
+
+  const generate = () => {
     let key = '';
     while (key.length === 0) {
       let tmp = '';
-      for (let i = 0; i < this.keyLength; i++) {
-        tmp += this.chars.charAt(Math.floor(Math.random() * this.chars.length));
+      for (let i = 0; i < keyLength; i++) {
+        tmp += CHARS.charAt(Math.floor(Math.random() * CHARS.length));
       }
-      if (!this.keys.has(tmp)) {
+      if (!keys.has(tmp)) {
         key = tmp;
       }
     }
-    this.keys.add(key);
+    keys.add(key);
     return key;
-  }
-}
+  };
 
-const keyGen = new UniqueKeyGenerator();
+  return {
+    generate,
+  };
+};
 
-export default keyGen;
+export default createKeyGenerator;
