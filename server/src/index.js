@@ -13,6 +13,7 @@ import setAnimation from './routes/setAnimation';
 import upload from './routes/upload';
 import wshost from './routes/wshost';
 import createClientPool from './ws/client';
+import createMasterPool from './ws/master';
 import withAuth from './util/authMiddleware';
 
 // Check for errors parsing .env file
@@ -22,16 +23,17 @@ if (envResult.error) throw envResult.error;
 const PORT = 3000;
 const localHostname = process.env.PRODUCTION === 'true' ? '3.121.177.95' : localIP();
 const app = express();
-const clients = createClientPool();
+const masterPool = createMasterPool();
+const clientPool = createClientPool(masterPool);
 const userDB = new UserDB();
 
 configureUserDB(userDB);
 configureApp(app, express);
 
 app.post('/authenticate', authenticate(userDB));
-app.get('/start', withAuth, start(clients));
-app.get('/stop', withAuth, stop(clients));
-app.get('/setAnimation', withAuth, setAnimation(clients));
+app.get('/start', withAuth, start(clientPool));
+app.get('/stop', withAuth, stop(clientPool));
+app.get('/setAnimation', withAuth, setAnimation(clientPool));
 app.post('/upload', withAuth, upload());
 app.get('/wshost', wshost(localHostname));
 

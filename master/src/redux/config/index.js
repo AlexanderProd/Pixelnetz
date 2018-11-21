@@ -4,12 +4,13 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage/session';
 import thunk from 'redux-thunk';
 import fetchMiddleware, { setStore } from '../middleware/fetch';
-import baseUrl from '../../../../shared/util/baseUrl';
+import getBaseUrl from '../../../../shared/util/baseUrl';
 
 import animationControl from '../animationControl';
 import auth from '../auth';
 import error from '../error';
 import fileUpload from '../fileUpload';
+import connectStoreToWS from './ws';
 
 const persistConfig = {
   key: 'root',
@@ -29,15 +30,25 @@ const persistedReducer = persistReducer(
   reducer,
 );
 
+const baseUrl = getBaseUrl();
+
 const store = createStore(
   persistedReducer,
   composeWithDevTools(applyMiddleware(
     thunk,
-    fetchMiddleware({ baseUrl: baseUrl() }),
+    fetchMiddleware({ baseUrl }),
   )),
 );
 
 setStore(store);
+
+fetch(`${baseUrl}/wshost`)
+  .then(r => r.json())
+  .then(({ hostname }) => connectStoreToWS({
+    store,
+    hostname,
+    port: 3002,
+  }));
 
 export const persistor = persistStore(store);
 

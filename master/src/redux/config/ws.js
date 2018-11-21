@@ -1,0 +1,30 @@
+import { INIT_TIME_SYNC } from '../../../../shared/util/socketActionTypes';
+import createSender from '../../../../shared/util/createSender';
+
+const connectStoreToWS = ({
+  hostname,
+  port,
+  store,
+}) => {
+  const socket = new WebSocket(`ws://${hostname}:${port}`);
+  const send = createSender(socket);
+
+  socket.onmessage = ({ data }) => {
+    const { actionType, ...message } = JSON.parse(data);
+
+    if (actionType === INIT_TIME_SYNC) {
+      send({
+        actionType: INIT_TIME_SYNC,
+        initCounter: message.initCounter,
+        clientReceive: Date.now(),
+      });
+    } else {
+      store.dispatch({
+        type: actionType,
+        message,
+      });
+    }
+  };
+};
+
+export default connectStoreToWS;
