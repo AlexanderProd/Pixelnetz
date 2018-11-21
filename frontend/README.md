@@ -1,6 +1,6 @@
 # Frontend
 
-Zum starten:
-- terminal in Pixelnetz/frontend öffnen
-- yarn install
-- yarn start
+Zum Starten:
+- Terminal in Pixelnetz/frontend öffnen
+- "yarn install"
+- "yarn start" startet den Webpack Entwicklungsserver
