@@ -2,15 +2,16 @@ import WebSocket from 'ws';
 import createkeyGenerator from '../util/keyGen';
 import syncTime from './syncTime';
 import createSocket from './socket';
+import onMessage from './onMessage';
 
 const createPool = ({ port }) => {
   const wsServer = new WebSocket.Server({ port });
   const keyGen = createkeyGenerator();
   const pool = new Map();
 
-  let onConnection = null;
-  let onMessage = null;
-  let onClose = null;
+  const connectionHandlers = [];
+  const messageHandlers = [];
+  const closeHandlers = [];
 
   wsServer.on('connection', (socket) => {
     const id = keyGen.generate();
@@ -19,25 +20,18 @@ const createPool = ({ port }) => {
     syncTime(socket).then((deltaTime) => {
       const syncedSocket = createSocket({ socket, id, deltaTime });
       pool.set(id, syncedSocket);
-      if (onConnection) {
-        onConnection(syncedSocket);
-      }
+      connectionHandlers.forEach(handler => handler(syncedSocket));
     });
 
-    if (onMessage) {
-      socket.on(
-        'message',
-        message => onMessage(JSON.parse(message), pool.get(id)),
-      );
-    }
+    onMessage(socket, message => messageHandlers.forEach(
+      handler => handler(message, pool.get(id))),
+    );
 
     socket.on('close', () => {
       socket.isOpen = false;
       pool.delete(id);
       console.log('close connection', id);
-      if (onClose) {
-        onClose(id);
-      }
+      closeHandlers.forEach(handler => handler(id));
     });
   });
 
@@ -61,13 +55,13 @@ const createPool = ({ port }) => {
     forEachSync,
     forEach,
     onConnection: (callback) => {
-      onConnection = callback;
+      connectionHandlers.push(callback);
     },
     onMessage: (callback) => {
-      onMessage = callback;
+      messageHandlers.push(callback);
     },
     onClose: (callback) => {
-      onClose = callback;
+      closeHandlers.push(callback);
     },
     sendAll,
     size: () => pool.size(),
