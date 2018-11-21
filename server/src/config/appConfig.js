@@ -3,9 +3,9 @@ import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 
 const configureApp = (app, express) => {
-  app.use('/', express.static(`${__dirname}/../../dist/static/frontend/`));
+  app.use('/', express.static(`${__dirname}/../../../dist/static/frontend/`));
 
-  app.use('/master', express.static(`${__dirname}/../../dist/static/master/`));
+  app.use('/master', express.static(`${__dirname}/../../../dist/static/master/`));
 
   app.use(bodyParser.urlencoded({ extended: false }));
 
