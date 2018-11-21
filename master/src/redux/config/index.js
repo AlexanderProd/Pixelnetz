@@ -8,6 +8,7 @@ import getBaseUrl from '../../../../shared/util/baseUrl';
 
 import animationControl from '../animationControl';
 import auth from '../auth';
+import connections from '../connections';
 import error from '../error';
 import fileUpload from '../fileUpload';
 import connectStoreToWS from './ws';
@@ -21,6 +22,7 @@ const persistConfig = {
 const reducer = combineReducers({
   animationControl,
   auth,
+  connections,
   error,
   fileUpload,
 });

@@ -4,11 +4,23 @@ const createSocket = ({
   socket,
   id,
   deltaTime,
-}) => ({
-  send: createSender(socket),
-  id: () => id,
-  deltaTime: () => deltaTime,
-  properties: {},
-});
+}) => {
+  const properties = {};
+  const joinTime = Date.now();
+
+  return {
+    send: createSender(socket),
+    id: () => id,
+    deltaTime: () => deltaTime,
+    joinTime: () => joinTime,
+    properties,
+    info: () => ({
+      deltaTime,
+      id,
+      joinTime,
+      properties,
+    }),
+  };
+};
 
 export default createSocket;

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Card, CardGrid } from './components/ui';
 import LoginForm from './components/LoginForm';
 import AnimationControls from './components/AnimationControls';
+import ConnectionCounter from './components/ConnectionCounter';
 import FileUpload from './components/FileUpload';
 import Preview from './components/Preview';
 import TitleBar from './components/TitleBar';
@@ -26,6 +27,9 @@ export const App = ({ auth }) => (
         <CardGrid>
           <Card title="Sequence Control">
             <AnimationControls />
+          </Card>
+          <Card title="Connected Users">
+            <ConnectionCounter />
           </Card>
           <Card title="Upload Image" spanRows={2}>
             <FileUpload />

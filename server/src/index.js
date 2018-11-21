@@ -4,8 +4,8 @@ import express from 'express';
 import localIP from 'my-local-ip';
 import UserDB from './UserDB';
 
-import configureUserDB from './userDBConfig';
-import configureApp from './appConfig';
+import configureUserDB from './config/userDBConfig';
+import configureApp from './config/appConfig';
 import authenticate from './routes/authenticate';
 import start from './routes/start';
 import stop from './routes/stop';
@@ -15,6 +15,7 @@ import wshost from './routes/wshost';
 import createClientPool from './ws/client';
 import createMasterPool from './ws/master';
 import withAuth from './util/authMiddleware';
+import setupLiveData from './config/setupLiveData';
 
 // Check for errors parsing .env file
 envResult.load();
@@ -24,11 +25,12 @@ const PORT = 3000;
 const localHostname = process.env.PRODUCTION === 'true' ? '3.121.177.95' : localIP();
 const app = express();
 const masterPool = createMasterPool();
-const clientPool = createClientPool(masterPool);
+const clientPool = createClientPool();
 const userDB = new UserDB();
 
 configureUserDB(userDB);
 configureApp(app, express);
+setupLiveData({ masterPool, clientPool });
 
 app.post('/authenticate', authenticate(userDB));
 app.get('/start', withAuth, start(clientPool));
