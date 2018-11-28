@@ -20,7 +20,7 @@ const setAnimation = clients => async (req, res) => {
 
   let sequence;
   try {
-    const sequenceJSON = await readFile(`${__dirname}/../sequences/db/${name}.json`);
+    const sequenceJSON = await readFile(`${__dirname}/../../db/${name}.json`);
     sequence = JSON.parse(sequenceJSON);
   } catch (e) {
     res.status(500).json({ error: 'Error opening sequence file' });

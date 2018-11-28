@@ -28,7 +28,7 @@ const upload = () => (req, res) => {
       row => row.map(col => [[col, 1]]),
     ))
     .then((sequenceMatrix) => writeFile(
-      `${__dirname}/../sequences/db/${file.name}.json`,
+      `${__dirname}/../../db/${file.name}.json`,
       JSON.stringify(sequenceMatrix),
     ))
     .then(() => {
