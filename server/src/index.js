@@ -12,6 +12,7 @@ import stop from './routes/stop';
 import setAnimation from './routes/setAnimation';
 import upload from './routes/upload';
 import wshost from './routes/wshost';
+import savedFiles from './routes/savedFiles';
 import createClientPool from './ws/client';
 import createMasterPool from './ws/master';
 import withAuth from './util/authMiddleware';
@@ -38,6 +39,7 @@ app.get('/stop', withAuth, stop(clientPool));
 app.get('/setAnimation', withAuth, setAnimation(clientPool));
 app.post('/upload', withAuth, upload());
 app.get('/wshost', wshost(localHostname));
+app.get('/savedFiles', savedFiles());
 
 app.listen(PORT, () => console.log(
   '\n' +
