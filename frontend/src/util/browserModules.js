@@ -5,6 +5,8 @@ const fs = fullscreen(document.documentElement);
 const noSleep = new NoSleep();
 
 const configureBrowser = () => {
+  noSleep.enable();
+
   const enableButton = document.createElement('input');
   enableButton.type = 'button';
   enableButton.value = 'Please put your brightness to max and click here!';
@@ -16,12 +18,10 @@ const configureBrowser = () => {
 
   enableButton.onclick = () => {
     fs.request();
-    noSleep.enable();
   };
 
   disableButton.onclick = () => {
     fs.release();
-    noSleep.disable();
   };
 
   fs.on('attain', () => {
