@@ -34,8 +34,10 @@ const configureBrowser = () => {
     enableButton.style.display = 'inline';
   });
 
-  document.body.appendChild(enableButton);
-  document.body.appendChild(disableButton);
+  if (!(/iPhone|iPad|iPod/i.test(navigator.userAgent))) {
+    document.body.appendChild(enableButton);
+    document.body.appendChild(disableButton);
+  }
 };
 
 export default configureBrowser;
