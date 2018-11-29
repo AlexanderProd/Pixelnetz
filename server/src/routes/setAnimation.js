@@ -44,6 +44,16 @@ const setAnimation = clients => async (req, res) => {
     if (y > dimensions.maxY) dimensions.maxY = y;
   });
 
+  if (
+    dimensions.minX === Infinity ||
+    dimensions.minY === Infinity ||
+    dimensions.maxX === -Infinity ||
+    dimensions.maxY === -Infinity
+  ) {
+    res.status(503).json({ error: 'No valid pixel coordinates' });
+    return;
+  }
+
   const offsetX = dimensions.minX;
   const offsetY = dimensions.minY;
   const gridWidth = dimensions.maxX - offsetX + 1;
