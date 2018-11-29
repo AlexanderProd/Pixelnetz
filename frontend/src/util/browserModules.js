@@ -1,11 +1,10 @@
-import NoSleep from 'nosleep.js';
 import fullscreen from 'fullscreen';
+import enableNoSleep from './enableNoSleep';
 
 const fs = fullscreen(document.documentElement);
-const noSleep = new NoSleep();
 
-const configureBrowser = () => {
-  noSleep.enable();
+const configureBrowser = async () => {
+  await enableNoSleep();
 
   const enableButton = document.createElement('input');
   enableButton.type = 'button';
