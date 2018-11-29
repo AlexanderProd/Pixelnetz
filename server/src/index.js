@@ -4,6 +4,7 @@ import express from 'express';
 import localIP from 'my-local-ip';
 import UserDB from './UserDB';
 
+import { isProd } from './util/env';
 import configureUserDB from './config/userDBConfig';
 import configureApp from './config/appConfig';
 import authenticate from './routes/authenticate';
@@ -23,7 +24,7 @@ envResult.load();
 if (envResult.error) throw envResult.error;
 
 const PORT = 3000;
-const localHostname = process.env.PRODUCTION === 'true' ? '3.121.177.95' : localIP();
+const localHostname = isProd() ? '3.121.177.95' : localIP();
 const app = express();
 const masterPool = createMasterPool();
 const clientPool = createClientPool();

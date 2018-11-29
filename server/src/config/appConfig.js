@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
+import { isDev } from '../util/env';
 
 const configureApp = (app, express) => {
   app.use('/', express.static(`${__dirname}/../../../dist/static/frontend/`));
@@ -15,7 +16,7 @@ const configureApp = (app, express) => {
 
   app.use(fileUpload());
 
-  if (process.env.PRODUCTION !== 'true') {
+  if (isDev()) {
     app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*');
       res.header(
