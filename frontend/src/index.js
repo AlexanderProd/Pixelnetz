@@ -3,6 +3,7 @@ import baseUrl from '../../shared/util/baseUrl';
 import createSender from '../../shared/util/createSender';
 import createActionRunner from './actions';
 import configureBrowser from '../src/util/browserModules';
+import './index.sass';
 
 const main = async () => {
   configureBrowser();
