@@ -1,5 +1,6 @@
 import fullscreen from 'fullscreen';
 import enableNoSleep from './enableNoSleep';
+import './dialog.sass';
 
 const fs = fullscreen(document.documentElement);
 
