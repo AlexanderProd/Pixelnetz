@@ -1,19 +1,23 @@
 import fullscreen from 'fullscreen';
+import screenBrightness from './screenBrightness';
 import enableNoSleep from './enableNoSleep';
 import './dialog.sass';
 
 const fs = fullscreen(document.documentElement);
 
-const configureBrowser = async () => {
+const runConfigDialogs = async () => {
+  await screenBrightness();
   await enableNoSleep();
 
-  const enableButton = document.createElement('input');
-  enableButton.type = 'button';
-  enableButton.value = 'Please put your brightness to max and click here!';
+  const enableButton = document.createElement('button');
+  enableButton.classList.add('basic');
+  enableButton.classList.add('fullscreen-button');
+  enableButton.innerHTML = 'Vollbild';
 
-  const disableButton = document.createElement('input');
-  disableButton.type = 'button';
-  disableButton.value = 'exit';
+  const disableButton = document.createElement('button');
+  disableButton.classList.add('basic');
+  disableButton.classList.add('fullscreen-button');
+  disableButton.innerHTML = 'Vollbild verlassen';
   disableButton.style.display = 'none';
 
   enableButton.onclick = () => {
@@ -40,5 +44,5 @@ const configureBrowser = async () => {
   }
 };
 
-export default configureBrowser;
+export default runConfigDialogs;
 

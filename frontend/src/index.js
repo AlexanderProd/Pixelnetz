@@ -2,11 +2,11 @@ import '../polyfills';
 import baseUrl from '../../shared/util/baseUrl';
 import createSender from '../../shared/util/createSender';
 import createActionRunner from './actions';
-import configureBrowser from '../src/util/browserModules';
+import runConfigDialogs from './dialogs';
 import './index.sass';
 
 const main = async () => {
-  configureBrowser();
+  runConfigDialogs();
 
   const { hostname } = await (fetch(`${baseUrl()}/wshost`).then(r => r.json()));
   const socket = new WebSocket(`ws://${hostname}:3001`);
