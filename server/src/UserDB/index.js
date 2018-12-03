@@ -1,10 +1,8 @@
 import bcrypt from 'bcrypt';
 
 class UserDB {
-  constructor() {
-    this.db = new Map();
-    this.SALT_ROUNDS = 10;
-  }
+  db = new Map();
+  SALT_ROUNDS = 10;
 
   hash(data, saltRounds) {
     return new Promise((res, rej) => bcrypt.hash(
