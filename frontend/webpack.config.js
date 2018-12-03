@@ -14,10 +14,7 @@ module.exports = (env, argv) => {
 
   return {
     mode: isProd ? 'production' : 'development',
-    entry: [
-      '@babel/polyfill',
-      './src/index.js',
-    ],
+    entry: ['./src/index.js'],
     devtool: isDev ? 'source-map' : false,
     devServer: {
       contentBase: './dist',
