@@ -40,7 +40,7 @@ const store = createStore(
     thunk,
     // HOSTNAME kommt aus webpack.DefinePlugin und wird im Buildprozess gesetzt
     // eslint-disable-next-line no-undef
-    fetchMiddleware({ baseUrl: `http://${HOSTNAME}:3000` }),
+    fetchMiddleware({ baseUrl: `http://${HOSTNAME}${HOSTNAME === '3.121.177.95' ? '' : ':3000'}` }),
   )),
 );
 

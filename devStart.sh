@@ -1,5 +1,8 @@
 #!/bin/bash
 
+rm -rf ./dist
+rm -rf ./server/dist
+
 cd frontend
 yarn build:local
 
