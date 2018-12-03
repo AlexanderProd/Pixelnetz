@@ -41,8 +41,8 @@ app.get('/stop', withAuth, stop(clientPool));
 app.get('/setAnimation', withAuth, setAnimation(clientPool));
 app.post('/upload', withAuth, upload());
 app.get('/wshost', wshost(localHostname));
-app.get('/savedFiles', savedFiles());
-app.get('/deleteSequence', deleteSequence());
+app.get('/savedFiles', withAuth, savedFiles());
+app.get('/deleteSequence', withAuth, deleteSequence());
 
 app.listen(PORT, () => console.log(
   '\n' +
