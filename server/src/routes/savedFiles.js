@@ -1,9 +1,12 @@
-import { readdirSync } from 'fs';
+import readSavedFiles from '../util/readSavedFiles';
 
 const savedFiles = () => (req, res) => {
-  const fileList = readdirSync(`${__dirname}/../../db/`)
-    .map(fileName => fileName.split('.json')[0]);
-  res.status(200).json(fileList);
+  try {
+    const fileList = readSavedFiles();
+    res.status(200).json(fileList);
+  } catch (e) {
+    res.status(500).json({ error: 'Error reading saved files' });
+  }
 };
 
 export default savedFiles;

@@ -2,7 +2,9 @@ import {
   CURRENT_CONNECTIONS,
   CONNECTION_ADDED,
   CONNECTION_REMOVED,
+  ALL_SEQUENCES,
 } from '../../../shared/util/socketActionTypes';
+import readSavedFiles from '../util/readSavedFiles';
 
 const setupLiveData = ({ masterPool, clientPool }) => {
   masterPool.onConnection((masterSocket) => {
@@ -13,6 +15,11 @@ const setupLiveData = ({ masterPool, clientPool }) => {
     masterSocket.send({
       actionType: CURRENT_CONNECTIONS,
       connections: currentConnections,
+    });
+
+    masterSocket.send({
+      actionType: ALL_SEQUENCES,
+      data: readSavedFiles(),
     });
   });
 

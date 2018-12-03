@@ -39,10 +39,10 @@ app.post('/authenticate', authenticate(userDB));
 app.get('/start', withAuth, start(clientPool));
 app.get('/stop', withAuth, stop(clientPool));
 app.get('/setAnimation', withAuth, setAnimation(clientPool));
-app.post('/upload', withAuth, upload());
+app.post('/upload', withAuth, upload(masterPool));
 app.get('/wshost', wshost(localHostname));
 app.get('/savedFiles', withAuth, savedFiles());
-app.get('/deleteSequence', withAuth, deleteSequence());
+app.get('/deleteSequence', withAuth, deleteSequence(masterPool));
 
 app.listen(PORT, () => console.log(
   '\n' +

@@ -1,4 +1,4 @@
-import { FILE_UPLOAD_SUCCESS } from './fileUpload';
+import { ALL_SEQUENCES } from '../../../shared/util/socketActionTypes';
 
 // ActionsTypes
 export const SEQUENCE_SET_REQUEST = 'sequences/SEQUENCE_SET_REQUEST';
@@ -7,9 +7,6 @@ export const SEQUENCE_SET_FAILURE = 'sequences/SEQUENCE_SET_FAILURE';
 export const SEQUENCE_DELETE_REQUEST = 'sequences/SEQUENCE_DELETE_REQUEST';
 export const SEQUENCE_DELETE_SUCCESS = 'sequences/SEQUENCE_DELETE_SUCCESS';
 export const SEQUENCE_DELETE_FAILURE = 'sequences/SEQUENCE_DELETE_FAILURE';
-export const SEQUENCE_GET_REQUEST = 'sequences/SEQUENCE_GET_REQUEST';
-export const SEQUENCE_GET_SUCCESS = 'sequences/SEQUENCE_GET_SUCCESS';
-export const SEQUENCE_GET_FAILURE = 'sequences/SEQUENCE_GET_FAILURE';
 
 // Reducer
 export default (state = [], action) => {
@@ -18,10 +15,8 @@ export default (state = [], action) => {
       return state.filter(name => name !== action.name);
     case SEQUENCE_DELETE_FAILURE:
       return [...state, action.name];
-    case SEQUENCE_GET_SUCCESS:
-      return action.response;
-    case FILE_UPLOAD_SUCCESS:
-      return [...state, action.name];
+    case ALL_SEQUENCES:
+      return action.message.data;
     default:
       return state;
   }
@@ -41,10 +36,4 @@ export const deleteSequence = name => ({
   expect: 'text',
   name,
   types: [SEQUENCE_DELETE_REQUEST, SEQUENCE_DELETE_SUCCESS, SEQUENCE_DELETE_FAILURE],
-});
-
-export const getSequences = () => ({
-  fetch: 'GET',
-  endpoint: '/savedFiles',
-  types: [SEQUENCE_GET_REQUEST, SEQUENCE_GET_SUCCESS, SEQUENCE_GET_FAILURE],
 });

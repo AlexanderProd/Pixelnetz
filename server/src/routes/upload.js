@@ -2,6 +2,7 @@ import fs from 'fs';
 import { promisify } from 'util';
 import rasterize from '../sequences/rasterize';
 import { isSafeFileName } from '../util/userInput';
+import sendAllSequences from '../util/sendAllSequences';
 
 const allowedTypes = [
   'image/png',
@@ -10,7 +11,7 @@ const allowedTypes = [
 
 const writeFile = promisify(fs.writeFile);
 
-const upload = () => (req, res) => {
+const upload = (masterPool) => (req, res) => {
   const { file } = req.files;
 
   if (!isSafeFileName(file.name)) {
@@ -34,6 +35,7 @@ const upload = () => (req, res) => {
     .then(() => {
       console.log('file written successfully');
       res.sendStatus(200);
+      sendAllSequences(masterPool);
     })
     .catch((err) => {
       console.log(err);
