@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Card, CardGrid } from './components/ui';
 import LoginForm from './components/LoginForm';
 import AnimationControls from './components/AnimationControls';
+import SequenceSelector from './components/SequenceSelector';
 import ConnectionCounter from './components/ConnectionCounter';
 import FileUpload from './components/FileUpload';
 import Preview from './components/Preview';
@@ -13,13 +14,15 @@ import './App.sass';
 
 const propTypes = {
   auth: PropTypes.shape(authType),
+  sequences: PropTypes.arrayOf(PropTypes.string),
 };
 
 const defaultProps = {
   auth: null,
+  sequences: ['npm', 'test'],
 };
 
-export const App = ({ auth }) => (
+export const App = ({ auth, sequences }) => (
   <div className="App">
     <TitleBar />
     {auth
@@ -27,6 +30,9 @@ export const App = ({ auth }) => (
         <CardGrid>
           <Card title="Sequence Control">
             <AnimationControls />
+          </Card>
+          <Card title="Sequences">
+            <SequenceSelector sequenceNames={sequences} />
           </Card>
           <Card title="Connected Users">
             <ConnectionCounter />
