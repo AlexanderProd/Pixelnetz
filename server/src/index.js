@@ -14,6 +14,7 @@ import setAnimation from './routes/setAnimation';
 import upload from './routes/upload';
 import wshost from './routes/wshost';
 import savedFiles from './routes/savedFiles';
+import deleteSequence from './routes/deleteSequence';
 import createClientPool from './ws/client';
 import createMasterPool from './ws/master';
 import withAuth from './util/authMiddleware';
@@ -23,7 +24,7 @@ import setupLiveData from './config/setupLiveData';
 envResult.load();
 if (envResult.error) throw envResult.error;
 
-const PORT = 3000;
+const PORT = isProd() ? 8080 : 3000;
 const localHostname = isProd() ? '3.121.177.95' : localIP();
 const app = express();
 const masterPool = createMasterPool();
@@ -41,6 +42,7 @@ app.get('/setAnimation', withAuth, setAnimation(clientPool));
 app.post('/upload', withAuth, upload());
 app.get('/wshost', wshost(localHostname));
 app.get('/savedFiles', savedFiles());
+app.get('/deleteSequence', deleteSequence());
 
 app.listen(PORT, () => console.log(
   '\n' +

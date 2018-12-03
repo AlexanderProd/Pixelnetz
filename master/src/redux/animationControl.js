@@ -57,9 +57,9 @@ export const stopAnimation = () => ({
   types: [ANIMATION_STOP_REQUEST, ANIMATION_STOP_SUCCESS, ANIMATION_STOP_FAILURE],
 });
 
-export const setAnimation = () => ({
+export const setAnimation = sequenceName => ({
   fetch: 'GET',
-  endpoint: `/setAnimation?name=${'npm'}`,
+  endpoint: `/setAnimation?name=${sequenceName}`,
   expect: 'text',
   types: [ANIMATION_SET_REQUEST, ANIMATION_SET_SUCCESS, ANIMATION_SET_FAILURE],
 });
