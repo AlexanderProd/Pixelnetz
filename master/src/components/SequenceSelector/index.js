@@ -1,68 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setAnimation as set } from '../../redux/animationControl';
+import { setSequence, getSequences, deleteSequence } from '../../redux/sequences';
+import Sequence from './Sequence';
 import './SequenceSelector.sass';
-import { Button } from '../ui';
 
-const sequencePropTypes = {
-  name: PropTypes.string,
-  setAnimation: PropTypes.func.isRequired,
+const propTypes = {
+  setSequence: PropTypes.func.isRequired,
+  getSequences: PropTypes.func.isRequired,
+  deleteSequence: PropTypes.func.isRequired,
+  sequences: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-const sequenceDefaultProps = {
-  name: '',
-};
-
-const sequenceSelectorPropTypes = {
-  sequenceNames: PropTypes.arrayOf(PropTypes.string),
-};
-
-const sequenceSelectorDefaultProps = {
-  sequenceNames: null,
-};
-
-const Sequence = ({ name, setAnimation }) => (
-  <div className="Sequence">
-    <Button primary className="animation-set-button" onClick={() => setAnimation(name)}>
-      Set
-    </Button>
-    <Button secondary className="animation-set-button">
-      Delete
-    </Button>
-    <p>
-      {name}
-    </p>
-  </div>
-);
-
-const SequenceSelector = ({ sequenceNames }) => {
-  // const [sequenceNames, setSequenceNames] = useState(null);
-
-  /* useEffect(() => {
-    fetch('/savedFiles')
-      .then(response => response.json())
-      .then(data => setSequenceNames(data));
-  }, []); */
-
-  const table = Array.isArray(sequenceNames) && sequenceNames.map(name => Sequence({ name }));
+const SequenceSelector = ({
+  sequences,
+  setSequence, // eslint-disable-line no-shadow
+  getSequences, // eslint-disable-line no-shadow
+  deleteSequence, // eslint-disable-line no-shadow
+}) => {
+  useEffect(() => getSequences(), []);
 
   return (
     <div className="SequenceSelector">
-      {table}
+      {sequences.sort().map(name => (
+        <Sequence
+          key={name}
+          name={name}
+          onSet={setSequence}
+          onDelete={deleteSequence}
+        />
+      ))}
     </div>
   );
 };
 
-Sequence.propTypes = sequencePropTypes;
-Sequence.defaultProps = sequenceDefaultProps;
+SequenceSelector.propTypes = propTypes;
 
-SequenceSelector.propTypes = sequenceSelectorPropTypes;
-SequenceSelector.defaultProps = sequenceSelectorDefaultProps;
+const mapStateToProps = ({ sequences }) => ({
+  sequences,
+});
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  setAnimation: set,
+  setSequence,
+  getSequences,
+  deleteSequence,
 }, dispatch);
 
-export default connect(null, mapDispatchToProps)(Sequence);
+export default connect(mapStateToProps, mapDispatchToProps)(SequenceSelector);

@@ -14,15 +14,13 @@ import './App.sass';
 
 const propTypes = {
   auth: PropTypes.shape(authType),
-  sequences: PropTypes.arrayOf(PropTypes.string),
 };
 
 const defaultProps = {
   auth: null,
-  sequences: ['npm', 'test'],
 };
 
-export const App = ({ auth, sequences }) => (
+export const App = ({ auth }) => (
   <div className="App">
     <TitleBar />
     {auth
@@ -31,8 +29,8 @@ export const App = ({ auth, sequences }) => (
           <Card title="Sequence Control">
             <AnimationControls />
           </Card>
-          <Card title="Sequences">
-            <SequenceSelector sequenceNames={sequences} />
+          <Card title="Sequences" spanRows={2}>
+            <SequenceSelector />
           </Card>
           <Card title="Connected Users">
             <ConnectionCounter />

@@ -48,7 +48,11 @@ const FileUpload = ({ upload, fileUpload }) => {
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append('file', file, sequenceName);
-    upload(formData, file.type);
+    upload({
+      data: formData,
+      mimeType: file.type,
+      name: sequenceName,
+    }).then(handleCancel);
   };
 
   const handleChange = (e) => {

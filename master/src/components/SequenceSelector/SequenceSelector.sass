@@ -1,13 +1,18 @@
 @import '../../styles/vars'
 
 .SequenceSelector
-	border-top: 1px solid $light-text-color;
 	.Sequence 
 		padding-top: 2px
 		padding-bottom: 2px
-		border-bottom: 1px solid $light-text-color;
-		p
-			padding-left: 10px;
-		Button
-			margin: 10px
-			float: right;
+		padding: 0.4rem 0
+		border-top: $border-width solid $light-text-color
+		display: flex
+		flex-direction: row
+		justify-content: space-between
+		align-items: center
+
+		&:first-child
+      border-top: none
+
+		.sequence-label
+			padding-left: 10px

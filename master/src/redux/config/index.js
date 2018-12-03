@@ -5,13 +5,14 @@ import storage from 'redux-persist/lib/storage/session';
 import thunk from 'redux-thunk';
 import fetchMiddleware, { setStore } from '../middleware/fetch';
 import getBaseUrl from '../../../../shared/util/baseUrl';
+import connectStoreToWS from './ws';
 
 import animationControl from '../animationControl';
 import auth from '../auth';
 import connections from '../connections';
 import error from '../error';
 import fileUpload from '../fileUpload';
-import connectStoreToWS from './ws';
+import sequences from '../sequences';
 
 const persistConfig = {
   key: 'root',
@@ -25,6 +26,7 @@ const reducer = combineReducers({
   connections,
   error,
   fileUpload,
+  sequences,
 });
 
 const persistedReducer = persistReducer(

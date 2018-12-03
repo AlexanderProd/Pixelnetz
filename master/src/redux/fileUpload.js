@@ -32,11 +32,12 @@ export default (state = initialState, action) => {
 };
 
 // ActionCreators
-export const upload = (file, mimeType) => ({
+export const upload = ({ data, mimeType, name }) => ({
   fetch: 'POST-MULTIPART',
   endpoint: '/upload',
   expect: 'text',
-  data: file,
+  data,
   mimeType,
+  name,
   types: [FILE_UPLOAD_REQUEST, FILE_UPLOAD_SUCCESS, FILE_UPLOAD_FAILURE],
 });
