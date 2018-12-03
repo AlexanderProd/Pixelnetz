@@ -11,6 +11,20 @@ const safePostCssParser = require('postcss-safe-parser');
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
   const isProd = argv.mode === 'production';
+  const localBuild = process.env.LOCAL_BUILD;
+  let hostname;
+  switch (localBuild) {
+    case 'prod':
+      hostname = '3.121.177.95';
+      break;
+    case 'build':
+      hostname = localIP();
+      break;
+    case 'dev-server':
+    default:
+      hostname = 'localhost';
+      break;
+  }
 
   return {
     mode: isProd ? 'production' : 'development',
@@ -50,6 +64,9 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: isDev ? '[name].css' : '[name].[hash].css',
         chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
+      }),
+      new webpack.DefinePlugin({
+        HOSTNAME: JSON.stringify(hostname),
       }),
       ...(isDev ? [new webpack.HotModuleReplacementPlugin()] : []),
       new BundleAnalyzerPlugin({

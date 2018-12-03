@@ -7,10 +7,25 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
+const localIP = require('my-local-ip');
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
   const isProd = argv.mode === 'production';
+  const localBuild = process.env.LOCAL_BUILD;
+  let hostname;
+  switch (localBuild) {
+    case 'prod':
+      hostname = '3.121.177.95';
+      break;
+    case 'build':
+      hostname = localIP();
+      break;
+    case 'dev-server':
+    default:
+      hostname = 'localhost';
+      break;
+  }
 
   return {
     mode: isProd ? 'production' : 'development',
@@ -43,6 +58,9 @@ module.exports = (env, argv) => {
       new CleanWebpackPlugin(['dist']),
       new HtmlWebpackPlugin({
         template: 'public/index.html',
+      }),
+      new webpack.DefinePlugin({
+        HOSTNAME: JSON.stringify(hostname),
       }),
       new MiniCssExtractPlugin({
         filename: isDev ? '[name].css' : '[name].[hash].css',

@@ -34,25 +34,25 @@ const persistedReducer = persistReducer(
   reducer,
 );
 
-const baseUrl = getBaseUrl();
-
 const store = createStore(
   persistedReducer,
   composeWithDevTools(applyMiddleware(
     thunk,
-    fetchMiddleware({ baseUrl }),
+    // HOSTNAME kommt aus webpack.DefinePlugin und wird im Buildprozess gesetzt
+    // eslint-disable-next-line no-undef
+    fetchMiddleware({ baseUrl: `http://${HOSTNAME}:3000` }),
   )),
 );
 
 setStore(store);
 
-fetch(`${baseUrl}/wshost`)
-  .then(r => r.json())
-  .then(({ hostname }) => connectStoreToWS({
-    store,
-    hostname,
-    port: 3002,
-  }));
+connectStoreToWS({
+  store,
+  // HOSTNAME kommt aus webpack.DefinePlugin und wird im Buildprozess gesetzt
+  // eslint-disable-next-line no-undef
+  hostname: HOSTNAME,
+  port: 3002,
+});
 
 export const persistor = persistStore(store);
 

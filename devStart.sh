@@ -1,10 +1,10 @@
 #!/bin/bash
 
 cd frontend
-yarn build
+yarn build:local
 
 cd ../master
-yarn build
+yarn build:local
 
 cd ../server
 yarn start:dev
