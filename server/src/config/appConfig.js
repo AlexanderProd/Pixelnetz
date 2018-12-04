@@ -1,6 +1,5 @@
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import { isDev } from '../util/env';
 
@@ -14,8 +13,6 @@ const configureApp = (app, express) => {
   app.use(bodyParser.urlencoded({ extended: false }));
 
   app.use(bodyParser.json());
-
-  app.use(cookieParser());
 
   app.use(fileUpload());
 

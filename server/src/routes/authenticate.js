@@ -14,7 +14,6 @@ const authenticate = userDB => (req, res) => {
           { expiresIn: '1h' },
         );
         res
-          .cookie('token', token, { httpOnly: true })
           .status(200)
           .json({ user: username, token, expiresIn: '1h' });
       } else {
