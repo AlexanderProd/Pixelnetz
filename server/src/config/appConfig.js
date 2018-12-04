@@ -1,9 +1,12 @@
+import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import { isDev } from '../util/env';
 
 const configureApp = (app, express) => {
+  app.use(helmet());
+
   app.use('/', express.static(`${__dirname}/../../../dist/static/frontend/`));
 
   app.use('/master', express.static(`${__dirname}/../../../dist/static/master/`));
