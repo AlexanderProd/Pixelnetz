@@ -26,12 +26,13 @@ const createPool = ({ server, path }) => {
   const messageHandlers = [];
   const closeHandlers = [];
 
-  wsServer.on('connection', (socket) => {
+  wsServer.on('connection', (socket, req) => {
     const id = keyGen.generate();
+    const ip = req.connection.remoteAddress;
     socket.isOpen = true;
 
     syncTime(socket).then((deltaTime) => {
-      const syncedSocket = createSocket({ socket, id, deltaTime });
+      const syncedSocket = createSocket({ socket, id, ip, deltaTime });
       pool.set(id, syncedSocket);
       connectionHandlers.forEach(handler => handler(syncedSocket));
     });
