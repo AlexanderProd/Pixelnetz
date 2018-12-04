@@ -1,8 +1,8 @@
 import { POSITION } from '../../../shared/util/socketActionTypes';
 import createPool from './pool';
 
-const createClientPool = () => {
-  const clientPool = createPool({ port: 3001 });
+const createClientPool = (server) => {
+  const clientPool = createPool({ server, path: '/' });
 
   clientPool.onConnection((socket) => {
     socket.send({ actionType: POSITION });

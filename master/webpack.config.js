@@ -14,16 +14,20 @@ module.exports = (env, argv) => {
   const isProd = argv.mode === 'production';
   const localBuild = process.env.LOCAL_BUILD;
   let hostname;
+  let port;
   switch (localBuild) {
     case 'prod':
       hostname = '3.121.177.95';
+      port = '';
       break;
     case 'build':
       hostname = localIP();
+      port = '3000';
       break;
     case 'dev-server':
     default:
       hostname = 'localhost';
+      port = '3000';
       break;
   }
 
@@ -65,6 +69,7 @@ module.exports = (env, argv) => {
       }),
       new webpack.DefinePlugin({
         HOSTNAME: JSON.stringify(hostname),
+        PORT: JSON.stringify(port),
       }),
       ...(isDev ? [new webpack.HotModuleReplacementPlugin()] : []),
       new BundleAnalyzerPlugin({

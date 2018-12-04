@@ -1,4 +1,5 @@
 import envResult from 'dotenv';
+import http from 'http';
 import express from 'express';
 import localIP from 'my-local-ip';
 import UserDB from './UserDB';
@@ -23,11 +24,12 @@ import setupLiveData from './config/setupLiveData';
 envResult.load();
 if (envResult.error) throw envResult.error;
 
+const app = express();
+const server = http.createServer({}, app);
 const PORT = isProd() ? 3080 : 3000;
 const localHostname = isProd() ? '3.121.177.95' : localIP();
-const app = express();
-const masterPool = createMasterPool();
-const clientPool = createClientPool();
+const masterPool = createMasterPool(server);
+const clientPool = createClientPool(server);
 const userDB = new UserDB();
 
 configureUserDB(userDB);
@@ -43,7 +45,7 @@ app.get('/wshost', wshost(localHostname));
 app.get('/savedFiles', withAuth, savedFiles());
 app.get('/deleteSequence', withAuth, deleteSequence(masterPool));
 
-app.listen(PORT, () => console.log(
+server.listen(PORT, () => console.log(
   '\n' +
   `Client Seite auf http://${localHostname}:${PORT} aufrufen.\n` +
   `Steuerung der Animation unter http://${localHostname}:${PORT}/master.\n`,

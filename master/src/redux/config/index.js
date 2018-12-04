@@ -4,7 +4,6 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage/session';
 import thunk from 'redux-thunk';
 import fetchMiddleware, { setStore } from '../middleware/fetch';
-import getBaseUrl from '../../../../shared/util/baseUrl';
 import connectStoreToWS from './ws';
 
 import animationControl from '../animationControl';
@@ -38,21 +37,18 @@ const store = createStore(
   persistedReducer,
   composeWithDevTools(applyMiddleware(
     thunk,
-    // HOSTNAME kommt aus webpack.DefinePlugin und wird im Buildprozess gesetzt
-    // eslint-disable-next-line no-undef
-    fetchMiddleware({ baseUrl: `http://${HOSTNAME}${HOSTNAME === '3.121.177.95' ? '' : ':3000'}` }),
+    fetchMiddleware({
+      // HOSTNAME & PORT kommen aus webpack.DefinePlugin
+      // und wird im Buildprozess gesetzt
+      // eslint-disable-next-line no-undef
+      baseUrl: `http://${HOSTNAME}${PORT ? ':' : ''}${PORT}`,
+    }),
   )),
 );
 
 setStore(store);
 
-connectStoreToWS({
-  store,
-  // HOSTNAME kommt aus webpack.DefinePlugin und wird im Buildprozess gesetzt
-  // eslint-disable-next-line no-undef
-  hostname: HOSTNAME,
-  port: 3002,
-});
+connectStoreToWS(store);
 
 export const persistor = persistStore(store);
 

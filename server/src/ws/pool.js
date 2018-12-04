@@ -1,13 +1,26 @@
+import url from 'url';
 import WebSocket from 'ws';
 import createkeyGenerator from '../util/keyGen';
 import syncTime from './syncTime';
 import createSocket from './socket';
 import onMessage from './onMessage';
 
-const createPool = ({ port }) => {
-  const wsServer = new WebSocket.Server({ port });
+const createPool = ({ server, path }) => {
+  const wsServer = new WebSocket.Server({ noServer: true });
   const keyGen = createkeyGenerator();
   const pool = new Map();
+
+  server.on('upgrade', (req, socket, head) => {
+    const { pathname } = url.parse(req.url);
+    if (pathname === path) {
+      wsServer.handleUpgrade(
+        req,
+        socket,
+        head,
+        ws => wsServer.emit('connection', ws, req),
+      );
+    }
+  });
 
   const connectionHandlers = [];
   const messageHandlers = [];

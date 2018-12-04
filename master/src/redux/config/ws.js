@@ -1,12 +1,13 @@
 import { INIT_TIME_SYNC } from '../../../../shared/util/socketActionTypes';
 import createSender from '../../../../shared/util/createSender';
 
-const connectStoreToWS = ({
-  hostname,
-  port,
-  store,
-}) => {
-  const socket = new WebSocket(`ws://${hostname}:${port}`);
+const connectStoreToWS = (store) => {
+  const socket = new WebSocket(
+    // HOSTNAME & PORT kommen aus webpack.DefinePlugin
+    // und wird im Buildprozess gesetzt
+    // eslint-disable-next-line no-undef
+    `ws://${HOSTNAME}${PORT ? ':' : ''}${PORT}/master`,
+  );
   const send = createSender(socket);
 
   socket.onmessage = ({ data }) => {

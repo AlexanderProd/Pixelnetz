@@ -1,7 +1,7 @@
 import createPool from './pool';
 
-const createMasterPool = () => {
-  const masterPool = createPool({ port: 3002 });
+const createMasterPool = (server) => {
+  const masterPool = createPool({ server, path: '/master' });
 
   masterPool.onConnection((socket) => {
     console.log(`MASTER: ${socket.id()} deltaTime=${socket.deltaTime()}`);
