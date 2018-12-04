@@ -23,7 +23,7 @@ import setupLiveData from './config/setupLiveData';
 envResult.load();
 if (envResult.error) throw envResult.error;
 
-const PORT = isProd() ? 8080 : 3000;
+const PORT = isProd() ? 3080 : 3000;
 const localHostname = isProd() ? '3.121.177.95' : localIP();
 const app = express();
 const masterPool = createMasterPool();
