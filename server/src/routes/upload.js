@@ -25,10 +25,7 @@ const upload = (masterPool) => (req, res) => {
   }
 
   rasterize(file.data, file.mimetype)
-    .then(pixelMatrix => pixelMatrix.map(
-      row => row.map(col => [[col, 1]]),
-    ))
-    .then((sequenceMatrix) => writeFile(
+    .then(sequenceMatrix => writeFile(
       `${__dirname}/../../db/${file.name}.json`,
       JSON.stringify(sequenceMatrix),
     ))
