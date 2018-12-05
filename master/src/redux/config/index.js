@@ -6,9 +6,11 @@ import thunk from 'redux-thunk';
 import fetchMiddleware, { setStore } from '../middleware/fetch';
 import connectStoreToWS from './ws';
 
+// Reducer
 import animationControl from '../animationControl';
 import auth from '../auth';
 import connections from '../connections';
+import counter from '../counter';
 import error from '../error';
 import fileUpload from '../fileUpload';
 import sequences from '../sequences';
@@ -23,6 +25,7 @@ const reducer = combineReducers({
   animationControl,
   auth,
   connections,
+  counter,
   error,
   fileUpload,
   sequences,

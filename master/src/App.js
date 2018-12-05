@@ -11,6 +11,7 @@ import Preview from './components/Preview';
 import TitleBar from './components/TitleBar';
 import { authType } from './types';
 import './App.sass';
+import Counter from './components/Counter';
 
 const propTypes = {
   auth: PropTypes.shape(authType),
@@ -40,6 +41,9 @@ export const App = ({ auth }) => (
           </Card>
           <Card title="Realtime Preview" spanRows={2}>
             <Preview />
+          </Card>
+          <Card title="Counter" spanRows={2}>
+            <Counter />
           </Card>
         </CardGrid>
       )
