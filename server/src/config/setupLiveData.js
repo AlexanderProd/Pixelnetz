@@ -23,7 +23,7 @@ const setupLiveData = ({ masterPool, clientPool }) => {
     });
   });
 
-  clientPool.onConnection(clientSocket => masterPool.sendAll({
+  clientPool.onPosition(clientSocket => masterPool.sendAll({
     actionType: CONNECTION_ADDED,
     connection: clientSocket.info(),
   }));
