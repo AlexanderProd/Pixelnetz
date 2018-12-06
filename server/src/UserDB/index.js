@@ -2,26 +2,10 @@ import bcrypt from 'bcrypt';
 
 class UserDB {
   db = new Map();
-  SALT_ROUNDS = 10;
-
-  hash(data, saltRounds) {
-    return new Promise((res, rej) => bcrypt.hash(
-      data,
-      saltRounds,
-      (err, hashedData) => (err ? rej(err) : res(hashedData)),
-    ));
-  }
-
-  compare(data, storedData) {
-    return new Promise((res, rej) => bcrypt.compare(
-      data,
-      storedData,
-      (err, isMatch) => (err ? rej(err) : res(isMatch)),
-    ));
-  }
+  saltRounds = Number(process.env.SALT_ROUNDS);
 
   userPasswordMatches({ username, password }) {
-    return this.compare(
+    return bcrypt.compare(
       password,
       this.db.get(username).password,
     );
@@ -36,7 +20,7 @@ class UserDB {
       if (this.db.has(username)) {
         rej('Username already exists.');
       } else {
-        this.hash(password, this.SALT_ROUNDS)
+        bcrypt.hash(password, this.saltRounds)
           .then(hashedPassword => {
             this.db.set(username, {
               username,
