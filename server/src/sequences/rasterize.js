@@ -7,7 +7,7 @@ const getPixels = promisify(getPixelsCB);
 const toHex = num => num.toString(16).padStart(2, '0');
 
 const rasterize = (buffer, mimetype) => sharp(buffer)
-  .resize(100)
+  .resize(480)
   .toBuffer()
   .then(b => getPixels(b, mimetype))
   .then(({ data, shape }) => {
