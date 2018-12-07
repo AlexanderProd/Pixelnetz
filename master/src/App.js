@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm';
 import AnimationControls from './components/AnimationControls';
 import SequenceSelector from './components/SequenceSelector';
 import ConnectionCounter from './components/ConnectionCounter';
+import ConnectionsList from './components/ConnectionsList';
 import FileUpload from './components/FileUpload';
 import Preview from './components/Preview';
 import TitleBar from './components/TitleBar';
@@ -34,6 +35,9 @@ export const App = ({ auth }) => (
           </Card>
           <Card title="Connected Users">
             <ConnectionCounter />
+          </Card>
+          <Card title="Connections List" spanCols={2} spanRows={2}>
+            <ConnectionsList />
           </Card>
           <Card title="Upload Image" spanRows={2}>
             <FileUpload />
