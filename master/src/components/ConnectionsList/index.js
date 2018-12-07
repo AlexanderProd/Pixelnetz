@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import timeago from 'epoch-timeago';
 import { connectionType } from '../../types';
 import './ConnectionsList.sass';
 
@@ -39,7 +38,7 @@ const ConnectionsList = ({ connections }) => {
           </td>
           <td key={connection.joinTime}>
             <time dateTime={new Date(connection.joinTime).toISOString()}>
-              {timeago(connection.joinTime)}
+              {new Date(connection.joinTime).toLocaleTimeString()}
             </time>
           </td>
         </tr>
