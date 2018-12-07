@@ -28,7 +28,7 @@ const ConnectionsList = ({ connections }) => {
       {connections.map(connection => (
         <tr key={connection.id}>
           <td key={connection.ip}>
-            {connection.ip}
+            {(connection.ip).replace('::ffff:', '')}
           </td>
           <td key={connection.id}>
             {connection.id}
