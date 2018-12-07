@@ -33,10 +33,10 @@ const ConnectionsList = ({ connections }) => {
           <td key={connection.id}>
             {connection.id}
           </td>
-          <td key={Math.random() * 1000}>
+          <td key={connection.properties.x}>
             {connection.properties ? connection.properties.x : '' }
           </td>
-          <td key={Math.random() * 1000}>
+          <td key={connection.properties.y}>
             {connection.properties ? connection.properties.y : ''}
           </td>
           <td key={connection.deltaTime}>
