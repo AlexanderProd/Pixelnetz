@@ -25,7 +25,7 @@ const ConnectionsList = ({ connections }) => {
 
   const tableBody = (
     <tbody>
-      {connections.map(connection => (
+      {connections.reverse().map(connection => (
         <tr key={connection.id}>
           <td key={connection.ip}>
             {(connection.ip).replace('::ffff:', '')}
