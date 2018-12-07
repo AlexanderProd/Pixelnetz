@@ -36,14 +36,14 @@ export const App = ({ auth }) => (
           <Card title="Connected Users">
             <ConnectionCounter />
           </Card>
-          <Card title="Connections List" spanCols={2} spanRows={2}>
-            <ConnectionsList />
-          </Card>
           <Card title="Upload Image" spanRows={2}>
             <FileUpload />
           </Card>
           <Card title="Realtime Preview" spanRows={2}>
             <Preview />
+          </Card>
+          <Card title="Connections List" spanCols={2} spanRows={2}>
+            <ConnectionsList />
           </Card>
         </CardGrid>
       )

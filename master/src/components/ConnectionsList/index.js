@@ -11,7 +11,7 @@ const propTypes = {
 };
 
 const ConnectionsList = ({ connections }) => {
-  const dataColumns = ['Ip Adress', 'ID', 'Delta Time', 'Join Time'];
+  const dataColumns = ['IP Adress', 'ID', 'Longitude', 'Latitude', 'Delta Time', 'Join Time'];
 
   const tableHeaders = (
     <thead>
@@ -32,6 +32,12 @@ const ConnectionsList = ({ connections }) => {
           </td>
           <td key={connection.id}>
             {connection.id}
+          </td>
+          <td key={Math.random() * 1000}>
+            null
+          </td>
+          <td key={Math.random() * 1000}>
+            null
           </td>
           <td key={connection.deltaTime}>
             {(connection.deltaTime / 1000).toFixed(2)}
