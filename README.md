@@ -7,8 +7,8 @@
 SSH Verbindung mit Server herstellen:
 *Anleitung nur für macOS/Linux gülitg.*
 - Terminal in dem Ordner mit der pixelnetz-new.pem Datei öffnen oder pixelnetz-new.pem in den .ssh Ordner kopieren.
-- `chmod 400 pixelnetz.pem`
-- `ssh -i pixelnetz.pem pixelnetz@ec2-3-121-177-95.eu-central-1.compute.amazonaws.com`
+- `chmod 400 pixelnetz-new.pem`
+- `ssh -i pixelnetz-new.pem pixelnetz@ec2-3-121-177-95.eu-central-1.compute.amazonaws.com`
 - IP: 3.121.177.95
 
 # Kommunikation über WebSockets
