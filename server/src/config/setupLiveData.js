@@ -1,7 +1,7 @@
 import {
   CURRENT_CONNECTIONS,
-  CONNECTION_ADDED,
-  CONNECTION_REMOVED,
+  NEW_CONNECTIONS,
+  CLOSED_CONNECTIONS,
   ALL_SEQUENCES,
 } from '../../../shared/util/socketActionTypes';
 import readSavedFiles from '../util/readSavedFiles';
@@ -23,15 +23,32 @@ const setupLiveData = ({ masterPool, clientPool }) => {
     });
   });
 
-  clientPool.onPosition(clientSocket => masterPool.sendAll({
-    actionType: CONNECTION_ADDED,
-    connection: clientSocket.info(),
-  }));
+  let newConnections = [];
+  let closedConnections = [];
 
-  clientPool.onClose(id => masterPool.sendAll({
-    actionType: CONNECTION_REMOVED,
-    id,
-  }));
+  clientPool.onPosition(
+    clientSocket => newConnections.push(clientSocket.info()),
+  );
+
+  clientPool.onClose(id => closedConnections.push(id));
+
+  setInterval(() => {
+    if (newConnections.length > 0) {
+      masterPool.sendAll({
+        actionType: NEW_CONNECTIONS,
+        connections: newConnections,
+      });
+      newConnections = [];
+    }
+
+    if (closedConnections.length > 0) {
+      masterPool.sendAll({
+        actionType: CLOSED_CONNECTIONS,
+        ids: closedConnections,
+      });
+      closedConnections = [];
+    }
+  }, 1000);
 };
 
 export default setupLiveData;

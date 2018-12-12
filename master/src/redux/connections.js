@@ -1,7 +1,7 @@
 // ActionTypes
 import {
-  CONNECTION_ADDED,
-  CONNECTION_REMOVED,
+  NEW_CONNECTIONS,
+  CLOSED_CONNECTIONS,
   CURRENT_CONNECTIONS,
 } from '../../../shared/util/socketActionTypes';
 
@@ -10,13 +10,15 @@ export default (state = [], action) => {
   switch (action.type) {
     case CURRENT_CONNECTIONS:
       return action.message.connections;
-    case CONNECTION_ADDED:
+    case NEW_CONNECTIONS:
       return [
         ...state,
-        action.message.connection,
+        ...action.message.connections,
       ];
-    case CONNECTION_REMOVED:
-      return state.filter(({ id }) => id !== action.message.id);
+    case CLOSED_CONNECTIONS: {
+      const closedConnections = new Set(action.message.ids);
+      return state.filter(({ id }) => !closedConnections.has(id));
+    }
     default:
       return state;
   }
