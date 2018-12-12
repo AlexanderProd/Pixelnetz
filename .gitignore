@@ -6,3 +6,5 @@
 /**/dist
 /server/src/sequences/db/*.json
 .DS_Store
+/**/*.pem
+/**/*.key
