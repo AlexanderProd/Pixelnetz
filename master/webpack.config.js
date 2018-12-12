@@ -18,7 +18,7 @@ module.exports = (env, argv) => {
   switch (localBuild) {
     case 'prod':
       hostname = '3.121.177.95';
-      port = '';
+      port = '3080';
       break;
     case 'build':
       hostname = localIP();
