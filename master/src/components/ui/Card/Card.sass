@@ -1,11 +1,66 @@
 @import '../../../styles/vars'
 
+$card-padding: 1.5rem
+
+\:root
+  --card-col-width-1: span 1
+  --card-col-width-2: span 2
+  --card-col-width-3: span 3
+  --card-col-width-4: span 4
+
+@media (max-width: 1700px)
+  \:root
+    --card-col-width-1: span 1
+    --card-col-width-2: span 2
+    --card-col-width-3: span 3
+    --card-col-width-4: span 3
+
+@media (max-width: 1200px)
+  \:root
+    --card-col-width-1: span 1
+    --card-col-width-2: span 2
+    --card-col-width-3: span 2
+    --card-col-width-4: span 2
+
+@media (max-width: 720px)
+  \:root
+    --card-col-width-1: span 1
+    --card-col-width-2: span 1
+    --card-col-width-3: span 1
+    --card-col-width-4: span 1
+
 .Card
   display: inline-block
-  padding: 1.5rem
+  padding: $card-padding
   background: #fff
   box-shadow: $medium-grey 0px 1px 3px -1px
+  max-width: calc(100vw - (2 * var(--card-margin)))
+  box-sizing: border-box
 
   .card-title
     color: $light-text-color
     margin-bottom: 1rem 
+
+  &.card-cols-1
+    grid-column: var(--card-col-width-1)
+  
+  &.card-cols-2
+    grid-column: var(--card-col-width-2)
+
+  &.card-cols-3
+    grid-column: var(--card-col-width-3)
+
+  &.card-cols-4
+    grid-column: var(--card-col-width-4)
+
+  &.card-rows-1
+    grid-row: span 1
+  
+  &.card-rows-2
+    grid-row: span 2
+
+  &.card-rows-3
+    grid-row: span 3
+
+  &.card-rows-4
+    grid-row: span 4

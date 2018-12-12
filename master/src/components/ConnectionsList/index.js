@@ -27,22 +27,22 @@ const ConnectionsList = ({ connections }) => {
     <tbody>
       {connections.reverse().map(connection => (
         <tr key={connection.id}>
-          <td key={connection.ip}>
+          <td>
             {(connection.ip).replace('::ffff:', '')}
           </td>
-          <td key={connection.id}>
+          <td>
             {connection.id}
           </td>
-          <td key={Math.random() * 1000}>
+          <td>
             {connection.properties ? connection.properties.x : '' }
           </td>
-          <td key={Math.random() * 1000}>
+          <td>
             {connection.properties ? connection.properties.y : ''}
           </td>
-          <td key={connection.deltaTime}>
+          <td>
             {(connection.deltaTime / 1000).toFixed(2)}
           </td>
-          <td key={connection.joinTime}>
+          <td>
             <time dateTime={new Date(connection.joinTime).toISOString()}>
               {new Date(connection.joinTime).toLocaleTimeString()}
             </time>
@@ -54,7 +54,7 @@ const ConnectionsList = ({ connections }) => {
 
   return (
     <div className="ConnectionsList">
-      <table width="100%">
+      <table>
         {tableHeaders}
         {tableBody}
       </table>
