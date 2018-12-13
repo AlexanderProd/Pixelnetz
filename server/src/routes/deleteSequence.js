@@ -11,7 +11,7 @@ const savedFiles = (masterPool) => (req, res) => {
     if (existsSync(path)) {
       deleteFile(path)
         .then(() => {
-          res.sendStatus(200);
+          res.sendStatus(204);
           sendAllSequences(masterPool);
         })
         .catch(() => res.status(500).json({ error: 'Error deleting sequence' }));
