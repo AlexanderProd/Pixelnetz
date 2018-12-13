@@ -5,6 +5,8 @@ const webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const localIP = require('my-local-ip');
@@ -66,6 +68,14 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: isDev ? '[name].css' : '[name].[hash].css',
         chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
+      }),
+      new BrotliPlugin({
+        test: /\.(js|css|html|svg)$/,
+        threshold: 10240,
+      }),
+      new CompressionPlugin({
+        test: /\.(js|css|html|svg)$/,
+        threshold: 10240,
       }),
       new webpack.DefinePlugin({
         HOSTNAME: JSON.stringify(hostname),
