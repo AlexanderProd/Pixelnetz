@@ -19,6 +19,7 @@
     "express": "^4.16.3",
     "express-fileupload": "^1.0.0",
     "get-pixels": "^3.3.2",
+    "gif-frames": "^1.0.1",
     "helmet": "^3.15.0",
     "jsonwebtoken": "^8.3.0",
     "my-local-ip": "^1.0.0",
