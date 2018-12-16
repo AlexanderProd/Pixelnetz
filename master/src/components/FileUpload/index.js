@@ -71,7 +71,7 @@ const FileUpload = ({ upload, fileUpload }) => {
         className="upload-dropzone"
         activeClassName="upload-dropzone-active"
         onDrop={handleDrop}
-        accept=".png,.jpg,.jpeg"
+        accept=".png,.jpg,.jpeg,.gif"
         multiple={false}
       >
         <Icon name="cloud-upload" />

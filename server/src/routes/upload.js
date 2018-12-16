@@ -7,6 +7,7 @@ import sendAllSequences from '../util/sendAllSequences';
 const allowedTypes = [
   'image/png',
   'image/jpeg',
+  'image/gif',
 ];
 
 const writeFile = promisify(fs.writeFile);
@@ -25,9 +26,9 @@ const upload = (masterPool) => (req, res) => {
   }
 
   rasterize(file.data, file.mimetype)
-    .then(sequenceMatrix => writeFile(
+    .then(({ matrix, stepLength }) => writeFile(
       `${__dirname}/../../db/${file.name}.json`,
-      JSON.stringify(sequenceMatrix),
+      JSON.stringify(matrix),
     ))
     .then(() => {
       console.log('file written successfully');
