@@ -1,13 +1,13 @@
-import { createSequenceStack } from '../sequences';
+import { createFrameStack } from '../sequences';
 
 const DELTA_PADDING = 1000;
 
 const createAnimationController = (frameHandler) => {
-  let _animation = null;
+  let animation = null;
   let animationRunning = false;
 
-  const setAnimation = (animation) => {
-    _animation = animation;
+  const setAnimation = (_animation) => {
+    animation = _animation;
   };
 
   const start = (startTime) => {
@@ -17,9 +17,9 @@ const createAnimationController = (frameHandler) => {
       stepLength,
       repeat,
       sequence,
-    } = _animation;
+    } = animation;
 
-    let sequenceStack = createSequenceStack(sequence, stepLength);
+    let sequenceStack = createFrameStack(sequence, stepLength);
 
     let currentStep = sequenceStack.pop();
 
@@ -41,7 +41,7 @@ const createAnimationController = (frameHandler) => {
         }
       } else if (repeat) {
         startTime = Date.now();
-        sequenceStack = createSequenceStack(sequence, stepLength);
+        sequenceStack = createFrameStack(sequence, stepLength);
         currentStep = sequenceStack.pop();
       } else {
         continueSequence = false;

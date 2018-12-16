@@ -1,9 +1,16 @@
-export const expandSequence = (sequence, stepLength) => sequence
-  .reduce((acc, [col, duration]) => [
-    ...acc,
-    ...([...new Array(duration)]
-      .map((x, i) => [col, stepLength * (acc.length + i), false])),
-  ], []);
+export const expandFrames = (frames, stepLength) => {
+  const expanded = [];
+  let frameTime = 0;
+  for (const [color, duration] of frames) {
+    frameTime += stepLength * duration;
+    expanded.push([
+      color,
+      frameTime,
+      false,
+    ]);
+  }
+  return expanded;
+};
 
-export const createSequenceStack = (sequence, stepLength) =>
-  expandSequence([...sequence], stepLength).reverse();
+export const createFrameStack = (sequence, stepLength) =>
+  expandFrames([...sequence], stepLength).reverse();
