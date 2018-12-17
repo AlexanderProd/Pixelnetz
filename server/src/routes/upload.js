@@ -1,16 +1,13 @@
-import fs from 'fs';
-import { promisify } from 'util';
-import rasterize from '../sequences/rasterize';
 import { isSafeFileName } from '../util/userInput';
 import sendAllSequences from '../util/sendAllSequences';
+import Sequence from '../sequences/Sequence';
+import mimetypes from '../sequences/mimetypes';
 
 const allowedTypes = [
-  'image/png',
-  'image/jpeg',
-  'image/gif',
+  mimetypes.PNG,
+  mimetypes.JPEG,
+  mimetypes.GIF,
 ];
-
-const writeFile = promisify(fs.writeFile);
 
 const upload = (masterPool) => (req, res) => {
   const { file } = req.files;
@@ -25,11 +22,8 @@ const upload = (masterPool) => (req, res) => {
     return;
   }
 
-  rasterize(file.data, file.mimetype)
-    .then(({ matrix, stepLength }) => writeFile(
-      `${__dirname}/../../db/${file.name}.json`,
-      JSON.stringify(matrix),
-    ))
+  Sequence.fromFile({ file, repeat: false })
+    .then(sequence => sequence.save())
     .then(() => {
       console.log('file written successfully');
       res.sendStatus(200);

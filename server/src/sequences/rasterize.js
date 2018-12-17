@@ -42,16 +42,23 @@ const rasterize = async (buffer, mimetype) => {
     throw e;
   }
 
-  const minDelay = frames.reduce((acc, { delay }) => (
+  const frameDelays = frames.map(({ delay }) => delay);
+
+  const minDelay = frameDelays.reduce((acc, delay) => (
     delay < acc ? delay : acc
   ), Infinity);
 
-  await Promise.all(frames.map(async ({
+  const duration = frameDelays.reduce((acc, delay) => acc + delay, 0);
+
+  let imageWidth = null;
+  let imageHeight = null;
+
+  await Promise.all(frames.map(({
     frame,
     delay,
   }) => {
     const delayFactor = roundFloat(delay / minDelay, 2);
-    return await sharp(frame)
+    return sharp(frame)
       .resize(RESOLUTION)
       .toBuffer()
       .then(b => getPixels(b, getSharpMimetype(mimetype)))
@@ -60,6 +67,11 @@ const rasterize = async (buffer, mimetype) => {
 
         if (matrix.length === 0) {
           matrix = prepareMatrix(width, height);
+        }
+
+        if (!imageWidth || !imageHeight) {
+          imageWidth = width;
+          imageHeight = height;
         }
 
         for (let pos = 0; pos < data.length; pos += channels) {
@@ -80,6 +92,10 @@ const rasterize = async (buffer, mimetype) => {
   return {
     matrix,
     stepLength: minDelay,
+    width: imageWidth,
+    height: imageHeight,
+    length: frames.length,
+    duration,
   };
 };
 

@@ -1,9 +1,9 @@
 import { ALL_SEQUENCES } from '../../../shared/util/socketActionTypes';
-import readSavedFiles from '../util/readSavedFiles';
+import Sequence from '../sequences/Sequence';
 
 const sendAllSequences = pool => pool.sendAll({
   actionType: ALL_SEQUENCES,
-  data: readSavedFiles(),
+  data: Sequence.listAvailable(),
 });
 
 export default sendAllSequences;

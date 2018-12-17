@@ -4,7 +4,7 @@ import {
   CLOSED_CONNECTIONS,
   ALL_SEQUENCES,
 } from '../../../shared/util/socketActionTypes';
-import readSavedFiles from '../util/readSavedFiles';
+import Sequence from '../sequences/Sequence';
 
 const setupLiveData = ({ masterPool, clientPool }) => {
   masterPool.onConnection((masterSocket) => {
@@ -19,7 +19,7 @@ const setupLiveData = ({ masterPool, clientPool }) => {
 
     masterSocket.send({
       actionType: ALL_SEQUENCES,
-      data: readSavedFiles(),
+      data: Sequence.listAvailable(),
     });
   });
 

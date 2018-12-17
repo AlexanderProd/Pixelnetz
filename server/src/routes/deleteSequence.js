@@ -1,22 +1,21 @@
-import { unlink, existsSync } from 'fs';
-import { promisify } from 'util';
 import sendAllSequences from '../util/sendAllSequences';
-
-const deleteFile = promisify(unlink);
+import Sequence from '../sequences/Sequence';
 
 const savedFiles = (masterPool) => (req, res) => {
-  const path = `${__dirname}/../../db/${req.query.name}.json`;
+  const { name } = req.query;
 
   try {
-    if (existsSync(path)) {
-      deleteFile(path)
+    if (Sequence.listAvailable().indexOf(name) !== -1) {
+      Sequence.delete(name)
         .then(() => {
           res.sendStatus(204);
           sendAllSequences(masterPool);
         })
-        .catch(() => res.status(500).json({ error: 'Error deleting sequence' }));
+        .catch(() => res.status(500).json({
+          error: 'Error deleting sequence',
+        }));
     } else {
-      res.status(500).json({ error: 'Error deleting sequence' });
+      res.status(500).json({ error: 'Sequence does not exist' });
     }
   } catch (err) {
     res.status(500).json({ error: 'Error deleting sequence' });
