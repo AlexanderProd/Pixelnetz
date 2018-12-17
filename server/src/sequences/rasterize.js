@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import getFrames from './getFrames';
 import mimetypes from './mimetypes';
 
-const RESOLUTION = 480;
+const RESOLUTION = 100;
 
 const getPixels = promisify(getPixelsCB);
 

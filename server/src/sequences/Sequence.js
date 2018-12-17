@@ -100,7 +100,7 @@ class Sequence {
     return this._duration;
   }
 
-  get matrix() {
+  loadMatrix() {
     return new Promise((res, rej) => {
       if (this._matrix) {
         res(this._matrix);
@@ -114,6 +114,52 @@ class Sequence {
           .catch(rej);
       }
     });
+  }
+
+  getFrames(x, y) {
+    const {
+      scaleRatio,
+      xOffset,
+      yOffset,
+      gxOffset,
+      gyOffset,
+    } = this._scaling;
+
+    const mx =
+      Math.floor((x - gxOffset) * scaleRatio) + // Scale pixel coordinate
+      xOffset + // Center grid to matrix
+      Math.floor(scaleRatio / 2); // Center pixel
+    const my =
+      Math.floor((y - gyOffset) * scaleRatio) +
+      yOffset +
+      Math.floor(scaleRatio / 2);
+
+    return this._matrix[my][mx];
+  }
+
+  scale(dimensions) {
+    const width = this._width;
+    const height = this._height;
+    const gxOffset = dimensions.minX;
+    const gyOffset = dimensions.minY;
+    const gWidth = dimensions.maxX - gxOffset + 1;
+    const gHeight = dimensions.maxY - gyOffset + 1;
+    const wScale = width / gWidth;
+    const hScale = height / gHeight;
+    const aspect = width / height;
+    const gAspect = gWidth / gHeight;
+
+    const scaleRatio = aspect < gAspect ? wScale : hScale;
+    const xOffset = Math.floor((width - (gWidth * scaleRatio)) / 2);
+    const yOffset = Math.floor((height - (gHeight * scaleRatio)) / 2);
+
+    this._scaling = {
+      scaleRatio,
+      xOffset,
+      yOffset,
+      gxOffset,
+      gyOffset,
+    };
   }
 
   save() {

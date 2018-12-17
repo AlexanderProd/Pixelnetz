@@ -19,7 +19,7 @@ const setSequence = clients => async (req, res) => {
   try {
     sequence = await Sequence.load(name);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.status(500).json({ error: 'Error opening sequence file' });
     return;
   }
@@ -28,28 +28,20 @@ const setSequence = clients => async (req, res) => {
   try {
     dimensions = clients.dimensions();
   } catch (e) {
+    console.error(e);
     res.status(503).json({ error: 'No valid pixel coordinates' });
     return;
   }
 
-  const offsetX = dimensions.minX;
-  const offsetY = dimensions.minY;
-  const gridWidth = dimensions.maxX - offsetX + 1;
-  const gridHeight = dimensions.maxY - offsetY + 1;
-  const scaleWidth = Math.ceil(sequence.width / gridWidth);
-  const scaleHeight = Math.ceil(sequence.height / gridHeight);
+  sequence.scale(dimensions);
 
-  let matrix;
   try {
-    matrix = await sequence.matrix;
+    await sequence.loadMatrix();
   } catch (e) {
+    console.error(e);
     res.status(500).json({ error: 'Error loading sequence matrix' });
     return;
   }
-
-  const scaledSequence = matrix
-    .filter((elem, i) => i % scaleHeight === 0)
-    .map(row => row.filter((elem, i) => i % scaleWidth === 0));
 
   clients.forEach((socket) => {
     console.log('set: ', socket.id());
@@ -57,7 +49,7 @@ const setSequence = clients => async (req, res) => {
     socket.send({
       actionType: SET_ANIMATION,
       animation: {
-        sequence: scaledSequence[y - offsetY][x - offsetX],
+        sequence: sequence.getFrames(x, y),
         ...sequence.info,
       },
     });
