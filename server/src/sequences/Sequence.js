@@ -134,7 +134,7 @@ class Sequence {
       yOffset +
       Math.floor(scaleRatio / 2);
 
-    return this._matrix[my][mx];
+    return this._matrix[(this._width * my) + mx];
   }
 
   scale(dimensions) {

@@ -9,7 +9,7 @@ const RESOLUTION = 100;
 const getPixels = promisify(getPixelsCB);
 
 const toHex = num => num.toString(16).padStart(2, '0');
-const roundFloat = (num, precision) => Number((num).toFixed(precision));
+const roundFloat = (num, precision) => Number(num.toFixed(precision));
 
 const getSharpMimetype = (type) => {
   switch (type) {
@@ -20,13 +20,11 @@ const getSharpMimetype = (type) => {
   }
 };
 
-const prepareMatrix = (width, height) => {
-  const matrix = [];
-  for (let y = 0; y < height; y++) {
-    matrix.push([]);
-    for (let x = 0; x < width; x++) {
-      matrix[y].push([]);
-    }
+const prepareMatrix = (width, height, frameLength) => {
+  const matrix = new Array(width * height);
+
+  for (let i = 0; i < width * height; i++) {
+    matrix[i] = new Array(frameLength);
   }
 
   return matrix;
@@ -34,13 +32,8 @@ const prepareMatrix = (width, height) => {
 
 const rasterize = async (buffer, mimetype) => {
   let matrix = [];
-  let frames;
 
-  try {
-    frames = await getFrames(buffer, mimetype);
-  } catch (e) {
-    throw e;
-  }
+  const frames = await getFrames(buffer, mimetype);
 
   const frameDelays = frames.map(({ delay }) => delay);
 
@@ -56,6 +49,7 @@ const rasterize = async (buffer, mimetype) => {
   await Promise.all(frames.map(({
     frame,
     delay,
+    index,
   }) => {
     const delayFactor = roundFloat(delay / minDelay, 2);
     return sharp(frame)
@@ -66,7 +60,7 @@ const rasterize = async (buffer, mimetype) => {
         const [width, height, channels] = shape;
 
         if (matrix.length === 0) {
-          matrix = prepareMatrix(width, height);
+          matrix = prepareMatrix(width, height, frames.length);
         }
 
         if (!imageWidth || !imageHeight) {
@@ -84,7 +78,7 @@ const rasterize = async (buffer, mimetype) => {
           const x = i % width;
           const y = Math.floor(i / width);
 
-          matrix[y][x].push([col, delayFactor]);
+          matrix[(width * y) + x][index] = [col, delayFactor];
         }
       });
   }));
