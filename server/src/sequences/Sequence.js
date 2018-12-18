@@ -137,6 +137,37 @@ class Sequence {
     return this._matrix[(this._width * my) + mx];
   }
 
+  getMasterMatrix() {
+    const {
+      gxOffset,
+      gyOffset,
+      gWidth,
+      gHeight,
+    } = this._scaling;
+
+    const matrix = new Array(this._length);
+
+    for (let i = 0; i < this._length; i++) {
+      const frame = new Array(gWidth * gHeight);
+      matrix[i] = [frame, null];
+    }
+
+    for (let y = 0; y < gHeight; y++) {
+      for (let x = 0; x < gWidth; x++) {
+        const gx = (x + gxOffset);
+        const gy = (y + gyOffset);
+        const frameStack = this.getFrames(gx, gy);
+        frameStack.forEach(([pixelCol, stepLength], i) => {
+          const level = matrix[i];
+          level[0][(gWidth * y) + x] = pixelCol;
+          level[1] = stepLength;
+        });
+      }
+    }
+
+    return matrix;
+  }
+
   scale(dimensions) {
     const width = this._width;
     const height = this._height;
@@ -159,6 +190,8 @@ class Sequence {
       yOffset,
       gxOffset,
       gyOffset,
+      gWidth,
+      gHeight,
     };
   }
 

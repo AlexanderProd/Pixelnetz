@@ -43,6 +43,16 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
     return;
   }
 
+  const masterMatrix = sequence.getMasterMatrix();
+
+  masterPool.sendAll({
+    actionType: SET_ANIMATION,
+    sequence: {
+      frames: masterMatrix,
+      ...sequence.info,
+    },
+  });
+
   clientPool.forEach((socket) => {
     console.log('set: ', socket.id());
     const { x, y } = socket.properties;
