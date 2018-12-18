@@ -1,5 +1,5 @@
 // ActionTypes
-import { DIMENSIONS } from '../../../shared/util/socketActionTypes';
+import { DIMENSIONS } from '../../../shared/dist/util/socketActionTypes';
 
 const initialState = {
   xOffset: 0,

@@ -1,4 +1,4 @@
-import { STOP_ANIMATION } from '../../../shared/util/socketActionTypes';
+import { STOP_ANIMATION } from '../../../shared/dist/util/socketActionTypes';
 
 const stop = clients => (req, res) => {
   clients.forEach((socket) => {

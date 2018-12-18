@@ -1,5 +1,5 @@
-import { INIT_TIME_SYNC } from '../../../../shared/util/socketActionTypes';
-import createSender from '../../../../shared/util/createSender';
+import { INIT_TIME_SYNC } from '../../../../shared/dist/util/socketActionTypes';
+import createSender from '../../../../shared/dist/util/createSender';
 
 const connectStoreToWS = (store) => {
   const socket = new WebSocket(

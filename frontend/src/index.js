@@ -1,5 +1,5 @@
 import '../polyfills';
-import createSender from '../../shared/util/createSender';
+import createSender from '../../shared/dist/util/createSender';
 import runConfigDialogs from './dialogs';
 import './index.sass';
 

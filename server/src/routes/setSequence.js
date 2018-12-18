@@ -1,4 +1,4 @@
-import { SET_SEQUENCE, DIMENSIONS } from '../../../shared/util/socketActionTypes';
+import { SET_SEQUENCE, DIMENSIONS } from '../../../shared/dist/util/socketActionTypes';
 import { isSafeFileName } from '../util/userInput';
 import Sequence from '../sequences/Sequence';
 

@@ -1,4 +1,4 @@
-import { ALL_SEQUENCES } from '../../../shared/util/socketActionTypes';
+import { ALL_SEQUENCES } from '../../../shared/dist/util/socketActionTypes';
 
 // ActionsTypes
 export const SEQUENCE_SET_REQUEST = 'sequences/SEQUENCE_SET_REQUEST';

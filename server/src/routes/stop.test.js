@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { mockRes } from 'sinon-express-mock';
 import { spy } from 'sinon';
 import stop from './stop';
-import { STOP_ANIMATION } from '../../../shared/util/socketActionTypes';
+import { STOP_ANIMATION } from '../../../shared/dist/util/socketActionTypes';
 
 const wait = (ms = 0) => new Promise(res => setTimeout(res, ms));
 

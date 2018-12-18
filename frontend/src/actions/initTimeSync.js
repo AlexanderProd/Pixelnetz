@@ -1,4 +1,4 @@
-import { INIT_TIME_SYNC } from '../../../shared/util/socketActionTypes';
+import { INIT_TIME_SYNC } from '../../../shared/dist/util/socketActionTypes';
 
 const initTimeSync = send => (message) => {
   send({

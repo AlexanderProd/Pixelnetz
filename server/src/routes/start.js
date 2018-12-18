@@ -1,4 +1,4 @@
-import { START_ANIMATION } from '../../../shared/util/socketActionTypes';
+import { START_ANIMATION } from '../../../shared/dist/util/socketActionTypes';
 
 const start = clients => (req, res) => {
   clients.forEach((socket) => {

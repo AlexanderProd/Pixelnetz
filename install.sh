@@ -1,6 +1,9 @@
 #!/bin/bash
 
-cd frontend
+cd shared
+yarn install
+
+cd ../frontend
 yarn install
 
 cd ../master

@@ -3,7 +3,7 @@ import {
   NEW_CONNECTIONS,
   CLOSED_CONNECTIONS,
   CURRENT_CONNECTIONS,
-} from '../../../shared/util/socketActionTypes';
+} from '../../../shared/dist/util/socketActionTypes';
 
 // Reducer
 export default (state = [], action) => {

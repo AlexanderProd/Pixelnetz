@@ -4,14 +4,14 @@ import {
   START_ANIMATION,
   STOP_ANIMATION,
   POSITION,
-} from '../../../shared/util/socketActionTypes';
+} from '../../../shared/dist/util/socketActionTypes';
 import initTimeSync from './initTimeSync';
 import setSequence from './setSequence';
 import startAnimation from './startAnimation';
 import stopAnimation from './stopAnimation';
 import position from './position';
-import createAnimationController from '../../../shared/animationController';
-import { sosAnimation } from '../../../shared/util/sequence';
+import createAnimationController from '../../../shared/dist/animationController';
+import { sosAnimation } from '../../../shared/dist/util/sequence';
 
 const setColor = col => document.body.style.backgroundColor = col;
 

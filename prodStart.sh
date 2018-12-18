@@ -2,8 +2,12 @@
 
 rm -rf ./dist
 rm -rf ./server/dist
+rm -rf ./shared/dist
 
-cd frontend
+cd shared
+yarn build
+
+cd ../frontend
 yarn build
 
 cd ../master

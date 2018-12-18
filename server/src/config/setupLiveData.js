@@ -3,7 +3,7 @@ import {
   NEW_CONNECTIONS,
   CLOSED_CONNECTIONS,
   ALL_SEQUENCES,
-} from '../../../shared/util/socketActionTypes';
+} from '../../../shared/dist/util/socketActionTypes';
 import Sequence from '../sequences/Sequence';
 
 const setupLiveData = ({ masterPool, clientPool }) => {

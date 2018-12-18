@@ -1,6 +1,6 @@
 import onMessage from './onMessage';
 import createSender from '../util/createSender';
-import { INIT_TIME_SYNC } from '../../../shared/util/socketActionTypes';
+import { INIT_TIME_SYNC } from '../../../shared/dist/util/socketActionTypes';
 
 const MAX_INIT_COUNTER = 16;
 

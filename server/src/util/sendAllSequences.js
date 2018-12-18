@@ -1,4 +1,4 @@
-import { ALL_SEQUENCES } from '../../../shared/util/socketActionTypes';
+import { ALL_SEQUENCES } from '../../../shared/dist/util/socketActionTypes';
 import Sequence from '../sequences/Sequence';
 
 const sendAllSequences = pool => pool.sendAll({

@@ -1,4 +1,4 @@
-import { POSITION } from '../../../shared/util/socketActionTypes';
+import { POSITION } from '../../../shared/dist/util/socketActionTypes';
 import extractPosition from '../util/extractPosition';
 
 const position = send => () => {
