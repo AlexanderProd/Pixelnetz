@@ -15,3 +15,10 @@ export const connectionType = {
   joinTime: number.isRequired,
   properties: shape({}),
 };
+
+export const dimensionsType = {
+  xOffset: number,
+  yOffset: number,
+  width: number,
+  height: number,
+};

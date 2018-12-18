@@ -9,6 +9,7 @@ import connectStoreToWS from './ws';
 import animationControl from '../animationControl';
 import auth from '../auth';
 import connections from '../connections';
+import dimensions from '../dimensions';
 import error from '../error';
 import fileUpload from '../fileUpload';
 import sequences from '../sequences';
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   animationControl,
   auth,
   connections,
+  dimensions,
   error,
   fileUpload,
   sequences,

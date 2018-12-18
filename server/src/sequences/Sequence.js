@@ -140,10 +140,10 @@ class Sequence {
   scale(dimensions) {
     const width = this._width;
     const height = this._height;
-    const gxOffset = dimensions.minX;
-    const gyOffset = dimensions.minY;
-    const gWidth = dimensions.maxX - gxOffset + 1;
-    const gHeight = dimensions.maxY - gyOffset + 1;
+    const gxOffset = dimensions.xOffset;
+    const gyOffset = dimensions.yOffset;
+    const gWidth = dimensions.width;
+    const gHeight = dimensions.height;
     const wScale = width / gWidth;
     const hScale = height / gHeight;
     const aspect = width / height;

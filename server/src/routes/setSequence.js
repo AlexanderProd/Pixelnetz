@@ -1,11 +1,11 @@
-import { SET_ANIMATION } from '../../../shared/util/socketActionTypes';
+import { SET_ANIMATION, DIMENSIONS } from '../../../shared/util/socketActionTypes';
 import { isSafeFileName } from '../util/userInput';
 import Sequence from '../sequences/Sequence';
 
-const setSequence = clients => async (req, res) => {
+const setSequence = (clientPool, masterPool) => async (req, res) => {
   const { name } = req.query;
 
-  if (clients.size < 1) {
+  if (clientPool.size < 1) {
     res.status(503).json({ error: 'No pixel clients connected' });
     return;
   }
@@ -26,7 +26,7 @@ const setSequence = clients => async (req, res) => {
 
   let dimensions;
   try {
-    dimensions = clients.dimensions();
+    dimensions = clientPool.dimensions();
   } catch (e) {
     console.error(e);
     res.status(503).json({ error: 'No valid pixel coordinates' });
@@ -43,7 +43,7 @@ const setSequence = clients => async (req, res) => {
     return;
   }
 
-  clients.forEach((socket) => {
+  clientPool.forEach((socket) => {
     console.log('set: ', socket.id());
     const { x, y } = socket.properties;
     socket.send({
@@ -53,6 +53,11 @@ const setSequence = clients => async (req, res) => {
         ...sequence.info,
       },
     });
+  });
+
+  masterPool.sendAll({
+    actionType: DIMENSIONS,
+    dimensions,
   });
 
   res.sendStatus(200);

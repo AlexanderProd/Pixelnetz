@@ -10,4 +10,5 @@ module.exports = {
   CLOSED_CONNECTIONS: 'connections/CLOSED_CONNECTIONS',
   CURRENT_CONNECTIONS: 'connections/CURRENT_CONNECTIONS',
   ALL_SEQUENCES: 'sequences/ALL_SEQUENCES',
+  DIMENSIONS: 'dimensions/DIMENSIONS',
 };

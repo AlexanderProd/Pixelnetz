@@ -39,7 +39,7 @@ setupLiveData({ masterPool, clientPool });
 app.post('/authenticate', authenticate(userDB));
 app.get('/start', withAuth, start(clientPool));
 app.get('/stop', withAuth, stop(clientPool));
-app.get('/setAnimation', withAuth, setSequence(clientPool));
+app.get('/setAnimation', withAuth, setSequence(clientPool, masterPool));
 app.post('/upload', withAuth, upload(masterPool));
 app.get('/wshost', wshost(localHostname));
 app.get('/savedFiles', withAuth, savedFiles());

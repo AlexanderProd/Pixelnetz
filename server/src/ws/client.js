@@ -48,7 +48,17 @@ const createClientPool = (server) => {
       throw new Error('Invalid pixel coordinates');
     }
 
-    return dimensions;
+    const xOffset = dimensions.minX;
+    const yOffset = dimensions.minY;
+    const width = dimensions.maxX - xOffset + 1;
+    const height = dimensions.maxY - yOffset + 1;
+
+    return {
+      xOffset,
+      yOffset,
+      width,
+      height,
+    };
   };
 
   return clientPool;
