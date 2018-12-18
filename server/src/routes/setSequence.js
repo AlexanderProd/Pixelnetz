@@ -53,8 +53,10 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
   masterPool.sendAll({
     actionType: SET_SEQUENCE,
     sequence: {
-      frames: masterMatrix,
       ...sequence.info,
+      frames: masterMatrix,
+      width: dimensions.width,
+      height: dimensions.height,
     },
   });
 

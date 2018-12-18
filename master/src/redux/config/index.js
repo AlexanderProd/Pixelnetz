@@ -12,6 +12,7 @@ import connections from '../connections';
 import dimensions from '../dimensions';
 import error from '../error';
 import fileUpload from '../fileUpload';
+import masterSequence from '../masterSequence';
 import sequences from '../sequences';
 
 const persistConfig = {
@@ -27,6 +28,7 @@ const reducer = combineReducers({
   dimensions,
   error,
   fileUpload,
+  masterSequence,
   sequences,
 });
 

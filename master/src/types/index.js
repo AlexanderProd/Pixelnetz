@@ -1,7 +1,10 @@
 import {
   string,
   number,
+  bool,
   shape,
+  arrayOf,
+  array,
 } from 'prop-types';
 
 export const authType = {
@@ -17,8 +20,19 @@ export const connectionType = {
 };
 
 export const dimensionsType = {
-  xOffset: number,
-  yOffset: number,
-  width: number,
-  height: number,
+  xOffset: number.isRequired,
+  yOffset: number.isRequired,
+  width: number.isRequired,
+  height: number.isRequired,
+};
+
+export const sequenceType = {
+  name: string.isRequired,
+  repeat: bool.isRequired,
+  stepLength: number.isRequired,
+  duration: number.isRequired,
+  length: number.isRequired,
+  width: number.isRequired,
+  height: number.isRequired,
+  frames: arrayOf(array).isRequired,
 };
