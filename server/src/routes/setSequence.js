@@ -1,4 +1,4 @@
-import { SET_ANIMATION, DIMENSIONS } from '../../../shared/util/socketActionTypes';
+import { SET_SEQUENCE, DIMENSIONS } from '../../../shared/util/socketActionTypes';
 import { isSafeFileName } from '../util/userInput';
 import Sequence from '../sequences/Sequence';
 
@@ -46,7 +46,12 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
   const masterMatrix = sequence.getMasterMatrix();
 
   masterPool.sendAll({
-    actionType: SET_ANIMATION,
+    actionType: DIMENSIONS,
+    dimensions,
+  });
+
+  masterPool.sendAll({
+    actionType: SET_SEQUENCE,
     sequence: {
       frames: masterMatrix,
       ...sequence.info,
@@ -57,17 +62,12 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
     console.log('set: ', socket.id());
     const { x, y } = socket.properties;
     socket.send({
-      actionType: SET_ANIMATION,
-      animation: {
-        sequence: sequence.getFrames(x, y),
+      actionType: SET_SEQUENCE,
+      sequence: {
+        frames: sequence.getFrames(x, y),
         ...sequence.info,
       },
     });
-  });
-
-  masterPool.sendAll({
-    actionType: DIMENSIONS,
-    dimensions,
   });
 
   res.sendStatus(200);

@@ -3,25 +3,25 @@ import { createFrameStack } from '../sequences';
 const DELTA_PADDING = 1000;
 
 const createAnimationController = (frameHandler) => {
-  let animation = null;
-  let animationRunning = false;
+  let sequence = null;
+  let sequenceRunning = false;
 
-  const setAnimation = (_animation) => {
-    animation = _animation;
+  const setSequence = (_sequence) => {
+    sequence = _sequence;
   };
 
   const start = (startTime) => {
-    animationRunning = true;
+    sequenceRunning = true;
 
     const {
       stepLength,
       repeat,
-      sequence,
-    } = animation;
+      frames,
+    } = sequence;
 
-    let sequenceStack = createFrameStack(sequence, stepLength);
+    let frameStack = createFrameStack(frames, stepLength);
 
-    let currentStep = sequenceStack.pop();
+    let currentStep = frameStack.pop();
 
     let continueSequence = true;
 
@@ -29,25 +29,25 @@ const createAnimationController = (frameHandler) => {
       const deltaTime = Date.now() - startTime - DELTA_PADDING;
 
       while (currentStep && currentStep[1] < deltaTime) {
-        currentStep = sequenceStack.pop();
+        currentStep = frameStack.pop();
       }
 
-      if (currentStep && sequenceStack.length >= 0) {
+      if (currentStep && frameStack.length >= 0) {
         const [frame,, executed] = currentStep;
 
         if (!executed) {
           frameHandler(frame);
-          currentStep.executed = false;
+          currentStep[2] = false;
         }
       } else if (repeat) {
         startTime = Date.now();
-        sequenceStack = createFrameStack(sequence, stepLength);
-        currentStep = sequenceStack.pop();
+        frameStack = createFrameStack(frames, stepLength);
+        currentStep = frameStack.pop();
       } else {
         continueSequence = false;
       }
 
-      if (continueSequence && animationRunning) {
+      if (continueSequence && sequenceRunning) {
         requestAnimationFrame(loop);
       }
     };
@@ -60,11 +60,11 @@ const createAnimationController = (frameHandler) => {
   };
 
   const stop = () => {
-    animationRunning = false;
+    sequenceRunning = false;
   };
 
   return {
-    setAnimation,
+    setSequence,
     start,
     stop,
   };

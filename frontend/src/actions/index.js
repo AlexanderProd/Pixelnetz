@@ -1,5 +1,12 @@
+import {
+  INIT_TIME_SYNC,
+  SET_SEQUENCE,
+  START_ANIMATION,
+  STOP_ANIMATION,
+  POSITION,
+} from '../../../shared/util/socketActionTypes';
 import initTimeSync from './initTimeSync';
-import setAnimation from './setAnimation';
+import setSequence from './setSequence';
 import startAnimation from './startAnimation';
 import stopAnimation from './stopAnimation';
 import position from './position';
@@ -10,14 +17,14 @@ const setColor = col => document.body.style.backgroundColor = col;
 
 const createActionRunner = (send) => {
   const animationController = createAnimationController(setColor);
-  animationController.setAnimation(sosAnimation);
+  animationController.setSequence(sosAnimation);
 
   const actions = {
-    INIT_TIME_SYNC: initTimeSync(send),
-    SET_ANIMATION: setAnimation(animationController),
-    START_ANIMATION: startAnimation(animationController),
-    STOP_ANIMATION: stopAnimation(animationController),
-    POSITION: position(send),
+    [INIT_TIME_SYNC]: initTimeSync(send),
+    [SET_SEQUENCE]: setSequence(animationController),
+    [START_ANIMATION]: startAnimation(animationController),
+    [STOP_ANIMATION]: stopAnimation(animationController),
+    [POSITION]: position(send),
   };
 
   return (message) => {
