@@ -41,5 +41,5 @@ export const sos = [
 export const sosAnimation = {
   stepLength: 200,
   repeat: false,
-  sequence: sos,
+  frames: sos,
 };
