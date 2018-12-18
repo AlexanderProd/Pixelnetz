@@ -10,7 +10,7 @@ import setSequence from './setSequence';
 import startAnimation from './startAnimation';
 import stopAnimation from './stopAnimation';
 import position from './position';
-import createAnimationController from './animationController';
+import createAnimationController from '../../../shared/animationController';
 import { sosAnimation } from '../../../shared/util/sequence';
 
 const setColor = col => document.body.style.backgroundColor = col;
