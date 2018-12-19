@@ -35,7 +35,10 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
           role="button"
           tabIndex={0}
         >
-          <Icon name="arrow-drop-down" />
+          <Icon
+            className={expanded ? 'sequence-expanded' : ''}
+            name="arrow-drop-down"
+          />
           <span className="sequence-label">{sequence.name}</span>
         </div>
         <div className="sequence-group">
