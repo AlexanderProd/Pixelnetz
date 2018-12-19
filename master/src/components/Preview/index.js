@@ -98,10 +98,15 @@ const Preview = ({ connections, dimensions, masterSequence }) => {
     animationController.start(Date.now());
   };
 
+  const handleStop = () => {
+    animationController.stop();
+  };
+
   return (
     <>
       <div id="Preview" className="Preview" />
-      <Button onClick={handleStart}>Start</Button>
+      <Button primary onClick={handleStart}>Start</Button>
+      <Button secondary onClick={handleStop}>Stop</Button>
     </>
   );
 };
