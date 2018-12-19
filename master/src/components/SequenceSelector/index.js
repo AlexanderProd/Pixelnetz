@@ -4,12 +4,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setSequence, deleteSequence } from '../../redux/sequences';
 import Sequence from './Sequence';
+import { sequenceType } from '../../types';
 import './SequenceSelector.sass';
 
 const propTypes = {
   setSequence: PropTypes.func.isRequired,
   deleteSequence: PropTypes.func.isRequired,
-  sequences: PropTypes.arrayOf(PropTypes.string).isRequired,
+  sequences: PropTypes.arrayOf(
+    PropTypes.shape(sequenceType),
+  ).isRequired,
 };
 
 const SequenceSelector = ({
@@ -18,14 +21,17 @@ const SequenceSelector = ({
   deleteSequence, // eslint-disable-line no-shadow
 }) => (
   <div className="SequenceSelector">
-    {sequences.sort().map(name => (
-      <Sequence
-        key={name}
-        name={name}
-        onSet={setSequence}
-        onDelete={deleteSequence}
-      />
-    ))}
+    {sequences
+      .sort((a, b) => (a.name < b.name ? -1 : 1))
+      .map(sequence => (
+        <Sequence
+          key={sequence.name}
+          sequence={sequence}
+          onSet={setSequence}
+          onDelete={deleteSequence}
+        />
+      ))
+    }
   </div>
 );
 

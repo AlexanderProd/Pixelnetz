@@ -6,18 +6,58 @@ $card-height: 290px
 	max-height: $card-height
 	overflow-y: auto
 
-	.Sequence 
+	.Sequence
+		background: #fff
 		padding-top: 2px
 		padding-bottom: 2px
 		padding: 0.4rem 0
 		border-top: $border-width solid $light-text-color
-		display: flex
-		flex-direction: row
-		justify-content: space-between
-		align-items: center
+		
+		.sequence-dropdown-button
+			border: none
+			width: 1em
+			height: 1em
+
+		.sequence-controlls
+			display: flex
+			flex-direction: row
+			justify-content: space-between
+			align-items: center
+
+			.sequence-group
+				display: flex
+				flex-direction: row
+				align-items: center
+
+				&.dropdown
+					padding: 0.4rem 1rem 0.4rem 0
+					cursor: pointer
 
 		&:first-child
       border-top: none
 
 		.sequence-label
 			padding-left: 10px
+
+		.sequence-details.expanded
+			max-height: 400px
+			padding: 0.4rem 0
+
+		.sequence-details
+			max-height: 0
+			transition: all 150ms ease-in-out
+			overflow: hidden
+		
+			.s-d-row
+				padding: 0.4rem 0.4rem
+				display: flex
+				align-items: center
+				flex-direction: row
+
+				.step-length-input
+					width: 5em
+
+				.s-d-title
+					font-family: Roboto-Bold
+					display: inline-block
+					min-width: 8em

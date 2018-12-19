@@ -55,6 +55,14 @@ module.exports = (env, argv) => {
           'sass-loader',
         ],
       }, {
+        test: /\.css$/,
+        use: [
+          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader',
+          'resolve-url-loader',
+          'postcss-loader',
+        ],
+      }, {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         exclude: /node_modules/,
         loader: 'file-loader',
