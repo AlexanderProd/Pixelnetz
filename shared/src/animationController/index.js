@@ -8,6 +8,7 @@ const createAnimationController = (frameHandler) => {
 
   const setSequence = (_sequence) => {
     sequence = _sequence;
+    sequenceRunning = false;
   };
 
   const start = (startTime) => {
@@ -26,7 +27,7 @@ const createAnimationController = (frameHandler) => {
     let continueSequence = true;
 
     const loop = () => {
-      const deltaTime = Date.now() - startTime - DELTA_PADDING;
+      const deltaTime = Date.now() - startTime;
 
       while (currentStep && currentStep[1] < deltaTime) {
         currentStep = frameStack.pop();
