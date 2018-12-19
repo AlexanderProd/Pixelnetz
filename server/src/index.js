@@ -37,8 +37,8 @@ configureApp(app, express);
 setupLiveData({ masterPool, clientPool });
 
 app.post('/authenticate', authenticate(userDB));
-app.get('/start', withAuth, start(clientPool));
-app.get('/stop', withAuth, stop(clientPool));
+app.get('/start', withAuth, start([clientPool, masterPool]));
+app.get('/stop', withAuth, stop([clientPool, masterPool]));
 app.get('/setAnimation', withAuth, setSequence(clientPool, masterPool));
 app.post('/upload', withAuth, upload(masterPool));
 app.get('/wshost', wshost(localHostname));

@@ -56,18 +56,17 @@ const createFrameHandler = (canvas, dimensions) => {
 };
 
 const propTypes = {
-  connections: PropTypes.arrayOf(
-    PropTypes.shape(connectionType),
-  ).isRequired,
+  animationStart: PropTypes.number,
   dimensions: PropTypes.shape(dimensionsType).isRequired,
   masterSequence: PropTypes.shape(sequenceType),
 };
 
 const defaultProps = {
+  animationStart: null,
   masterSequence: null,
 };
 
-const Preview = ({ connections, dimensions, masterSequence }) => {
+const Preview = ({ animationStart, dimensions, masterSequence }) => {
   const [canvas] = useState(
     createCanvas(),
   );
@@ -94,6 +93,16 @@ const Preview = ({ connections, dimensions, masterSequence }) => {
     setAnimationController(controller);
   }, [dimensions, masterSequence]);
 
+  useEffect(() => {
+    if (animationController) {
+      if (animationStart) {
+        animationController.start(animationStart);
+      } else {
+        animationController.start();
+      }
+    }
+  }, [animationStart]);
+
   const handleStart = () => {
     animationController.start(Date.now());
   };
@@ -115,11 +124,11 @@ Preview.propTypes = propTypes;
 Preview.defaultProps = defaultProps;
 
 const mapStateToProps = ({
-  connections,
+  animationStart,
   dimensions,
   masterSequence,
 }) => ({
-  connections,
+  animationStart,
   dimensions,
   masterSequence,
 });
