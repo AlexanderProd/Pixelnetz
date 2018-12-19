@@ -22,9 +22,16 @@ const setHeight = (elem, val) => elem
   .style
   .setProperty('height', `${val}px`);
 
-const frameHandler = (canvas, dimensions, blockScaling) => {
+const createFrameHandler = (canvas, dimensions) => {
   const ctx = canvas.getContext('2d');
   ctx.strokeStyle = '#434343';
+
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const blockScaling = canvas.width / dimensions.width;
+  // eslint-disable-next-line no-param-reassign
+  canvas.height = blockScaling * dimensions.height;
 
   return (frame) => {
     for (let y = 0; y < dimensions.height; y++) {
@@ -78,12 +85,10 @@ const Preview = ({ connections, dimensions, masterSequence }) => {
     const { width, height } = dimensions;
     const cWidth = getWidth(canvas);
     const blockScaling = cWidth / width;
-    console.log(blockScaling);
     setHeight(canvas, blockScaling * height);
-    const controller = createAnimationController(frameHandler(
+    const controller = createAnimationController(createFrameHandler(
       canvas,
       dimensions,
-      blockScaling,
     ));
     controller.setSequence(masterSequence);
     setAnimationController(controller);
