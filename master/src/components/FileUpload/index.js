@@ -15,7 +15,7 @@ const propTypes = {
   }).isRequired,
 };
 
-const FileUpload = ({ upload, fileUpload }) => {
+const FileUpload = ({ upload }) => {
   const [file, setFile] = useState(null);
   const [rejectedFile, setRejectedFile] = useState(null);
   const [multipleDropped, setMultipleDropped] = useState(false);

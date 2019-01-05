@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectionType, dimensionsType, sequenceType } from '../../types';
+import { dimensionsType, sequenceType } from '../../types';
 import createAnimationController from '../../../../shared/dist/animationController';
 import { Button } from '../ui';
 import './Preview.sass';

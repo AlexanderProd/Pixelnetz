@@ -1,4 +1,5 @@
 const isFailure = type => type.split('_').pop() === 'FAILURE';
+// eslint-disable-next-line no-unused-vars
 const isSuccess = type => type.split('_').pop() === 'SUCCESS';
 const isRequest = type => type.split('_').pop() === 'REQUEST';
 
