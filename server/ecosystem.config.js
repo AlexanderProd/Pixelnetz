@@ -8,7 +8,6 @@ module.exports = {
     instances: 1,
     autorestart: true,
     watch: false,
-    max_memory_restart: '1G',
     env: {
       NODE_ENV: 'development',
     },
@@ -19,12 +18,15 @@ module.exports = {
 
   deploy : {
     production : {
-      user : 'node',
-      host : '212.83.163.1',
-      ref  : 'origin/master',
-      repo : 'git@github.com:repo.git',
-      path : '/var/www/production',
-      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
+      key: '~/.ssh/pixelnetz-new.pem',
+      user: 'pixelnetz',
+      host: '3.121.177.95',
+      ssh_options: 'StrictHostKeyChecking=no',
+      ref: 'origin/master',
+      repo: 'git@github.com:AlexanderProd/Pixelnetz.git',
+      path: '/home/pixelnetz/test',
+      'post-setup': 'yarn && yarn build',
+      'post-deploy': 'yarn && yarn build && pm2 reload ecosystem.config.js'
     }
   }
 };
