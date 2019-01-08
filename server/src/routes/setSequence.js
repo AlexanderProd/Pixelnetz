@@ -4,6 +4,8 @@ import Sequence from '../sequences/Sequence';
 
 const setSequence = (clientPool, masterPool) => async (req, res) => {
   const { name } = req.query;
+  const repeat = req.query.repeat === 'true';
+  const stepLength = Number(req.query.stepLength);
 
   if (clientPool.size < 1) {
     res.status(503).json({ error: 'No pixel clients connected' });
@@ -44,6 +46,11 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
   }
 
   const masterMatrix = sequence.getMasterMatrix();
+  const sequenceInfo = {
+    ...sequence.info,
+    repeat,
+    stepLength,
+  };
 
   masterPool.sendAll({
     actionType: DIMENSIONS,
@@ -53,7 +60,7 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
   masterPool.sendAll({
     actionType: SET_SEQUENCE,
     sequence: {
-      ...sequence.info,
+      ...sequenceInfo,
       frames: masterMatrix,
       width: dimensions.width,
       height: dimensions.height,
@@ -67,7 +74,7 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
       actionType: SET_SEQUENCE,
       sequence: {
         frames: sequence.getFrames(x, y),
-        ...sequence.info,
+        ...sequenceInfo,
       },
     });
   });

@@ -5,6 +5,7 @@ process.env.NODE_ENV = 'test';
 require('@babel/register')();
 
 require.extensions['.sass'] = function () { return null ;};
+require.extensions['.css'] = function () { return null ;};
 
 var jsdom = require('jsdom').jsdom;
 

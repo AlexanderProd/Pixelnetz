@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { connectionType, dimensionsType, sequenceType } from '../../types';
+import { dimensionsType, sequenceType } from '../../types';
 import createAnimationController from '../../../../shared/dist/animationController';
 import { Button } from '../ui';
 import './Preview.sass';
@@ -22,9 +22,16 @@ const setHeight = (elem, val) => elem
   .style
   .setProperty('height', `${val}px`);
 
-const frameHandler = (canvas, dimensions, blockScaling) => {
+const createFrameHandler = (canvas, dimensions) => {
   const ctx = canvas.getContext('2d');
   ctx.strokeStyle = '#434343';
+
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const blockScaling = canvas.width / dimensions.width;
+  // eslint-disable-next-line no-param-reassign
+  canvas.height = blockScaling * dimensions.height;
 
   return (frame) => {
     for (let y = 0; y < dimensions.height; y++) {
@@ -49,18 +56,17 @@ const frameHandler = (canvas, dimensions, blockScaling) => {
 };
 
 const propTypes = {
-  connections: PropTypes.arrayOf(
-    PropTypes.shape(connectionType),
-  ).isRequired,
+  animationStart: PropTypes.number,
   dimensions: PropTypes.shape(dimensionsType).isRequired,
   masterSequence: PropTypes.shape(sequenceType),
 };
 
 const defaultProps = {
+  animationStart: null,
   masterSequence: null,
 };
 
-const Preview = ({ connections, dimensions, masterSequence }) => {
+const Preview = ({ animationStart, dimensions, masterSequence }) => {
   const [canvas] = useState(
     createCanvas(),
   );
@@ -78,25 +84,38 @@ const Preview = ({ connections, dimensions, masterSequence }) => {
     const { width, height } = dimensions;
     const cWidth = getWidth(canvas);
     const blockScaling = cWidth / width;
-    console.log(blockScaling);
     setHeight(canvas, blockScaling * height);
-    const controller = createAnimationController(frameHandler(
+    const controller = createAnimationController(createFrameHandler(
       canvas,
       dimensions,
-      blockScaling,
     ));
     controller.setSequence(masterSequence);
     setAnimationController(controller);
   }, [dimensions, masterSequence]);
 
+  useEffect(() => {
+    if (animationController) {
+      if (animationStart) {
+        animationController.start(animationStart);
+      } else {
+        animationController.start();
+      }
+    }
+  }, [animationStart]);
+
   const handleStart = () => {
     animationController.start(Date.now());
+  };
+
+  const handleStop = () => {
+    animationController.stop();
   };
 
   return (
     <>
       <div id="Preview" className="Preview" />
-      <Button onClick={handleStart}>Start</Button>
+      <Button primary onClick={handleStart}>Start</Button>
+      <Button secondary onClick={handleStop}>Stop</Button>
     </>
   );
 };
@@ -105,11 +124,11 @@ Preview.propTypes = propTypes;
 Preview.defaultProps = defaultProps;
 
 const mapStateToProps = ({
-  connections,
+  animationStart,
   dimensions,
   masterSequence,
 }) => ({
-  connections,
+  animationStart,
   dimensions,
   masterSequence,
 });

@@ -7,7 +7,7 @@ import {
 import Sequence from '../sequences/Sequence';
 
 const setupLiveData = ({ masterPool, clientPool }) => {
-  masterPool.onConnection((masterSocket) => {
+  masterPool.onConnection(async (masterSocket) => {
     const currentConnections = [];
     clientPool.forEachSync(
       client => currentConnections.push(client.info()),
@@ -17,10 +17,15 @@ const setupLiveData = ({ masterPool, clientPool }) => {
       connections: currentConnections,
     });
 
-    masterSocket.send({
-      actionType: ALL_SEQUENCES,
-      data: Sequence.listAvailable(),
-    });
+    try {
+      const sequences = await Sequence.listAvailable();
+      masterSocket.send({
+        actionType: ALL_SEQUENCES,
+        data: sequences,
+      });
+    } catch (e) {
+      console.error('Failed to send sequence info to master');
+    }
   });
 
   let newConnections = [];

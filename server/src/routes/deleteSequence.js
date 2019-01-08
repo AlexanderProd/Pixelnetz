@@ -1,11 +1,12 @@
 import sendAllSequences from '../util/sendAllSequences';
 import Sequence from '../sequences/Sequence';
 
-const savedFiles = (masterPool) => (req, res) => {
+const savedFiles = (masterPool) => async (req, res) => {
   const { name } = req.query;
 
   try {
-    if (Sequence.listAvailable().indexOf(name) !== -1) {
+    const sequences = await Sequence.listAvailable();
+    if (sequences.indexOf(name) !== -1) {
       Sequence.delete(name)
         .then(() => {
           res.sendStatus(204);

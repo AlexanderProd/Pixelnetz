@@ -5,12 +5,18 @@ import './Icon.sass';
 
 const propTypes = {
   name: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
-const Icon = ({ name }) => (
-  <i className="Icon">{codepoints[name]}</i>
+const defaultProps = {
+  className: '',
+};
+
+const Icon = ({ name, className }) => (
+  <i className={`Icon ${className}`}>{codepoints[name]}</i>
 );
 
 Icon.propTypes = propTypes;
+Icon.defaultProps = defaultProps;
 
 export default Icon;

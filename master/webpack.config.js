@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -36,13 +37,19 @@ module.exports = (env, argv) => {
   return {
     mode: isProd ? 'production' : 'development',
     entry: ['./src/index.js'],
-    devtool: isDev ? 'source-map' : false,
+    devtool: isDev ? 'eval-source-map' : false,
     devServer: {
       contentBase: './dist',
       port: 8082,
+      quiet: true,
     },
     module: {
       rules: [{
+        enforce: 'pre',
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+      }, {
         test: /\.js$/,
         use: ['babel-loader'],
       }, {
@@ -55,12 +62,21 @@ module.exports = (env, argv) => {
           'sass-loader',
         ],
       }, {
+        test: /\.css$/,
+        use: [
+          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'css-loader',
+          'resolve-url-loader',
+          'postcss-loader',
+        ],
+      }, {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         exclude: /node_modules/,
         loader: 'file-loader',
       }],
     },
     plugins: [
+      new FriendlyErrorsPlugin(),
       new CleanWebpackPlugin(['dist']),
       new HtmlWebpackPlugin({
         template: 'public/index.html',

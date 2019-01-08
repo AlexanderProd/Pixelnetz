@@ -12,9 +12,9 @@ export const SEQUENCE_DELETE_FAILURE = 'sequences/SEQUENCE_DELETE_FAILURE';
 export default (state = [], action) => {
   switch (action.type) {
     case SEQUENCE_DELETE_REQUEST:
-      return state.filter(name => name !== action.name);
+      return state.filter(({ name }) => name !== action.name);
     case SEQUENCE_DELETE_FAILURE:
-      return [...state, action.name];
+      return [...state, action.sequence];
     case ALL_SEQUENCES:
       return action.message.data;
     default:
@@ -23,17 +23,21 @@ export default (state = [], action) => {
 };
 
 // ActionCreators
-export const setSequence = sequenceName => ({
+export const setSequence = ({
+  name,
+  repeat,
+  stepLength,
+}) => ({
   fetch: 'GET',
-  endpoint: `/setAnimation?name=${sequenceName}`,
+  endpoint: `/setAnimation?name=${name}&repeat=${repeat}&stepLength=${stepLength}`,
   expect: 'text',
   types: [SEQUENCE_SET_REQUEST, SEQUENCE_SET_SUCCESS, SEQUENCE_SET_FAILURE],
 });
 
-export const deleteSequence = name => ({
+export const deleteSequence = sequence => ({
   fetch: 'GET',
-  endpoint: `/deleteSequence?name=${name}`,
+  endpoint: `/deleteSequence?name=${sequence.name}`,
   expect: 'text',
-  name,
+  sequence,
   types: [SEQUENCE_DELETE_REQUEST, SEQUENCE_DELETE_SUCCESS, SEQUENCE_DELETE_FAILURE],
 });

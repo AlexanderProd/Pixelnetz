@@ -28,9 +28,14 @@ class Sequence {
   }
 
   static listAvailable() {
-    return fs.readdirSync(DB_PATH)
-      .map(fileName => fileName.split('.json')[0])
-      .filter(fileName => !fileName.match(/\.matrix/));
+    return Promise.all(
+      fs.readdirSync(DB_PATH)
+        .filter(fileName => !fileName.match(/\.matrix/))
+        .map((fileName) => {
+          const name = fileName.split('.json')[0];
+          return Sequence.load(name).then(seq => seq.info);
+        }),
+    );
   }
 
   static delete(name) {

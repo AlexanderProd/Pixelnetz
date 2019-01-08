@@ -7,6 +7,7 @@ import fetchMiddleware, { setStore } from '../middleware/fetch';
 import connectStoreToWS from './ws';
 
 import animationControl from '../animationControl';
+import animationStart from '../animationStart';
 import auth from '../auth';
 import connections from '../connections';
 import dimensions from '../dimensions';
@@ -23,6 +24,7 @@ const persistConfig = {
 
 const reducer = combineReducers({
   animationControl,
+  animationStart,
   auth,
   connections,
   dimensions,

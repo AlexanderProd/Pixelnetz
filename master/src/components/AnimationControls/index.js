@@ -12,8 +12,6 @@ import './AnimationControls.sass';
 const propTypes = {
   startAnimation: PropTypes.func.isRequired,
   stopAnimation: PropTypes.func.isRequired,
-  startError: PropTypes.bool.isRequired,
-  stopError: PropTypes.bool.isRequired,
 };
 
 export const AnimationControls = ({
