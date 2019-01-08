@@ -9,24 +9,10 @@ module.exports = {
     autorestart: true,
     watch: false,
     env: {
-      NODE_ENV: 'development',
-    },
-    env_production: {
       NODE_ENV: 'production',
+      ADMIN_PW: 'admin',
+      JWT_SECRET: '2psPxwr0n3z4R95vIocgRabt1AJZ9jH6bJHrZUoR6V9Mq0poilWbFqkddbYq7Upf',
+      SALT_ROUNDS: '10'
     },
   }],
-
-  deploy : {
-    production : {
-      key: '~/.ssh/pixelnetz-new.pem',
-      user: 'pixelnetz',
-      host: '3.121.177.95',
-      ssh_options: 'StrictHostKeyChecking=no',
-      ref: 'origin/master',
-      repo: 'git@github.com:AlexanderProd/Pixelnetz.git',
-      path: '/home/pixelnetz/test',
-      'post-setup': 'yarn && yarn build',
-      'post-deploy': 'yarn && yarn build && pm2 reload ecosystem.config.js'
-    }
-  }
 };
