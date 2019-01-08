@@ -31,6 +31,14 @@ const localHostname = isProd() ? '3.121.177.95' : localIP();
 const masterPool = createMasterPool(server);
 const clientPool = createClientPool(server);
 const userDB = new UserDB();
+const banner = `
+██████╗ ██╗██╗  ██╗███████╗██╗     ███╗   ██╗███████╗████████╗███████╗
+██╔══██╗██║╚██╗██╔╝██╔════╝██║     ████╗  ██║██╔════╝╚══██╔══╝╚══███╔╝
+██████╔╝██║ ╚███╔╝ █████╗  ██║     ██╔██╗ ██║█████╗     ██║     ███╔╝
+██╔═══╝ ██║ ██╔██╗ ██╔══╝  ██║     ██║╚██╗██║██╔══╝     ██║    ███╔╝
+██║     ██║██╔╝ ██╗███████╗███████╗██║ ╚████║███████╗   ██║   ███████╗
+╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚══════╝
+`;
 
 configureUserDB(userDB);
 configureApp(app, express);
@@ -47,6 +55,6 @@ app.get('/deleteSequence', withAuth, deleteSequence(masterPool));
 
 server.listen(PORT, () => console.log(
   '\n' +
-  `Client Seite auf http://${localHostname}:${PORT} aufrufen.\n` +
+  `${banner}\n Client Seite auf http://${localHostname}:${PORT} aufrufen.\n` +
   `Steuerung der Animation unter http://${localHostname}:${PORT}/master.\n`,
 ));
