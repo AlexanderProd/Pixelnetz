@@ -55,6 +55,6 @@ app.get('/deleteSequence', withAuth, deleteSequence(masterPool));
 
 server.listen(PORT, () => console.log(
   '\n' +
-  `${banner}\n Client Seite auf http://${localHostname}:${PORT} aufrufen.\n` +
+  `${banner}\nClient Seite auf http://${localHostname}:${PORT} aufrufen.\n` +
   `Steuerung der Animation unter http://${localHostname}:${PORT}/master.\n`,
 ));
