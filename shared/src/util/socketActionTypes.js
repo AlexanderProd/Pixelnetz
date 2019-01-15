@@ -1,14 +1,13 @@
-module.exports = {
-  ANIMATION: 'ANIMATION',
-  INIT_TIME_SYNC: 'INIT_TIME_SYNC',
-  POSITION: 'POSITION',
-  SERVER_TIME: 'SERVER_TIME',
-  SET_SEQUENCE: 'SET_SEQUENCE',
-  START_ANIMATION: 'START_ANIMATION',
-  STOP_ANIMATION: 'STOP_ANIMATION',
-  NEW_CONNECTIONS: 'connections/NEW_CONNECTIONS',
-  CLOSED_CONNECTIONS: 'connections/CLOSED_CONNECTIONS',
-  CURRENT_CONNECTIONS: 'connections/CURRENT_CONNECTIONS',
-  ALL_SEQUENCES: 'sequences/ALL_SEQUENCES',
-  DIMENSIONS: 'dimensions/DIMENSIONS',
-};
+export const ANIMATION = 'ANIMATION';
+export const INIT_TIME_SYNC = 'INIT_TIME_SYNC';
+export const POSITION = 'POSITION';
+export const SERVER_TIME = 'SERVER_TIME';
+export const SET_SEQUENCE = 'animationController/SET_SEQUENCE';
+export const START_ANIMATION = 'animationController/START_ANIMATION';
+export const STOP_ANIMATION = 'animationController/STOP_ANIMATION';
+export const APPEND_SEQUENCE = 'animationController/APPEND_SEQUENCE';
+export const NEW_CONNECTIONS = 'connections/NEW_CONNECTIONS';
+export const CLOSED_CONNECTIONS = 'connections/CLOSED_CONNECTIONS';
+export const CURRENT_CONNECTIONS = 'connections/CURRENT_CONNECTIONS';
+export const ALL_SEQUENCES = 'sequences/ALL_SEQUENCES';
+export const DIMENSIONS = 'dimensions/DIMENSIONS';

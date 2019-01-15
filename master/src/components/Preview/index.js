@@ -59,14 +59,16 @@ const propTypes = {
   animationStart: PropTypes.number,
   dimensions: PropTypes.shape(dimensionsType).isRequired,
   masterSequence: PropTypes.shape(sequenceType),
+  appendedSequence: PropTypes.shape(sequenceType),
 };
 
 const defaultProps = {
   animationStart: null,
   masterSequence: null,
+  appendedSequence: null,
 };
 
-const Preview = ({ animationStart, dimensions, masterSequence }) => {
+const Preview = ({ animationStart, dimensions, masterSequence, appendedSequence }) => {
   const [canvas] = useState(createCanvas());
 
   const [animationController, setAnimationController] = useState(null);
@@ -95,6 +97,12 @@ const Preview = ({ animationStart, dimensions, masterSequence }) => {
       setAnimationController(controller);
     }
   }, [dimensions, masterSequence]);
+
+  useEffect(() => {
+    if (appendedSequence && animationController) {
+      animationController.appendedSequence(appendedSequence);
+    }
+  }, [appendedSequence]);
 
   useEffect(() => {
     if (animationController) {
@@ -133,7 +141,8 @@ const mapStateToProps = ({
 }) => ({
   animationStart,
   dimensions,
-  masterSequence,
+  masterSequence: masterSequence && masterSequence.initial,
+  appendedSequence: masterSequence && masterSequence.append,
 });
 
 export default connect(mapStateToProps)(Preview);

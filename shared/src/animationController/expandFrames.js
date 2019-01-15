@@ -1,4 +1,4 @@
-export const expandFrames = (frames, stepLength) => {
+export const expandFrames = (frames, stepLength, frameOffset = 0) => {
   const expanded = [];
   let frameTime = 0;
   let i = 0;
@@ -6,7 +6,7 @@ export const expandFrames = (frames, stepLength) => {
     frameTime += stepLength * duration;
     expanded.push({
       frame,
-      frameTime,
+      frameTime: frameTime + frameOffset,
       executed: false,
       duration,
       i: i++,

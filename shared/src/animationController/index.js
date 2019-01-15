@@ -1,19 +1,15 @@
-import expandFrames from './expandFrames';
-import Queue from '../Queue';
+import FrameQueue from '../FrameQueue';
 
 const createAnimationController = (frameHandler) => {
   let sequenceRunning = false;
-  let stepLength = null;
   let repeat = null;
   let frameQueue = null;
   let hasSequence = false;
 
   const setSequence = (_sequence) => {
-    ({ stepLength, repeat } = _sequence);
+    ({ repeat } = _sequence);
 
-    frameQueue = new Queue(
-      expandFrames(_sequence.frames, stepLength),
-    );
+    frameQueue = new FrameQueue(_sequence);
 
     sequenceRunning = false;
     hasSequence = true;
@@ -31,11 +27,7 @@ const createAnimationController = (frameHandler) => {
     const setStep = () => {
       currentStep = frameQueue.dequeue();
       if (repeat) {
-        frameQueue.enqueue({
-          ...currentStep,
-          frameTime: (currentStep.duration * stepLength) +
-            frameQueue.tail().frameTime,
-        });
+        frameQueue.appendFrame(currentStep);
       }
     };
 
@@ -81,10 +73,17 @@ const createAnimationController = (frameHandler) => {
     sequenceRunning = false;
   };
 
+  const appendSequence = (sequence) => {
+    if (sequence) {
+      frameQueue.appendSequence(sequence);
+    }
+  };
+
   return {
     setSequence,
     start,
     stop,
+    appendSequence,
   };
 };
 
