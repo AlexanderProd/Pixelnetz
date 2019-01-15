@@ -24,22 +24,29 @@ const createAnimationController = (frameHandler) => {
 
     sequenceRunning = true;
 
-    let currentStep = frameQueue.dequeue();
+    let currentStep;
 
     let continueSequence = true;
+
+    const setStep = () => {
+      currentStep = frameQueue.dequeue();
+      if (repeat) {
+        frameQueue.enqueue({
+          ...currentStep,
+          frameTime: (currentStep.duration * stepLength) +
+            frameQueue.tail().frameTime,
+        });
+      }
+    };
+
+    // Set first step
+    setStep();
 
     const loop = () => {
       const deltaTime = Date.now() - startTime;
 
       while (currentStep && currentStep.frameTime < deltaTime) {
-        currentStep = frameQueue.dequeue();
-        if (repeat) {
-          frameQueue.enqueue({
-            ...currentStep,
-            frameTime: (currentStep.duration * stepLength) +
-              frameQueue.tail().frameTime,
-          });
-        }
+        setStep();
       }
 
       if (currentStep && frameQueue.size() >= 0) {
@@ -50,6 +57,7 @@ const createAnimationController = (frameHandler) => {
           currentStep.executed = true;
         }
       } else if (repeat) {
+        // Maybe this will be neccessary when appending sequences
         // startTime = Date.now();
         // frameQueue = new Queue(expandFrames(frames, stepLength));
         // currentStep = frameQueue.dequeue();
