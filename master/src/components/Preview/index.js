@@ -67,9 +67,7 @@ const defaultProps = {
 };
 
 const Preview = ({ animationStart, dimensions, masterSequence }) => {
-  const [canvas] = useState(
-    createCanvas(),
-  );
+  const [canvas] = useState(createCanvas());
 
   const [animationController, setAnimationController] = useState(null);
 
@@ -81,16 +79,21 @@ const Preview = ({ animationStart, dimensions, masterSequence }) => {
   }, []);
 
   useEffect(() => {
-    const { width, height } = dimensions;
-    const cWidth = getWidth(canvas);
-    const blockScaling = cWidth / width;
-    setHeight(canvas, blockScaling * height);
-    const controller = createAnimationController(createFrameHandler(
-      canvas,
-      dimensions,
-    ));
-    controller.setSequence(masterSequence);
-    setAnimationController(controller);
+    if (masterSequence) {
+      if (animationController) {
+        animationController.stop();
+      }
+      const { width, height } = dimensions;
+      const cWidth = getWidth(canvas);
+      const blockScaling = cWidth / width;
+      setHeight(canvas, blockScaling * height);
+      const controller = createAnimationController(createFrameHandler(
+        canvas,
+        dimensions,
+      ));
+      controller.setSequence(masterSequence);
+      setAnimationController(controller);
+    }
   }, [dimensions, masterSequence]);
 
   useEffect(() => {
@@ -98,7 +101,7 @@ const Preview = ({ animationStart, dimensions, masterSequence }) => {
       if (animationStart) {
         animationController.start(animationStart);
       } else {
-        animationController.start();
+        animationController.stop();
       }
     }
   }, [animationStart]);

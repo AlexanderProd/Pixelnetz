@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "babel src -d dist --source-maps",
     "start": "node watchDir.js"
   },
   "devDependencies": {

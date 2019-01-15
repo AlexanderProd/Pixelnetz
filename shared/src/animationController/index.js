@@ -1,49 +1,58 @@
-import createFrameStack from './createFrameStack';
-
-const DELTA_PADDING = 1000;
+import expandFrames from './expandFrames';
+import Queue from '../Queue';
 
 const createAnimationController = (frameHandler) => {
-  let sequence = null;
   let sequenceRunning = false;
+  let stepLength = null;
+  let repeat = null;
+  let frameQueue = null;
+  let hasSequence = false;
 
   const setSequence = (_sequence) => {
-    sequence = _sequence;
+    ({ stepLength, repeat } = _sequence);
+
+    frameQueue = new Queue(
+      expandFrames(_sequence.frames, stepLength),
+    );
+
     sequenceRunning = false;
+    hasSequence = true;
   };
 
   const start = (startTime) => {
+    if (!hasSequence) return;
+
     sequenceRunning = true;
 
-    const {
-      stepLength,
-      repeat,
-      frames,
-    } = sequence;
-
-    let frameStack = createFrameStack(frames, stepLength);
-
-    let currentStep = frameStack.pop();
+    let currentStep = frameQueue.dequeue();
 
     let continueSequence = true;
 
     const loop = () => {
       const deltaTime = Date.now() - startTime;
 
-      while (currentStep && currentStep[1] < deltaTime) {
-        currentStep = frameStack.pop();
+      while (currentStep && currentStep.frameTime < deltaTime) {
+        currentStep = frameQueue.dequeue();
+        if (repeat) {
+          frameQueue.enqueue({
+            ...currentStep,
+            frameTime: (currentStep.duration * stepLength) +
+              frameQueue.tail().frameTime,
+          });
+        }
       }
 
-      if (currentStep && frameStack.length >= 0) {
-        const [frame,, executed] = currentStep;
+      if (currentStep && frameQueue.size() >= 0) {
+        const { frame, executed } = currentStep;
 
         if (!executed) {
           frameHandler(frame);
-          currentStep[2] = false;
+          currentStep.executed = true;
         }
       } else if (repeat) {
-        startTime = Date.now();
-        frameStack = createFrameStack(frames, stepLength);
-        currentStep = frameStack.pop();
+        // startTime = Date.now();
+        // frameQueue = new Queue(expandFrames(frames, stepLength));
+        // currentStep = frameQueue.dequeue();
       } else {
         continueSequence = false;
       }

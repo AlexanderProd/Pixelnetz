@@ -37,7 +37,7 @@ module.exports = (env, argv) => {
   return {
     mode: isProd ? 'production' : 'development',
     entry: ['./src/index.js'],
-    devtool: isDev ? 'eval-source-map' : false,
+    devtool: isDev ? 'source-map' : false,
     devServer: {
       contentBase: './dist',
       port: 8082,
