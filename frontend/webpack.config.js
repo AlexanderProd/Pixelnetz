@@ -1,6 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ScriptExtHtmlPlugin = require('script-ext-html-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const webpack = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -11,6 +14,10 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const localIP = require('my-local-ip');
+const manifest = require('./src/manifest');
+
+// Find the polyfill chunk
+const polyfillRegex = /(\w|\W)*polyfill\.(\w|\W)*\.js/;
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development';
@@ -36,7 +43,18 @@ module.exports = (env, argv) => {
 
   return {
     mode: isProd ? 'production' : 'development',
-    entry: ['./src/index.js'],
+    entry: {
+      // RegeneratorRuntime will be needed by all browsers to execute
+      // transpiles async/await
+      runtime: './runtime/index.js',
+      // Legacy polyfills are packaged in a seperate bundle because they are
+      // only needed by legacy browsers. They will be loaded with a script tag
+      // with the 'nomodule' attribute, so modern browsers won't download
+      // the bundle
+      legacyPolyfill: './polyfill/index.js',
+      // Main bundle
+      main: './src/index.js',
+    },
     devtool: isDev ? 'source-map' : false,
     devServer: {
       contentBase: './dist',
@@ -72,7 +90,33 @@ module.exports = (env, argv) => {
       new CleanWebpackPlugin(['dist']),
       new HtmlWebpackPlugin({
         template: 'public/index.html',
+        minify: isProd
+          ? {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeRedundantAttributes: true,
+            useShortDoctype: true,
+            removeEmptyAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            keepClosingSlash: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+          }
+          : false,
       }),
+      // Set 'nomodule' attribute on plyfill script tag,
+      // so newer browsers, which do not need the legacy polyfills,
+      // won't download the script
+      new ScriptExtHtmlPlugin({
+        custom: {
+          test: polyfillRegex,
+          attribute: 'nomodule',
+        },
+      }),
+      // Generate manifest file
+      new WebpackPwaManifest(manifest),
+      new FaviconsWebpackPlugin(path.resolve(__dirname, '/../logo.png'),
       new webpack.DefinePlugin({
         HOSTNAME: JSON.stringify(hostname),
         PORT: JSON.stringify(port),
