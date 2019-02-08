@@ -7,7 +7,7 @@ import {
 import Sequence from '../sequences/Sequence';
 
 const setupLiveData = ({ masterPool, clientPool }) => {
-  masterPool.onConnection(async (masterSocket) => {
+  masterPool.on('connection', async (masterSocket) => {
     const currentConnections = [];
     clientPool.forEachSync(
       client => currentConnections.push(client.info()),
@@ -31,11 +31,12 @@ const setupLiveData = ({ masterPool, clientPool }) => {
   let newConnections = [];
   let closedConnections = [];
 
-  clientPool.onPosition(
+  clientPool.on(
+    'position',
     clientSocket => newConnections.push(clientSocket.info()),
   );
 
-  clientPool.onClose(id => closedConnections.push(id));
+  clientPool.on('close', id => closedConnections.push(id));
 
   setInterval(() => {
     if (newConnections.length > 0) {

@@ -1,9 +1,9 @@
-import createPool from './pool';
+import Pool from './Pool';
 
 const createMasterPool = (server) => {
-  const masterPool = createPool({ server, path: '/master' });
+  const masterPool = new Pool({ server, path: '/master' });
 
-  masterPool.onConnection((socket) => {
+  masterPool.on('connection', (socket) => {
     console.log(`MASTER: ${socket.id()} deltaTime=${socket.deltaTime()}`);
   });
 
