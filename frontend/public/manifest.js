@@ -6,10 +6,7 @@ const manifest = {
   short_name: 'Pixelnetz',
   description: 'Be Part of the Show!',
   background_color: '#000000',
-  icons: [{
-    src: path.resolve(__dirname, '/../../logo.png'),
-    sizes: [96, 128, 192, 256, 384, 512],
-  }],
+  theme_color: '#000000',
 };
 
 module.exports = manifest;

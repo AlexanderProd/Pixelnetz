@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ScriptExtHtmlPlugin = require('script-ext-html-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const webpack = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -14,7 +13,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const localIP = require('my-local-ip');
-const manifest = require('./src/manifest');
+const manifest = require('./public/manifest');
 
 // Find the polyfill chunk
 const polyfillRegex = /(\w|\W)*polyfill\.(\w|\W)*\.js/;
@@ -44,18 +43,15 @@ module.exports = (env, argv) => {
   return {
     mode: isProd ? 'production' : 'development',
     entry: {
-      // RegeneratorRuntime will be needed by all browsers to execute
-      // transpiles async/await
-      runtime: './runtime/index.js',
       // Legacy polyfills are packaged in a seperate bundle because they are
       // only needed by legacy browsers. They will be loaded with a script tag
       // with the 'nomodule' attribute, so modern browsers won't download
       // the bundle
-      legacyPolyfill: './polyfill/index.js',
+      polyfill: './polyfill/index.js',
       // Main bundle
       main: './src/index.js',
     },
-    devtool: isDev ? 'source-map' : false,
+    devtool: 'source-map',
     devServer: {
       contentBase: './dist',
       port: 8080,
@@ -116,7 +112,7 @@ module.exports = (env, argv) => {
       }),
       // Generate manifest file
       new WebpackPwaManifest(manifest),
-      new FaviconsWebpackPlugin(path.resolve(__dirname, '/../logo.png'),
+      // new FaviconsWebpackPlugin(path.resolve(__dirname, '/../logo.png'),
       new webpack.DefinePlugin({
         HOSTNAME: JSON.stringify(hostname),
         PORT: JSON.stringify(port),
@@ -166,12 +162,12 @@ module.exports = (env, argv) => {
           },
           parallel: true,
           cache: true,
-          sourceMap: false,
+          sourceMap: true,
         }),
         new OptimizeCSSAssetsPlugin({
           cssProcessorOptions: {
             parser: safePostCssParser,
-            map: false,
+            map: true,
           },
         }),
       ],
