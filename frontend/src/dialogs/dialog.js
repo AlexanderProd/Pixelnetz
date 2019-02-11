@@ -1,6 +1,7 @@
 const dialog = ({
   description,
-}) => new Promise((resolve) => {
+  onSubmit = () => {},
+}) => {
   const container = document.createElement('div');
   container.classList.add('container');
 
@@ -9,7 +10,7 @@ const dialog = ({
   form.onsubmit = (e) => {
     e.preventDefault();
     document.body.removeChild(container);
-    resolve();
+    onSubmit();
   };
 
   const descriptionBox = document.createElement('p');
@@ -24,6 +25,6 @@ const dialog = ({
   form.appendChild(button);
   container.appendChild(form);
   document.body.appendChild(container);
-});
+};
 
 export default dialog;
