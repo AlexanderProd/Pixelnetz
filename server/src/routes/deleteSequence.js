@@ -5,7 +5,8 @@ const savedFiles = (masterPool) => async (req, res) => {
   const { name } = req.query;
 
   try {
-    if (!(await Sequence.exists(name))) {
+    const sequences = await Sequence.listAvailable();
+    if (sequences.indexOf(name) !== -1) {
       Sequence.delete(name)
         .then(() => {
           res.sendStatus(204);

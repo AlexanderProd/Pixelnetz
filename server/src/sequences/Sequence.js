@@ -38,10 +38,6 @@ class Sequence {
     );
   }
 
-  static async exists(name) {
-    !!(await Sequence.listAvailable()).find(seq => seq.name === name);
-  }
-
   static delete(name) {
     return Promise.all([
       unlink(`${DB_PATH}/${name}.matrix.json`),
