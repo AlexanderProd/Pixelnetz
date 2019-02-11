@@ -1,12 +1,16 @@
-import enableNoSleep from './enableNoSleep';
+import screenBrightness from './screenBrightness';
 import './dialog.sass';
 
 const runConfigDialogs = async () => {
+  const enableNoSleepImport = import('./enableNoSleep');
   const fullscreenConfigImport = import('./fullscreen');
 
-  await enableNoSleep();
+  await screenBrightness();
 
+  const enableNoSleep = (await enableNoSleepImport).default;
   const fullscreenConfig = (await fullscreenConfigImport).default;
+
+  await enableNoSleep();
 
   fullscreenConfig();
 };
