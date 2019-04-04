@@ -10,6 +10,7 @@ import ConnectionsList from './components/ConnectionsList';
 import FileUpload from './components/FileUpload';
 import Preview from './components/Preview';
 import TitleBar from './components/TitleBar';
+import ErrorMenu from './components/ErrorMenu';
 import { authType } from './types';
 import './App.sass';
 
@@ -23,38 +24,36 @@ const defaultProps = {
 
 export const App = ({ auth }) => (
   <div className="App">
+    <ErrorMenu />
     <TitleBar />
-    {auth
-      ? (
-        <CardGrid>
-          <Card title="Sequence Control">
-            <AnimationControls />
-          </Card>
-          <Card title="Sequences" spanRows={2}>
-            <SequenceSelector />
-          </Card>
-          <Card title="Connected Users">
-            <ConnectionCounter />
-          </Card>
-          <Card title="Upload Image" spanRows={2}>
-            <FileUpload />
-          </Card>
-          <Card title="Realtime Preview" spanRows={2}>
-            <Preview />
-          </Card>
-          <Card title="Connections List" spanCols={2} spanRows={2}>
-            <ConnectionsList />
-          </Card>
-        </CardGrid>
-      )
-      : (
-        <div className="login-screen">
-          <Card title="Login">
-            <LoginForm />
-          </Card>
-        </div>
-      )
-    }
+    {auth ? (
+      <CardGrid>
+        <Card title="Sequence Control">
+          <AnimationControls />
+        </Card>
+        <Card title="Sequences" spanRows={2}>
+          <SequenceSelector />
+        </Card>
+        <Card title="Connected Users">
+          <ConnectionCounter />
+        </Card>
+        <Card title="Upload Image" spanRows={2}>
+          <FileUpload />
+        </Card>
+        <Card title="Realtime Preview" spanRows={2}>
+          <Preview />
+        </Card>
+        <Card title="Connections List" spanCols={2} spanRows={2}>
+          <ConnectionsList />
+        </Card>
+      </CardGrid>
+    ) : (
+      <div className="login-screen">
+        <Card title="Login">
+          <LoginForm />
+        </Card>
+      </div>
+    )}
   </div>
 );
 

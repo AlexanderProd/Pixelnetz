@@ -12,8 +12,10 @@ const defaultProps = {
   className: '',
 };
 
-const Icon = ({ name, className }) => (
-  <i className={`Icon ${className}`}>{codepoints[name]}</i>
+const Icon = ({ name, className, ...props }) => (
+  <i className={`Icon ${className}`} {...props}>
+    {codepoints[name]}
+  </i>
 );
 
 Icon.propTypes = propTypes;
