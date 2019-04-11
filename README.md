@@ -22,3 +22,33 @@ Das Testen mit Smartphones sollte nun möglich sein.
   - Server: yarn start:dev
   - Frontend & Master: yarn start
 - um alles auf einmal zu bauen und den Server im Produktionsmodus zu starten in Terminal "bash prodStart.sh" ausführen
+
+# Editor setup
+Für VS-Code die Extensions 'ESLint' und 'Prettier - Code formatter' installieren.
+Dann `strg+shift+p` und `Preferences: Open Settings (JSON)` eingeben und der Datei folgende Zeilen hinzufügen.
+
+```
+"eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+],
+"[javascript]":  {
+    "editor.formatOnSave": true,
+},
+"[javascriptreact]":  {
+    "editor.formatOnSave": true,
+},
+"[typescript]":  {
+    "editor.formatOnSave": true,
+},
+"[typescriptreact]":  {
+    "editor.formatOnSave": true,
+},
+"prettier.singleQuote": true,
+"prettier.eslintIntegration": true,
+"prettier.stylelintIntegration": true,
+"prettier.printWidth": 70,
+"prettier.trailingComma": "all",
+```
