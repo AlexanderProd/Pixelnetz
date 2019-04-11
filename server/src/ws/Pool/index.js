@@ -4,9 +4,11 @@ import Emitter from '../Emitter';
 import Socket from '../Socket';
 import syncTime from '../syncTime';
 
-const generateKey = () => `${
-  Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-}`.padStart(16, '0');
+const generateKey = () =>
+  `${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)}`.padStart(
+    16,
+    '0',
+  );
 
 class Pool extends Emitter {
   constructor({ port, server, path }) {
@@ -18,16 +20,15 @@ class Pool extends Emitter {
       server.on('upgrade', (req, socket, head) => {
         const { pathname } = url.parse(req.url);
         if (pathname === path) {
-          this._wsServer.handleUpgrade(
-            req,
-            socket,
-            head,
-            ws => this._wsServer.emit('connection', ws, req),
+          this._wsServer.handleUpgrade(req, socket, head, ws =>
+            this._wsServer.emit('connection', ws, req),
           );
         }
       });
     } else {
-      throw new Error('Either port or server and path have to be specified');
+      throw new Error(
+        'Either port or server and path have to be specified',
+      );
     }
 
     this._pool = new Map();
@@ -37,13 +38,18 @@ class Pool extends Emitter {
       const ip = req.connection.remoteAddress;
       socket.isOpen = true;
 
-      syncTime(socket).then((deltaTime) => {
-        const syncedSocket = new Socket({ socket, id, ip, deltaTime });
+      syncTime(socket).then(deltaTime => {
+        const syncedSocket = new Socket({
+          socket,
+          id,
+          ip,
+          deltaTime,
+        });
         this._pool.set(id, syncedSocket);
         this.emit('connection', syncedSocket);
       });
 
-      socket.on('message', (message) => {
+      socket.on('message', message => {
         this.emit('message', JSON.parse(message), this._pool.get(id));
       });
 
@@ -56,7 +62,7 @@ class Pool extends Emitter {
   }
 
   size() {
-    return this._pool.size();
+    return this._pool.size;
   }
 
   forEachSync(callback) {

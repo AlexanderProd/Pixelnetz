@@ -11,7 +11,7 @@ const getPixels = promisify(getPixelsCB);
 const toHex = num => num.toString(16).padStart(2, '0');
 const roundFloat = (num, precision) => Number(num.toFixed(precision));
 
-const getSharpMimetype = (type) => {
+const getSharpMimetype = type => {
   switch (type) {
     case mimetypes.GIF:
       return mimetypes.PNG;
@@ -23,6 +23,7 @@ const getSharpMimetype = (type) => {
 const prepareMatrix = (width, height, frameLength) => {
   const matrix = new Array(width * height);
 
+  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < width * height; i++) {
     matrix[i] = new Array(frameLength);
   }
@@ -30,6 +31,17 @@ const prepareMatrix = (width, height, frameLength) => {
   return matrix;
 };
 
+/**
+ * @param {Buffer} buffer
+ * @param {string} mimetype
+ * @returns {Object} rasterizationData
+ * @returns {Array<Array<Frame>>} rasterizationData.matrix,
+ * @returns {number} rasterizationData.stepLength,
+ * @returns {number} rasterizationData.width,
+ * @returns {number} rasterizationData.height,
+ * @returns {number} rasterizationData.length,
+ * @returns {number} rasterizationData.duration,
+ */
 const rasterize = async (buffer, mimetype) => {
   let matrix = [];
 
@@ -37,51 +49,50 @@ const rasterize = async (buffer, mimetype) => {
 
   const frameDelays = frames.map(({ delay }) => delay);
 
-  const minDelay = frameDelays.reduce((acc, delay) => (
-    delay < acc ? delay : acc
-  ), Infinity);
+  const minDelay = frameDelays.reduce(
+    (acc, delay) => (delay < acc ? delay : acc),
+    Infinity,
+  );
 
   const duration = frameDelays.reduce((acc, delay) => acc + delay, 0);
 
   let imageWidth = null;
   let imageHeight = null;
 
-  await Promise.all(frames.map(({
-    frame,
-    delay,
-    index,
-  }) => {
-    const delayFactor = roundFloat(delay / minDelay, 2);
-    return sharp(frame)
-      .resize(RESOLUTION)
-      .toBuffer()
-      .then(b => getPixels(b, getSharpMimetype(mimetype)))
-      .then(({ data, shape }) => {
-        const [width, height, channels] = shape;
+  await Promise.all(
+    frames.map(({ frame, delay, index }) => {
+      const delayFactor = roundFloat(delay / minDelay, 2);
+      return sharp(frame)
+        .resize(RESOLUTION)
+        .toBuffer()
+        .then(b => getPixels(b, getSharpMimetype(mimetype)))
+        .then(({ data, shape }) => {
+          const [width, height, channels] = shape;
 
-        if (matrix.length === 0) {
-          matrix = prepareMatrix(width, height, frames.length);
-        }
+          if (matrix.length === 0) {
+            matrix = prepareMatrix(width, height, frames.length);
+          }
 
-        if (!imageWidth || !imageHeight) {
-          imageWidth = width;
-          imageHeight = height;
-        }
+          if (!imageWidth || !imageHeight) {
+            imageWidth = width;
+            imageHeight = height;
+          }
 
-        for (let pos = 0; pos < data.length; pos += channels) {
-          const r = data[pos];
-          const g = data[pos + 1];
-          const b = data[pos + 2];
-          const col = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+          for (let pos = 0; pos < data.length; pos += channels) {
+            const r = data[pos];
+            const g = data[pos + 1];
+            const b = data[pos + 2];
+            const col = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 
-          const i = pos / channels;
-          const x = i % width;
-          const y = Math.floor(i / width);
+            const i = pos / channels;
+            const x = i % width;
+            const y = Math.floor(i / width);
 
-          matrix[(width * y) + x][index] = [col, delayFactor];
-        }
-      });
-  }));
+            matrix[width * y + x][index] = [col, delayFactor];
+          }
+        });
+    }),
+  );
 
   return {
     matrix,

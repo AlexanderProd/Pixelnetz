@@ -1,53 +1,111 @@
 import fs from 'fs';
 import { promisify } from 'util';
-import rasterize from '../sequences/rasterize';
+import rasterize from './rasterize';
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 const unlink = promisify(fs.unlink);
 
-const DB_PATH = `${__dirname}/../../db`;
+const DB_PATH = `${__dirname}/../../../../db`;
+
+interface FileInput {
+  file: {
+    data: Buffer;
+    mimetype: string;
+    name: string;
+  };
+  repeat: boolean;
+}
+
+interface Dimensions {
+  xOffset: number;
+  yOffset: number;
+  width: number;
+  height: number;
+}
+
+interface Scaling {
+  scaleRatio: number;
+  xOffset: number;
+  yOffset: number;
+  gxOffset: number;
+  gyOffset: number;
+  gWidth: number;
+  gHeight: number;
+}
+
+interface RasterizationData {
+  matrix: Matrix;
+  stepLength: number;
+  width: number;
+  height: number;
+  length: number;
+  duration: number;
+}
+
+type Frame = [any, number];
+type Matrix = Frame[][];
 
 class Sequence {
-  static fromFile({
-    file,
-    repeat,
-  }) {
-    return rasterize(file.data, file.mimetype)
-      .then((properties) => new Sequence({
-        name: file.name,
-        repeat,
-        ...properties,
-      }));
+  static fromFile({ file, repeat }: FileInput) {
+    return rasterize(file.data, file.mimetype).then(
+      (properties: RasterizationData) =>
+        new Sequence({
+          name: file.name,
+          repeat,
+          ...properties,
+        }),
+    );
   }
 
-  static async load(name) {
-    const info = await readFile(`${DB_PATH}/${name}.json`)
-      .then(sequence => JSON.parse(sequence));
+  static async load(name: string) {
+    const info = await readFile(
+      `${DB_PATH}/${name}.json`,
+      'utf-8',
+    ).then(sequence => JSON.parse(sequence));
     return new Sequence(info);
   }
 
   static listAvailable() {
     return Promise.all(
-      fs.readdirSync(DB_PATH)
+      fs
+        .readdirSync(DB_PATH)
         .filter(fileName => !fileName.match(/\.matrix/))
-        .map((fileName) => {
+        .map(fileName => {
           const name = fileName.split('.json')[0];
           return Sequence.load(name).then(seq => seq.info);
         }),
     );
   }
 
-  static async exists(name) {
+  static async exists(name: string) {
     !!(await Sequence.listAvailable()).find(seq => seq.name === name);
   }
 
-  static delete(name) {
+  static delete(name: string) {
     return Promise.all([
       unlink(`${DB_PATH}/${name}.matrix.json`),
       unlink(`${DB_PATH}/${name}.json`),
     ]);
   }
+
+  _name: string;
+
+  _repeat: boolean;
+
+  _stepLength: number;
+
+  _width: number;
+
+  _height: number;
+
+  _length: number;
+
+  _duration: number;
+
+  _matrix: Matrix | undefined;
+
+  _scaling: Scaling | undefined;
 
   constructor({
     name,
@@ -57,7 +115,16 @@ class Sequence {
     height,
     length,
     duration,
-    matrix = null,
+    matrix = undefined,
+  }: {
+    name: string;
+    repeat: boolean;
+    stepLength: number;
+    width: number;
+    height: number;
+    length: number;
+    duration: number;
+    matrix?: Matrix;
   }) {
     this._name = name;
     this._repeat = repeat;
@@ -67,6 +134,7 @@ class Sequence {
     this._length = length;
     this._duration = duration;
     this._matrix = matrix;
+    this._scaling = undefined;
   }
 
   get info() {
@@ -109,12 +177,12 @@ class Sequence {
     return this._duration;
   }
 
-  loadMatrix() {
+  loadMatrix(): Promise<Matrix> {
     return new Promise((res, rej) => {
       if (this._matrix) {
         res(this._matrix);
       } else {
-        readFile(`${DB_PATH}/${this._name}.matrix.json`)
+        readFile(`${DB_PATH}/${this._name}.matrix.json`, 'utf-8')
           .then(sequenceJSON => {
             const sequence = JSON.parse(sequenceJSON);
             this._matrix = sequence;
@@ -125,7 +193,18 @@ class Sequence {
     });
   }
 
-  getFrames(x, y) {
+  getFrames(x: number, y: number): Array<Frame> {
+    if (!this._scaling) {
+      throw new ReferenceError(
+        'Scaling has not been set on Sequence',
+      );
+    }
+    if (!this._matrix) {
+      throw new ReferenceError(
+        'Matrix has not been loaded on Sequence',
+      );
+    }
+
     const {
       scaleRatio,
       xOffset,
@@ -143,16 +222,17 @@ class Sequence {
       yOffset +
       Math.floor(scaleRatio / 2);
 
-    return this._matrix[(this._width * my) + mx];
+    return this._matrix[this._width * my + mx];
   }
 
-  getMasterMatrix() {
-    const {
-      gxOffset,
-      gyOffset,
-      gWidth,
-      gHeight,
-    } = this._scaling;
+  getMasterMatrix(): Matrix {
+    if (!this._scaling) {
+      throw new ReferenceError(
+        'Scaling has not been set on Sequence',
+      );
+    }
+
+    const { gxOffset, gyOffset, gWidth, gHeight } = this._scaling;
 
     const matrix = new Array(this._length);
 
@@ -163,12 +243,12 @@ class Sequence {
 
     for (let y = 0; y < gHeight; y++) {
       for (let x = 0; x < gWidth; x++) {
-        const gx = (x + gxOffset);
-        const gy = (y + gyOffset);
+        const gx = x + gxOffset;
+        const gy = y + gyOffset;
         const frameStack = this.getFrames(gx, gy);
         frameStack.forEach(([pixelCol, stepLength], i) => {
           const level = matrix[i];
-          level[0][(gWidth * y) + x] = pixelCol;
+          level[0][gWidth * y + x] = pixelCol;
           level[1] = stepLength;
         });
       }
@@ -177,7 +257,7 @@ class Sequence {
     return matrix;
   }
 
-  scale(dimensions) {
+  scale(dimensions: Dimensions) {
     const width = this._width;
     const height = this._height;
     const gxOffset = dimensions.xOffset;
@@ -190,8 +270,8 @@ class Sequence {
     const gAspect = gWidth / gHeight;
 
     const scaleRatio = aspect < gAspect ? wScale : hScale;
-    const xOffset = Math.floor((width - (gWidth * scaleRatio)) / 2);
-    const yOffset = Math.floor((height - (gHeight * scaleRatio)) / 2);
+    const xOffset = Math.floor((width - gWidth * scaleRatio) / 2);
+    const yOffset = Math.floor((height - gHeight * scaleRatio) / 2);
 
     this._scaling = {
       scaleRatio,

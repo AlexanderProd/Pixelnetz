@@ -7,11 +7,12 @@ import {
 import Sequence from '../sequences/Sequence';
 
 const setupLiveData = ({ masterPool, clientPool }) => {
-  masterPool.on('connection', async (masterSocket) => {
+  masterPool.on('connection', async masterSocket => {
     const currentConnections = [];
-    clientPool.forEachSync(
-      client => currentConnections.push(client.info()),
-    );
+    clientPool.forEachSync(client => {
+      currentConnections.push(client.info());
+    });
+
     masterSocket.send({
       actionType: CURRENT_CONNECTIONS,
       connections: currentConnections,
@@ -31,9 +32,8 @@ const setupLiveData = ({ masterPool, clientPool }) => {
   let newConnections = [];
   let closedConnections = [];
 
-  clientPool.on(
-    'position',
-    clientSocket => newConnections.push(clientSocket.info()),
+  clientPool.on('position', clientSocket =>
+    newConnections.push(clientSocket.info()),
   );
 
   clientPool.on('close', id => closedConnections.push(id));
