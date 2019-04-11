@@ -1,7 +1,6 @@
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
-import cors from 'cors';
 import compressionMiddleware from '../util/compressionMiddleware';
 import { isDev } from '../util/env';
 
@@ -37,22 +36,6 @@ const configureApp = (app, express) => {
       );
       next();
     });
-  } else {
-    const whitelist = [
-      'http://bepartoftheshow.de',
-      'https://bepartoftheshow.de',
-    ];
-    const corsOptions = {
-      origin(origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      },
-      optionsSuccessStatus: 200,
-    };
-    app.use(cors(corsOptions));
   }
 };
 
