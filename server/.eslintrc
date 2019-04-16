@@ -15,7 +15,8 @@
     "no-undef": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "no-restricted-syntax": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "import/no-named-as-default": "off"
   },
   "env": {
     "es6": true,
