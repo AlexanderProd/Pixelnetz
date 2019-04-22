@@ -83,9 +83,14 @@
   },
   "ava": {
     "compileEnhancements": false,
-    "cache": true,
     "extensions": [
       "ts"
+    ],
+    "files": [
+      "./src/**/*.test.ts"
+    ],
+    "sources": [
+      "./src/**/*"
     ],
     "require": [
       "ts-node/register"

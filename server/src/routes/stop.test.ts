@@ -39,7 +39,6 @@ test('stop: sends status 200', t => {
   stop([new MockPool()])(null, res);
 
   t.true(res.sendStatus.calledOnceWith(200));
-  // expect(res.sendStatus).to.be.calledWith(200);
 });
 
 test('stop: sends STOP_ANIMATION action to ws', async t => {
@@ -51,5 +50,4 @@ test('stop: sends STOP_ANIMATION action to ws', async t => {
   await wait();
 
   t.true(mockSend.calledOnceWith({ actionType: STOP_ANIMATION }));
-  // expect(socket.send).to.be.calledWith(JSON.stringify({ actionType: STOP_ANIMATION }));
 });
