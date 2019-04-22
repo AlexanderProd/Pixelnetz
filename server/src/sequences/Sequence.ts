@@ -37,7 +37,7 @@ interface Scaling {
 
 class Sequence {
   static async fromFile({ file, repeat }: FileInput): Promise<void> {
-    const mimetype = <Mimetypes>file.mimetype;
+    const mimetype = file.mimetype as Mimetypes;
     const { getMatrixPart, ...data } = await rasterize(
       file.data,
       mimetype,
@@ -93,25 +93,25 @@ class Sequence {
     ]);
   }
 
-  _name: string;
+  private _name: string;
 
-  _repeat: boolean;
+  private _repeat: boolean;
 
-  _stepLength: number;
+  private _stepLength: number;
 
-  _width: number;
+  private _width: number;
 
-  _height: number;
+  private _height: number;
 
-  _length: number;
+  private _length: number;
 
-  _duration: number;
+  private _duration: number;
 
-  _numParts: number;
+  private _numParts: number;
 
-  _matrix: Matrix | undefined;
+  private _matrix: Matrix | undefined;
 
-  _scaling: Scaling | undefined;
+  private _scaling: Scaling | undefined;
 
   constructor({
     name,
@@ -191,7 +191,7 @@ class Sequence {
     return this._numParts;
   }
 
-  loadMatrix(): Promise<Matrix> {
+  __loadMatrix(): Promise<Matrix> {
     return new Promise((res, rej) => {
       if (this._matrix) {
         res(this._matrix);
@@ -207,22 +207,26 @@ class Sequence {
     });
   }
 
+  async loadMatrix(index: number): Promise<Matrix> {
+    const matrixJSON = await readFile(
+      `${DB_PATH}/${this._name}.matrix.${index}.json`,
+      'utf-8',
+    );
+    const matrix = JSON.parse(matrixJSON) as Matrix;
+    return matrix;
+  }
+
   async *loadMatrices(): AsyncIterableIterator<Matrix> {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < this._numParts; i++) {
       this._matrix = undefined;
       // eslint-disable-next-line no-await-in-loop
-      const matrixJSON = await readFile(
-        `${DB_PATH}/${this._name}.matrix.${i}.json`,
-        'utf-8',
-      );
-      const matrix = <Matrix>JSON.parse(matrixJSON);
-      this._matrix = matrix;
+      this._matrix = await this.loadMatrix(i);
       yield this._matrix;
     }
   }
 
-  getFrames(x: number, y: number): Array<Frame> {
+  getFrames(x: number, y: number): Frame[] {
     if (!this._scaling) {
       throw new ReferenceError(
         'Scaling has not been set on Sequence',

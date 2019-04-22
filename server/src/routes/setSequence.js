@@ -1,4 +1,7 @@
-import { SET_SEQUENCE, DIMENSIONS } from '../../../shared/dist/util/socketActionTypes';
+import {
+  SET_SEQUENCE,
+  DIMENSIONS,
+} from '../../../shared/dist/util/socketActionTypes';
 import { isSafeFileName } from '../util/userInput';
 import Sequence from '../sequences/Sequence';
 
@@ -38,7 +41,7 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
   sequence.scale(dimensions);
 
   try {
-    await sequence.loadMatrix();
+    await sequence.__loadMatrix();
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Error loading sequence matrix' });
@@ -67,7 +70,7 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
     },
   });
 
-  clientPool.forEach((socket) => {
+  clientPool.forEach(socket => {
     console.log('set: ', socket.id());
     const { x, y } = socket.properties;
     socket.send({
