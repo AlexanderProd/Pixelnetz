@@ -26,5 +26,5 @@
     "node": true,
     "mocha": true
   },
-  "parser": "babel-eslint"
+  "parser": "@typescript-eslint/parser"
 }
