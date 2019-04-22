@@ -11,7 +11,6 @@ import start from './routes/start';
 import stop from './routes/stop';
 import setSequence from './routes/setSequence';
 import upload from './routes/upload';
-import wshost from './routes/wshost';
 import savedFiles from './routes/savedFiles';
 import deleteSequence from './routes/deleteSequence';
 import createClientPool from './ws/client';
@@ -45,7 +44,6 @@ app.get(
   setSequence(clientPool, masterPool),
 );
 app.post('/upload', withAuth, upload(masterPool));
-app.get('/wshost', wshost(localHostname));
 app.get('/savedFiles', withAuth, savedFiles());
 app.get('/deleteSequence', withAuth, deleteSequence(masterPool));
 
