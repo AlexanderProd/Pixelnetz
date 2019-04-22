@@ -3,13 +3,9 @@ import sendAllSequences from '../util/sendAllSequences';
 import Sequence from '../sequences/Sequence';
 import mimetypes from '../sequences/mimetypes';
 
-const allowedTypes = [
-  mimetypes.PNG,
-  mimetypes.JPEG,
-  mimetypes.GIF,
-];
+const allowedTypes = [mimetypes.PNG, mimetypes.JPEG, mimetypes.GIF];
 
-const upload = (masterPool) => (req, res) => {
+const upload = masterPool => (req, res) => {
   const { file } = req.files;
 
   if (!isSafeFileName(file.name)) {
@@ -23,13 +19,12 @@ const upload = (masterPool) => (req, res) => {
   }
 
   Sequence.fromFile({ file, repeat: false })
-    .then(sequence => sequence.save())
     .then(() => {
       console.log('file written successfully');
       res.sendStatus(200);
       sendAllSequences(masterPool);
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       res.status(500).json({ error: err });
     });

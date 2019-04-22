@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { promisify } from 'util';
-import rasterize from './rasterize';
+import rasterize, { Matrix, Frame } from './rasterize';
+import Mimetypes from './mimetypes';
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -34,28 +35,29 @@ interface Scaling {
   gHeight: number;
 }
 
-interface RasterizationData {
-  matrix: Matrix;
-  stepLength: number;
-  width: number;
-  height: number;
-  length: number;
-  duration: number;
-}
-
-type Frame = [any, number];
-type Matrix = Frame[][];
-
 class Sequence {
-  static fromFile({ file, repeat }: FileInput) {
-    return rasterize(file.data, file.mimetype).then(
-      (properties: RasterizationData) =>
-        new Sequence({
-          name: file.name,
-          repeat,
-          ...properties,
-        }),
+  static async fromFile({ file, repeat }: FileInput): Promise<void> {
+    const mimetype = <Mimetypes>file.mimetype;
+    const { getMatrixPart, ...data } = await rasterize(
+      file.data,
+      mimetype,
     );
+    const seq = new Sequence({
+      name: file.name,
+      repeat,
+      ...data,
+    });
+    await writeFile(
+      `${DB_PATH}/${seq.name}.json`,
+      JSON.stringify(seq.info),
+    );
+    for await (const { matrix, index } of getMatrixPart()) {
+      // eslint-disable-next-line no-await-in-loop
+      await writeFile(
+        `${DB_PATH}/${seq.name}.matrix.${index}.json`,
+        JSON.stringify(matrix),
+      );
+    }
   }
 
   static async load(name: string) {
@@ -79,7 +81,9 @@ class Sequence {
   }
 
   static async exists(name: string) {
-    !!(await Sequence.listAvailable()).find(seq => seq.name === name);
+    return !!(await Sequence.listAvailable()).find(
+      seq => seq.name === name,
+    );
   }
 
   static delete(name: string) {
@@ -103,6 +107,8 @@ class Sequence {
 
   _duration: number;
 
+  _numParts: number;
+
   _matrix: Matrix | undefined;
 
   _scaling: Scaling | undefined;
@@ -115,6 +121,7 @@ class Sequence {
     height,
     length,
     duration,
+    numParts,
     matrix = undefined,
   }: {
     name: string;
@@ -124,6 +131,7 @@ class Sequence {
     height: number;
     length: number;
     duration: number;
+    numParts: number;
     matrix?: Matrix;
   }) {
     this._name = name;
@@ -134,6 +142,7 @@ class Sequence {
     this._length = length;
     this._duration = duration;
     this._matrix = matrix;
+    this._numParts = numParts;
     this._scaling = undefined;
   }
 
@@ -146,6 +155,7 @@ class Sequence {
       height: this._height,
       length: this._length,
       duration: this._duration,
+      numParts: this._numParts,
     };
   }
 
@@ -177,6 +187,10 @@ class Sequence {
     return this._duration;
   }
 
+  get numParts() {
+    return this._numParts;
+  }
+
   loadMatrix(): Promise<Matrix> {
     return new Promise((res, rej) => {
       if (this._matrix) {
@@ -191,6 +205,21 @@ class Sequence {
           .catch(rej);
       }
     });
+  }
+
+  async *loadMatrices(): AsyncIterableIterator<Matrix> {
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < this._numParts; i++) {
+      this._matrix = undefined;
+      // eslint-disable-next-line no-await-in-loop
+      const matrixJSON = await readFile(
+        `${DB_PATH}/${this._name}.matrix.${i}.json`,
+        'utf-8',
+      );
+      const matrix = <Matrix>JSON.parse(matrixJSON);
+      this._matrix = matrix;
+      yield this._matrix;
+    }
   }
 
   getFrames(x: number, y: number): Array<Frame> {
@@ -236,12 +265,15 @@ class Sequence {
 
     const matrix = new Array(this._length);
 
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < this._length; i++) {
       const frame = new Array(gWidth * gHeight);
       matrix[i] = [frame, null];
     }
 
+    // eslint-disable-next-line no-plusplus
     for (let y = 0; y < gHeight; y++) {
+      // eslint-disable-next-line no-plusplus
       for (let x = 0; x < gWidth; x++) {
         const gx = x + gxOffset;
         const gy = y + gyOffset;
