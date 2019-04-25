@@ -13,14 +13,16 @@ const createCanvas = () => {
   return canvas;
 };
 
-const getWidth = elem => Number(window
-  .getComputedStyle(elem)
-  .getPropertyValue('width')
-  .split('px')[0]);
+const getWidth = elem =>
+  Number(
+    window
+      .getComputedStyle(elem)
+      .getPropertyValue('width')
+      .split('px')[0],
+  );
 
-const setHeight = (elem, val) => elem
-  .style
-  .setProperty('height', `${val}px`);
+const setHeight = (elem, val) =>
+  elem.style.setProperty('height', `${val}px`);
 
 const createFrameHandler = (canvas, dimensions) => {
   const ctx = canvas.getContext('2d');
@@ -33,10 +35,10 @@ const createFrameHandler = (canvas, dimensions) => {
   // eslint-disable-next-line no-param-reassign
   canvas.height = blockScaling * dimensions.height;
 
-  return (frame) => {
+  return frame => {
     for (let y = 0; y < dimensions.height; y++) {
       for (let x = 0; x < dimensions.width; x++) {
-        const col = frame[(dimensions.width * y) + x];
+        const col = frame[dimensions.width * y + x];
         ctx.fillStyle = col;
         ctx.fillRect(
           x * blockScaling,
@@ -68,10 +70,17 @@ const defaultProps = {
   appendedSequence: null,
 };
 
-const Preview = ({ animationStart, dimensions, masterSequence, appendedSequence }) => {
+const Preview = ({
+  animationStart,
+  dimensions,
+  masterSequence,
+  appendedSequence,
+}) => {
   const [canvas] = useState(createCanvas());
 
-  const [animationController, setAnimationController] = useState(null);
+  const [animationController, setAnimationController] = useState(
+    null,
+  );
 
   useEffect(() => {
     const wrapper = document.getElementById('Preview');
@@ -89,10 +98,9 @@ const Preview = ({ animationStart, dimensions, masterSequence, appendedSequence 
       const cWidth = getWidth(canvas);
       const blockScaling = cWidth / width;
       setHeight(canvas, blockScaling * height);
-      const controller = createAnimationController(createFrameHandler(
-        canvas,
-        dimensions,
-      ));
+      const controller = createAnimationController(
+        createFrameHandler(canvas, dimensions),
+      );
       controller.setSequence(masterSequence);
       setAnimationController(controller);
     }
@@ -100,7 +108,7 @@ const Preview = ({ animationStart, dimensions, masterSequence, appendedSequence 
 
   useEffect(() => {
     if (appendedSequence && animationController) {
-      animationController.appendedSequence(appendedSequence);
+      animationController.appendSequence(appendedSequence);
     }
   }, [appendedSequence]);
 
@@ -125,8 +133,12 @@ const Preview = ({ animationStart, dimensions, masterSequence, appendedSequence 
   return (
     <>
       <div id="Preview" className="Preview" />
-      <Button primary onClick={handleStart}>Start</Button>
-      <Button secondary onClick={handleStop}>Stop</Button>
+      <Button primary onClick={handleStart}>
+        Start
+      </Button>
+      <Button secondary onClick={handleStop}>
+        Stop
+      </Button>
     </>
   );
 };

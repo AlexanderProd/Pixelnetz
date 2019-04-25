@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import {
   SET_SEQUENCE,
+  APPEND_SEQUENCE,
   DIMENSIONS,
 } from '../../../shared/dist/util/socketActionTypes';
 import { isSafeFileName } from '../util/userInput';
@@ -47,47 +48,45 @@ const setSequence = (
 
   sequence.scale(dimensions);
 
-  try {
-    await sequence.__loadMatrix();
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Error loading sequence matrix' });
-    return;
-  }
-
-  const masterMatrix = sequence.getMasterMatrix();
-  const sequenceInfo = {
-    ...sequence.info,
-    repeat,
-    stepLength,
-  };
-
   masterPool.sendAll({
     actionType: DIMENSIONS,
     dimensions,
   });
 
-  masterPool.sendAll({
-    actionType: SET_SEQUENCE,
-    sequence: {
-      ...sequenceInfo,
-      frames: masterMatrix,
-      width: dimensions.width,
-      height: dimensions.height,
-    },
-  });
+  for await (const { index } of sequence.loadMatrices()) {
+    const masterMatrix = sequence.getMasterMatrix();
+    const sequenceInfo = {
+      ...sequence.info,
+      repeat,
+      stepLength,
+    };
 
-  clientPool.forEach((socket: Socket) => {
-    console.log('set: ', socket.id());
-    const { x, y } = socket.properties;
-    socket.send({
-      actionType: SET_SEQUENCE,
+    masterPool.sendAll({
+      actionType: index === 0 ? SET_SEQUENCE : APPEND_SEQUENCE,
       sequence: {
-        frames: sequence.getFrames(x, y),
         ...sequenceInfo,
+        frames: masterMatrix,
+        width: dimensions.width,
+        height: dimensions.height,
       },
     });
-  });
+
+    const poolSize = clientPool.size();
+    console.log(
+      `setting part ${index} of sequence for ${poolSize} clients`,
+    );
+
+    clientPool.forEachSync((socket: Socket) => {
+      const { x, y } = socket.properties;
+      socket.send({
+        actionType: index === 0 ? SET_SEQUENCE : APPEND_SEQUENCE,
+        sequence: {
+          frames: sequence.getFrames(x, y),
+          ...sequenceInfo,
+        },
+      });
+    });
+  }
 
   res.sendStatus(200);
 };

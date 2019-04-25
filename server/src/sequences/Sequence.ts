@@ -217,13 +217,16 @@ class Sequence {
     return matrix;
   }
 
-  async *loadMatrices(): AsyncIterableIterator<Matrix> {
+  async *loadMatrices(): AsyncIterableIterator<{
+    matrix: Matrix;
+    index: number;
+  }> {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < this._numParts; i++) {
       this._matrix = undefined;
       // eslint-disable-next-line no-await-in-loop
       this._matrix = await this.loadMatrix(i);
-      yield this._matrix;
+      yield { matrix: this._matrix, index: i };
     }
   }
 
@@ -265,13 +268,18 @@ class Sequence {
         'Scaling has not been set on Sequence',
       );
     }
+    if (!this._matrix) {
+      throw new ReferenceError(
+        'Matrix has not been loaded on Sequence',
+      );
+    }
 
     const { gxOffset, gyOffset, gWidth, gHeight } = this._scaling;
 
-    const matrix = new Array(this._length);
+    const matrix = new Array(this._matrix.length);
 
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < this._length; i++) {
+    for (let i = 0; i < this._matrix.length; i++) {
       const frame = new Array(gWidth * gHeight);
       matrix[i] = [frame, null];
     }
