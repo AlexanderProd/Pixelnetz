@@ -63,16 +63,10 @@ class Thread<ThreadInput, ThreadOutput> extends Emitter {
   ): void;
 
   // eslint-disable-next-line no-dupe-class-members
-  on(
-    event: string | symbol,
-    listener: (...args: any[]) => void,
-  ): void;
+  on(event: string, listener: (...args: any[]) => void): void;
 
   // eslint-disable-next-line no-dupe-class-members
-  on(
-    event: string | symbol,
-    listener: (...args: any[]) => void,
-  ): void {
+  on(event: string, listener: (...args: any[]) => void): void {
     super.on(event, listener);
   }
 
@@ -82,10 +76,10 @@ class Thread<ThreadInput, ThreadOutput> extends Emitter {
   ): void;
 
   // eslint-disable-next-line no-dupe-class-members
-  emit(event: string | symbol, ...args: any[]): void;
+  emit(event: string, ...args: any[]): void;
 
   // eslint-disable-next-line no-dupe-class-members
-  emit(event: string | symbol, ...args: any[]): void {
+  emit(event: string, ...args: any[]): void {
     super.emit(event, ...args);
   }
 

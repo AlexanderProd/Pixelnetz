@@ -1,5 +1,6 @@
 import url from 'url';
 import WebSocket from 'ws';
+import { Server } from 'http';
 import Emitter from '../Emitter';
 import Socket from '../Socket';
 import syncTime from '../syncTime';
@@ -11,7 +12,19 @@ const generateKey = () =>
   );
 
 class Pool extends Emitter {
-  constructor({ port, server, path }) {
+  private _wsServer: WebSocket.Server;
+
+  private _pool: Map<string, Socket>;
+
+  constructor({
+    port,
+    server,
+    path,
+  }: {
+    port: number;
+    server: Server;
+    path: string;
+  }) {
     super(['connection', 'message', 'close']);
     if (port) {
       this._wsServer = new WebSocket.Server({ port });
@@ -31,12 +44,13 @@ class Pool extends Emitter {
       );
     }
 
-    this._pool = new Map();
+    this._pool = new Map<string, Socket>();
 
-    this._wsServer.on('connection', (socket, req) => {
+    this._wsServer.on('connection', (socket: WebSocket, req) => {
       const id = generateKey();
       const ip = req.connection.remoteAddress;
-      socket.isOpen = true;
+      // eslint-disable-next-line no-param-reassign
+      (socket as any).isOpen = true;
 
       syncTime(socket).then(deltaTime => {
         const syncedSocket = new Socket({
@@ -50,11 +64,16 @@ class Pool extends Emitter {
       });
 
       socket.on('message', message => {
-        this.emit('message', JSON.parse(message), this._pool.get(id));
+        this.emit(
+          'message',
+          JSON.parse(message as string),
+          this._pool.get(id),
+        );
       });
 
       socket.on('close', () => {
-        socket.isOpen = false;
+        // eslint-disable-next-line no-param-reassign
+        (socket as any).isOpen = false;
         this._pool.delete(id);
         this.emit('close', id);
       });
@@ -65,13 +84,13 @@ class Pool extends Emitter {
     return this._pool.size;
   }
 
-  forEachSync(callback) {
+  forEachSync(callback: (socket: Socket) => void) {
     for (const socket of this._pool.values()) {
       callback(socket);
     }
   }
 
-  forEach(callback) {
+  forEach(callback: (socket: Socket) => void) {
     for (const socket of this._pool.values()) {
       setTimeout(() => {
         callback(socket);
@@ -79,7 +98,7 @@ class Pool extends Emitter {
     }
   }
 
-  sendAll(message) {
+  sendAll(message: any) {
     this.forEach(socket => socket.send(message));
   }
 }

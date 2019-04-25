@@ -1,5 +1,11 @@
+export type EventHandler = (...args: any[]) => void;
+
 class Emitter {
-  constructor(events, { strict = true } = {}) {
+  private _events: { [event: string]: EventHandler[] };
+
+  private _strict: boolean;
+
+  constructor(events?: string[], { strict = true } = {}) {
     this._events = {};
     this._strict = strict;
 
@@ -10,17 +16,15 @@ class Emitter {
     }
   }
 
-  register(event) {
-    if (this._events.hasOwnProperty(event)) {
-      throw new Error(
-        `Event '${event}' is already registered`,
-      );
+  register(event: string) {
+    if (event in this._events) {
+      throw new Error(`Event '${event}' is already registered`);
     }
     this._events[event] = [];
   }
 
-  on(event, handler) {
-    if (!this._events.hasOwnProperty(event)) {
+  on(event: string, handler: EventHandler) {
+    if (!(event in this._events)) {
       if (!this._strict) {
         this._events[event] = [];
       } else {
@@ -32,15 +36,13 @@ class Emitter {
     this._events[event].push(handler);
   }
 
-  emit(event, ...args) {
-    if (this._events.hasOwnProperty(event)) {
+  emit(event: string, ...args: any[]) {
+    if (event in this._events) {
       this._events[event].forEach(handler => {
         handler(...args);
       });
     } else {
-      throw new Error(
-        `Unregistered event '${event}' emitted`,
-      );
+      throw new Error(`Unregistered event '${event}' emitted`);
     }
   }
 }

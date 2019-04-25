@@ -1,7 +1,32 @@
+import WebSocket from 'ws';
 import createSender from '../../util/createSender';
 
 class Socket {
-  constructor({ socket, id, ip, deltaTime }) {
+  private _socket: WebSocket;
+
+  private _deltaTime: number;
+
+  private _id: string;
+
+  private _ip?: string;
+
+  private _joinTime: number;
+
+  private _send: (data: any) => void;
+
+  private properties: any;
+
+  constructor({
+    socket,
+    id,
+    ip,
+    deltaTime,
+  }: {
+    socket: WebSocket;
+    id: string;
+    ip?: string;
+    deltaTime: number;
+  }) {
     this._socket = socket;
     this._deltaTime = deltaTime;
     this._id = id;
@@ -11,7 +36,7 @@ class Socket {
     this.properties = {};
   }
 
-  send(data) {
+  send(data: any) {
     this._send(data);
   }
 
@@ -32,13 +57,13 @@ class Socket {
   }
 
   info() {
-    return ({
+    return {
       deltaTime: this._deltaTime,
       id: this._id,
       ip: this._ip,
       joinTime: this._joinTime,
       properties: this.properties,
-    });
+    };
   }
 }
 
