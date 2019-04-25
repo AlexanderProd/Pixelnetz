@@ -1,7 +1,7 @@
-import sharp from 'sharp';
 import Mimetypes from './mimetypes';
-import getPixels from '../@types/get-pixels/getPixels';
-import { PixelData } from '../@types/get-pixels';
+import getPixels, { PixelData } from '../@types/get-pixels';
+
+import sharp = require('sharp');
 
 export const RESOLUTION = 100;
 export const MAX_FRAMES = 50;

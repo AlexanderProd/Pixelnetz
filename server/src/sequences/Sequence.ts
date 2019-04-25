@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { promisify } from 'util';
-import rasterize, { Matrix, Frame } from './rasterize';
+import rasterize from './rasterize';
+import { Matrix, Frame } from './rasterization';
 import Mimetypes from './mimetypes';
 
 const writeFile = promisify(fs.writeFile);
@@ -196,7 +197,7 @@ class Sequence {
       if (this._matrix) {
         res(this._matrix);
       } else {
-        readFile(`${DB_PATH}/${this._name}.matrix.json`, 'utf-8')
+        readFile(`${DB_PATH}/${this._name}.matrix.0.json`, 'utf-8')
           .then(sequenceJSON => {
             const sequence = JSON.parse(sequenceJSON);
             this._matrix = sequence;

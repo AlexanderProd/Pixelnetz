@@ -8,28 +8,43 @@ import { FrameData } from './getFrames';
 import Mimetypes from './mimetypes';
 import { roundFloat, toHex } from '../util/numbers';
 
+export interface PartRasterizationInput {
+  frames: FrameData[];
+  minDelay: number;
+  mimetype: Mimetypes;
+  offsetIndex: number;
+  width: number;
+  height: number;
+  channels: number;
+  maxFrames?: number;
+}
+
 async function rasterizePart({
   frames,
   minDelay,
   mimetype,
   offsetIndex,
-}: {
-  frames: FrameData[];
-  minDelay: number;
-  mimetype: Mimetypes;
-  offsetIndex: number;
-}): Promise<Matrix> {
-  let matrix: Matrix = [];
+  width,
+  height,
+  channels,
+  maxFrames = MAX_FRAMES,
+}: PartRasterizationInput): Promise<Matrix> {
+  const matrix: Matrix = prepareMatrix(width, height, frames.length);
   await Promise.all(
     frames.map(
       ({ frame, delay, index }): Promise<void> => {
         const delayFactor = roundFloat(delay / minDelay, 2);
         return getPixelsFromFrame(frame, mimetype).then(
           ({ data, shape }): void => {
-            const [width, height, channels] = shape;
-
-            if (matrix.length === 0) {
-              matrix = prepareMatrix(width, height, frames.length);
+            const [imageWidth, imageHeight, colorChannels] = shape;
+            if (
+              imageWidth !== width ||
+              imageHeight !== height ||
+              colorChannels !== channels
+            ) {
+              throw new Error(
+                'Image dimensions do not match frame dimensions',
+              );
             }
 
             for (let pos = 0; pos < data.length; pos += channels) {
@@ -43,7 +58,7 @@ async function rasterizePart({
               const y = Math.floor(i / width);
 
               matrix[width * y + x][
-                index - offsetIndex * MAX_FRAMES
+                index - offsetIndex * maxFrames
               ] = [col, delayFactor];
             }
           },

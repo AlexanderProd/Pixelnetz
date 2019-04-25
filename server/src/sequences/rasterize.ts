@@ -1,4 +1,4 @@
-import getFrames from './getFrames';
+import getFrames, { FrameData } from './getFrames';
 import Mimetypes from './mimetypes';
 import {
   Matrix,
@@ -6,7 +6,9 @@ import {
   getPixelsFromFrame,
   MAX_FRAMES,
 } from './rasterization';
-import rasterizePart from './rasterizePart';
+import rasterizePart, {
+  PartRasterizationInput,
+} from './rasterizePart';
 
 export interface RasterizationData {
   getMatrixPart: () => AsyncIterableIterator<{
@@ -20,6 +22,47 @@ export interface RasterizationData {
   duration: number;
   numParts: number;
 }
+
+export const createGetMatrixPart = ({
+  numParts,
+  frameParts,
+  minDelay,
+  mimetype,
+  width,
+  height,
+  channels,
+  maxFrames,
+}: {
+  numParts: number;
+  frameParts: FrameData[][];
+  minDelay: number;
+  mimetype: Mimetypes;
+  width: number;
+  height: number;
+  channels: number;
+  maxFrames?: number;
+}) =>
+  async function* getMatrixPart() {
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < numParts; i++) {
+      const part = frameParts[i];
+      const input: PartRasterizationInput = {
+        frames: part,
+        minDelay,
+        mimetype,
+        offsetIndex: i,
+        width,
+        height,
+        channels,
+        maxFrames,
+      };
+      yield {
+        // eslint-disable-next-line no-await-in-loop
+        matrix: await rasterizePart(input),
+        index: i,
+      };
+    }
+  };
 
 const rasterize = async (
   buffer: Buffer,
@@ -43,38 +86,33 @@ const rasterize = async (
 
   const frameParts = splitToSize(frames, MAX_FRAMES);
 
-  const { imageWidth, imageHeight } = await getPixelsFromFrame(
+  const { width, height, channels } = await getPixelsFromFrame(
     frames[0].frame,
     mimetype,
   ).then(({ shape }) => {
-    const [width, height] = shape;
-    return { imageWidth: width, imageHeight: height };
+    const [imageWidth, imageHeight, colorChannels] = shape;
+    return {
+      width: imageWidth,
+      height: imageHeight,
+      channels: colorChannels,
+    };
   });
-
-  async function* getMatrixPart() {
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < numParts; i++) {
-      const part = frameParts[i];
-      yield {
-        // eslint-disable-next-line no-await-in-loop
-        matrix: await rasterizePart({
-          frames: part,
-          minDelay,
-          mimetype,
-          offsetIndex: i,
-        }),
-        index: i,
-      };
-    }
-  }
 
   return {
     stepLength: minDelay,
-    width: imageWidth,
-    height: imageHeight,
+    width,
+    height,
     length: frames.length,
     duration,
-    getMatrixPart,
+    getMatrixPart: createGetMatrixPart({
+      numParts,
+      frameParts,
+      minDelay,
+      mimetype,
+      width,
+      height,
+      channels,
+    }),
     numParts,
   };
 };
