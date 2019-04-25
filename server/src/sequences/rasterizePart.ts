@@ -2,11 +2,11 @@ import {
   Matrix,
   getPixelsFromFrame,
   prepareMatrix,
-  MAX_FRAMES,
 } from './rasterization';
 import { FrameData } from './getFrames';
 import Mimetypes from './mimetypes';
 import { roundFloat, toHex } from '../util/numbers';
+import { MAX_FRAMES } from './rasterisationConstants';
 
 export interface PartRasterizationInput {
   frames: FrameData[];

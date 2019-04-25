@@ -8,6 +8,8 @@ export interface FrameData {
   delay: number;
 }
 
+export const DEFAULT_DELAY = 1000;
+
 const toBuffer = (stream: Stream): Promise<Buffer> =>
   new Promise((res, rej) => {
     const buffers: any[] = [];
@@ -25,7 +27,7 @@ const getFrames = async (
       {
         frame: buffer,
         index: 0,
-        delay: 1000,
+        delay: DEFAULT_DELAY,
       },
     ];
   }

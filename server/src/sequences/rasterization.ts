@@ -1,10 +1,8 @@
 import Mimetypes from './mimetypes';
 import getPixels, { PixelData } from '../@types/get-pixels';
+import { RESOLUTION } from './rasterisationConstants';
 
 import sharp = require('sharp');
-
-export const RESOLUTION = 100;
-export const MAX_FRAMES = 50;
 
 export type Frame = [any, number];
 export type Matrix = Frame[][];

@@ -4,11 +4,11 @@ import {
   Matrix,
   splitToSize,
   getPixelsFromFrame,
-  MAX_FRAMES,
 } from './rasterization';
 import rasterizePart, {
   PartRasterizationInput,
 } from './rasterizePart';
+import { MAX_FRAMES } from './rasterisationConstants';
 
 export interface RasterizationData {
   getMatrixPart: () => AsyncIterableIterator<{
@@ -67,6 +67,7 @@ export const createGetMatrixPart = ({
 const rasterize = async (
   buffer: Buffer,
   mimetype: Mimetypes,
+  maxFrames: number = MAX_FRAMES,
 ): Promise<RasterizationData> => {
   const frames = await getFrames(buffer, mimetype);
 
@@ -82,9 +83,9 @@ const rasterize = async (
     0,
   );
 
-  const numParts = Math.ceil(frames.length / MAX_FRAMES);
+  const numParts = Math.ceil(frames.length / maxFrames);
 
-  const frameParts = splitToSize(frames, MAX_FRAMES);
+  const frameParts = splitToSize(frames, maxFrames);
 
   const { width, height, channels } = await getPixelsFromFrame(
     frames[0].frame,
