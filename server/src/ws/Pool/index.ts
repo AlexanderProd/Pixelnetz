@@ -21,9 +21,9 @@ class Pool extends Emitter {
     server,
     path,
   }: {
-    port: number;
-    server: Server;
-    path: string;
+    port?: number;
+    server?: Server;
+    path?: string;
   }) {
     super(['connection', 'message', 'close']);
     if (port) {

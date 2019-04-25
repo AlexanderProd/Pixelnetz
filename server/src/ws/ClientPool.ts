@@ -1,25 +1,33 @@
+import { Server } from 'http';
 import { POSITION } from '../../../shared/dist/util/socketActionTypes';
 import Pool from './Pool';
 
-const createClientPool = (server) => {
-  const clientPool = new Pool({ server, path: '/' });
-  clientPool.register('position');
+class ClientPool extends Pool {
+  constructor(server: Server) {
+    super({ server, path: '/' });
 
-  clientPool.on('connection', (socket) => {
-    socket.send({ actionType: POSITION });
-  });
+    this.register('position');
 
-  clientPool.on('message', (message, socket) => {
-    if (message.actionType === POSITION) {
-      const { x, y } = message;
-      socket.properties.x = Number(x);
-      socket.properties.y = Number(y);
-      console.log(`PIXEL: ${socket.id()} x=${x}, y=${y}, deltaTime=${socket.deltaTime()}`);
-      clientPool.emit('position', socket);
-    }
-  });
+    this.on('connection', socket => {
+      socket.send({ actionType: POSITION });
+    });
 
-  clientPool.dimensions = () => {
+    this.on('message', (message, socket) => {
+      if (message.actionType === POSITION) {
+        const { x, y } = message;
+        // eslint-disable-next-line no-param-reassign
+        socket.properties.x = Number(x);
+        // eslint-disable-next-line no-param-reassign
+        socket.properties.y = Number(y);
+        console.log(
+          `PIXEL: ${socket.id()} x=${x}, y=${y}, deltaTime=${socket.deltaTime()}`,
+        );
+        this.emit('position', socket);
+      }
+    });
+  }
+
+  dimensions() {
     const dimensions = {
       minX: Infinity,
       minY: Infinity,
@@ -27,7 +35,7 @@ const createClientPool = (server) => {
       maxY: -Infinity,
     };
 
-    clientPool.forEachSync(({ properties: { x, y } }) => {
+    this.forEachSync(({ properties: { x, y } }) => {
       if (x < dimensions.minX) dimensions.minX = x;
       if (y < dimensions.minY) dimensions.minY = y;
       if (x > dimensions.maxX) dimensions.maxX = x;
@@ -54,9 +62,7 @@ const createClientPool = (server) => {
       width,
       height,
     };
-  };
+  }
+}
 
-  return clientPool;
-};
-
-export default createClientPool;
+export default ClientPool;

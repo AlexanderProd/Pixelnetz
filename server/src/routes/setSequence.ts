@@ -1,16 +1,23 @@
+import { Response, Request } from 'express';
 import {
   SET_SEQUENCE,
   DIMENSIONS,
 } from '../../../shared/dist/util/socketActionTypes';
 import { isSafeFileName } from '../util/userInput';
 import Sequence from '../sequences/Sequence';
+import Socket from '../ws/Socket';
+import Pool from '../ws/Pool';
+import ClientPool from '../ws/ClientPool';
 
-const setSequence = (clientPool, masterPool) => async (req, res) => {
+const setSequence = (
+  clientPool: ClientPool,
+  masterPool: Pool,
+) => async (req: Request, res: Response) => {
   const { name } = req.query;
   const repeat = req.query.repeat === 'true';
   const stepLength = Number(req.query.stepLength);
 
-  if (clientPool.size < 1) {
+  if (clientPool.size() < 1) {
     res.status(503).json({ error: 'No pixel clients connected' });
     return;
   }
@@ -20,7 +27,7 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
     return;
   }
 
-  let sequence;
+  let sequence: Sequence;
   try {
     sequence = await Sequence.load(name);
   } catch (e) {
@@ -70,7 +77,7 @@ const setSequence = (clientPool, masterPool) => async (req, res) => {
     },
   });
 
-  clientPool.forEach(socket => {
+  clientPool.forEach((socket: Socket) => {
     console.log('set: ', socket.id());
     const { x, y } = socket.properties;
     socket.send({

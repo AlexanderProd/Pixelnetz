@@ -14,7 +14,7 @@ class Socket {
 
   private _send: (data: any) => void;
 
-  private properties: any;
+  public properties: any;
 
   constructor({
     socket,
