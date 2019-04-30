@@ -9,6 +9,7 @@ import rasterizePart, {
   PartRasterizationInput,
 } from './rasterizePart';
 import { MAX_FRAMES } from './rasterisationConstants';
+import ThreadPool from '../threads/ThreadPool';
 
 export interface RasterizationData {
   getMatrixPart: () => AsyncIterableIterator<{
@@ -34,7 +35,12 @@ export const createGetMatrixPart = ({
   maxFrames,
 }: {
   numParts: number;
-  frameParts: FrameData[][];
+  frameParts: {
+    data: number[];
+    shape: [number, number, number];
+    index: number;
+    delay: number;
+  }[][];
   minDelay: number;
   mimetype: Mimetypes;
   width: number;
@@ -64,6 +70,63 @@ export const createGetMatrixPart = ({
     }
   };
 
+// export const createGetMatrixPartThreaded = ({
+//   numParts,
+//   frameParts,
+//   minDelay,
+//   mimetype,
+//   width,
+//   height,
+//   channels,
+//   maxFrames,
+// }: {
+//   numParts: number;
+//   frameParts: {
+//     data: number[];
+//     shape: [number, number, number];
+//     index: number;
+//     delay: number;
+//   }[][];
+//   minDelay: number;
+//   mimetype: Mimetypes;
+//   width: number;
+//   height: number;
+//   channels: number;
+//   maxFrames?: number;
+// }) =>
+//   async function* getMatrixPart() {
+//     const pool = new ThreadPool<
+//       { input: PartRasterizationInput; index: number },
+//       {
+//         matrix: Matrix;
+//         index: number;
+//       }
+//     >({
+//       path: __dirname + '/raster.js',
+//     });
+
+//     // eslint-disable-next-line no-plusplus
+//     for (let i = 0; i < numParts; i++) {
+//       const part = frameParts[i];
+//       const input: PartRasterizationInput = {
+//         frames: part,
+//         minDelay,
+//         mimetype,
+//         offsetIndex: i,
+//         width,
+//         height,
+//         channels,
+//         maxFrames,
+//       };
+//       pool.performAction({ input, index: i });
+//       yield {
+//         // eslint-disable-next-line no-await-in-loop
+//         matrix: await rasterizePart(input),
+//         index: i,
+//       };
+//     }
+//   };
+
 const rasterize = async (
   buffer: Buffer,
   mimetype: Mimetypes,
@@ -85,19 +148,31 @@ const rasterize = async (
 
   const numParts = Math.ceil(frames.length / maxFrames);
 
-  const frameParts = splitToSize(frames, maxFrames);
+  const pixel = await Promise.all(
+    frames.map(({ frame, delay, index }) =>
+      getPixelsFromFrame(frame, mimetype).then(({ data, shape }) => ({
+        delay,
+        index,
+        data,
+        shape,
+      })),
+    ),
+  );
 
-  const { width, height, channels } = await getPixelsFromFrame(
-    frames[0].frame,
-    mimetype,
-  ).then(({ shape }) => {
-    const [imageWidth, imageHeight, colorChannels] = shape;
-    return {
-      width: imageWidth,
-      height: imageHeight,
-      channels: colorChannels,
-    };
-  });
+  const [width, height, channels] = pixel[0].shape;
+  // const { width, height, channels } = await getPixelsFromFrame(
+  //   frames[0].frame,
+  //   mimetype,
+  // ).then(({ shape }) => {
+  //   const [imageWidth, imageHeight, colorChannels] = shape;
+  //   return {
+  //     width: imageWidth,
+  //     height: imageHeight,
+  //     channels: colorChannels,
+  //   };
+  // });
+
+  const frameParts = splitToSize(pixel, maxFrames);
 
   return {
     stepLength: minDelay,
