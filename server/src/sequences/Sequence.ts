@@ -1,7 +1,11 @@
 import fs from 'fs';
 import { promisify } from 'util';
 import rasterize from './rasterize';
-import { Matrix, Frame } from './rasterization';
+import {
+  MasterMatrix,
+  ClientFrame,
+  ClientMatrix,
+} from './rasterization';
 import Mimetypes from './mimetypes';
 
 const writeFile = promisify(fs.writeFile);
@@ -110,7 +114,7 @@ class Sequence {
 
   private _numParts: number;
 
-  private _matrix: Matrix | undefined;
+  private _matrix: ClientMatrix | undefined;
 
   private _scaling: Scaling | undefined;
 
@@ -133,7 +137,7 @@ class Sequence {
     length: number;
     duration: number;
     numParts: number;
-    matrix?: Matrix;
+    matrix?: ClientMatrix;
   }) {
     this._name = name;
     this._repeat = repeat;
@@ -192,7 +196,7 @@ class Sequence {
     return this._numParts;
   }
 
-  __loadMatrix(): Promise<Matrix> {
+  __loadMatrix(): Promise<ClientMatrix> {
     return new Promise((res, rej) => {
       if (this._matrix) {
         res(this._matrix);
@@ -208,17 +212,17 @@ class Sequence {
     });
   }
 
-  async loadMatrix(index: number): Promise<Matrix> {
+  async loadMatrix(index: number): Promise<ClientMatrix> {
     const matrixJSON = await readFile(
       `${DB_PATH}/${this._name}.matrix.${index}.json`,
       'utf-8',
     );
-    const matrix = JSON.parse(matrixJSON) as Matrix;
+    const matrix = JSON.parse(matrixJSON) as ClientMatrix;
     return matrix;
   }
 
   async *loadMatrices(): AsyncIterableIterator<{
-    matrix: Matrix;
+    matrix: ClientMatrix;
     index: number;
   }> {
     // eslint-disable-next-line no-plusplus
@@ -230,7 +234,7 @@ class Sequence {
     }
   }
 
-  getFrames(x: number, y: number): Frame[] {
+  getFrames(x: number, y: number): ClientFrame[] {
     if (!this._scaling) {
       throw new ReferenceError(
         'Scaling has not been set on Sequence',
@@ -262,7 +266,7 @@ class Sequence {
     return this._matrix[this._width * my + mx];
   }
 
-  getMasterMatrix(): Matrix {
+  getMasterMatrix(): MasterMatrix {
     if (!this._scaling) {
       throw new ReferenceError(
         'Scaling has not been set on Sequence',
@@ -276,12 +280,12 @@ class Sequence {
 
     const { gxOffset, gyOffset, gWidth, gHeight } = this._scaling;
 
-    const matrix = new Array(this._matrix.length);
+    const matrix: MasterMatrix = new Array(this._matrix.length);
 
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < this._matrix.length; i++) {
-      const frame = new Array(gWidth * gHeight);
-      matrix[i] = [frame, null];
+      const frame: string[] = new Array(gWidth * gHeight);
+      matrix[i] = [frame, 1];
     }
 
     // eslint-disable-next-line no-plusplus

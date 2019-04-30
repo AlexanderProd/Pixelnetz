@@ -11,8 +11,6 @@
     "allowJs": true,
     "moduleResolution": "node"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.js"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.js"],
+  "exclude": ["src/**/__testdata__/*"]
 }

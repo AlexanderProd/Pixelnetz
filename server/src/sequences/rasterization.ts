@@ -1,11 +1,19 @@
 import Mimetypes from './mimetypes';
-import getPixels, { PixelData } from '../@types/get-pixels';
-import { RESOLUTION } from './rasterisationConstants';
+import PixelData from '../@types/get-pixels/PixelData';
 
-import sharp = require('sharp');
+export type Frame<FrameType> = [FrameType, number];
+export type Matrix<FrameType> = Frame<FrameType>[][];
 
-export type Frame = [any, number];
-export type Matrix = Frame[][];
+export type ClientFrame = Frame<string>;
+export type ClientMatrix = Matrix<string>;
+
+export type MasterFrame = Frame<string[]>;
+export type MasterMatrix = MasterFrame[];
+
+export interface PixelGrid extends PixelData {
+  index: number;
+  delay: number;
+}
 
 export const getSharpMimetype = (type: Mimetypes): Mimetypes => {
   switch (type) {
@@ -16,11 +24,11 @@ export const getSharpMimetype = (type: Mimetypes): Mimetypes => {
   }
 };
 
-export const prepareMatrix = (
+export function prepareMatrix<FrameType>(
   width: number,
   height: number,
   frameLength: number,
-): Matrix => {
+): Matrix<FrameType> {
   const matrix = new Array(width * height);
 
   // eslint-disable-next-line no-plusplus
@@ -29,20 +37,6 @@ export const prepareMatrix = (
   }
 
   return matrix;
-};
-
-export function getPixelsFromFrame(
-  frame: Buffer,
-  mimetype: Mimetypes,
-  resolution: number = RESOLUTION,
-): Promise<PixelData> {
-  return sharp(frame)
-    .resize(resolution)
-    .toBuffer()
-    .then(
-      (b: Buffer): Promise<PixelData> =>
-        getPixels(b, getSharpMimetype(mimetype)),
-    );
 }
 
 export function splitToSize<T>(arr: T[], size: number): T[][] {

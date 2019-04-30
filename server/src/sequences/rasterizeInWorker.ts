@@ -2,9 +2,14 @@ import ThreadProcess from '../threads/ThreadProcess';
 import rasterizePart, {
   PartRasterizationInput,
 } from './rasterizePart';
-import { Matrix } from './rasterization';
+import { ClientMatrix } from './rasterization';
 
-const threadProcess = new ThreadProcess<
-  PartRasterizationInput,
-  Matrix
->(data => rasterizePart(data));
+const t = new ThreadProcess<
+  { input: PartRasterizationInput; index: number },
+  {
+    matrix: ClientMatrix;
+    index: number;
+  }
+>(({ input, index }) =>
+  rasterizePart(input).then(matrix => ({ matrix, index })),
+);

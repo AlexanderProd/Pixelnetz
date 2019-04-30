@@ -1,14 +1,13 @@
 import test, { ExecutionContext } from 'ava';
 import fs from 'fs';
-import path from 'path';
 import { promisify } from 'util';
 import {
   getSharpMimetype,
   prepareMatrix,
-  getPixelsFromFrame,
   splitToSize,
 } from './rasterization';
 import Mimetypes from './mimetypes';
+import getPixelsFromFrame from './getPixelsFromFrame';
 
 const readFile = promisify(fs.readFile);
 

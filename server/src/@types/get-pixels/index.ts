@@ -1,11 +1,7 @@
 import { promisify } from 'util';
 import getPixelsCB from './getPixels';
 import Mimetypes from '../../sequences/mimetypes';
-
-export interface PixelData {
-  data: number[];
-  shape: [number, number, number];
-}
+import PixelData from './PixelData';
 
 const getPixels: (
   buffer: Buffer,

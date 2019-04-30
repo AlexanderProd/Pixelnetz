@@ -1,20 +1,28 @@
-import getFrames, { FrameData } from './getFrames';
+import getFrames from './getFrames';
 import Mimetypes from './mimetypes';
 import {
-  Matrix,
   splitToSize,
-  getPixelsFromFrame,
+  PixelGrid,
+  ClientMatrix,
 } from './rasterization';
+import { mapFramesToPixelGrid } from './getPixelsFromFrame';
 import rasterizePart, {
   PartRasterizationInput,
 } from './rasterizePart';
 import { MAX_FRAMES } from './rasterisationConstants';
+import ThreadPool from '../threads/ThreadPool';
 
 export interface RasterizationData {
   getMatrixPart: () => AsyncIterableIterator<{
-    matrix: Matrix;
+    matrix: ClientMatrix;
     index: number;
   }>;
+  getMatrixPartThreaded: () => Promise<
+    {
+      matrix: ClientMatrix;
+      index: number;
+    }[]
+  >;
   stepLength: number;
   width: number;
   height: number;
@@ -24,19 +32,15 @@ export interface RasterizationData {
 }
 
 export const createGetMatrixPart = ({
-  numParts,
   frameParts,
   minDelay,
-  mimetype,
   width,
   height,
   channels,
   maxFrames,
 }: {
-  numParts: number;
-  frameParts: FrameData[][];
+  frameParts: PixelGrid[][];
   minDelay: number;
-  mimetype: Mimetypes;
   width: number;
   height: number;
   channels: number;
@@ -44,12 +48,11 @@ export const createGetMatrixPart = ({
 }) =>
   async function* getMatrixPart() {
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < numParts; i++) {
+    for (let i = 0; i < frameParts.length; i++) {
       const part = frameParts[i];
       const input: PartRasterizationInput = {
         frames: part,
         minDelay,
-        mimetype,
         offsetIndex: i,
         width,
         height,
@@ -62,6 +65,69 @@ export const createGetMatrixPart = ({
         index: i,
       };
     }
+  };
+
+export const createGetMatrixPartThreaded = ({
+  frameParts,
+  minDelay,
+  width,
+  height,
+  channels,
+  maxFrames,
+}: {
+  frameParts: PixelGrid[][];
+  minDelay: number;
+  width: number;
+  height: number;
+  channels: number;
+  maxFrames?: number;
+}) =>
+  async function getMatrixPart() {
+    const pool = new ThreadPool<
+      { input: PartRasterizationInput; index: number },
+      {
+        matrix: ClientMatrix;
+        index: number;
+      }
+    >({
+      path: `${__dirname}/rasterizeInWorker.js`,
+    });
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < frameParts.length; i++) {
+      const part = frameParts[i];
+      const input: PartRasterizationInput = {
+        frames: part,
+        minDelay,
+        offsetIndex: i,
+        width,
+        height,
+        channels,
+        maxFrames,
+      };
+      pool.performAction({ input, index: i });
+    }
+    return new Promise<
+      {
+        matrix: ClientMatrix;
+        index: number;
+      }[]
+    >(res => {
+      let ops = 0;
+      const results: {
+        matrix: ClientMatrix;
+        index: number;
+      }[] = [];
+      pool.onActionPerformed(({ result }) => {
+        // eslint-disable-next-line no-plusplus
+        ops++;
+        results.push(result);
+        if (ops === frameParts.length) {
+          pool.close();
+          res(results);
+        }
+      });
+    });
   };
 
 const rasterize = async (
@@ -83,38 +149,36 @@ const rasterize = async (
     0,
   );
 
-  const numParts = Math.ceil(frames.length / maxFrames);
-
-  const frameParts = splitToSize(frames, maxFrames);
-
-  const { width, height, channels } = await getPixelsFromFrame(
-    frames[0].frame,
+  const pixel: PixelGrid[] = await mapFramesToPixelGrid(
+    frames,
     mimetype,
-  ).then(({ shape }) => {
-    const [imageWidth, imageHeight, colorChannels] = shape;
-    return {
-      width: imageWidth,
-      height: imageHeight,
-      channels: colorChannels,
-    };
-  });
+  );
+
+  const [width, height, channels] = pixel[0].shape;
+
+  const frameParts = splitToSize(pixel, maxFrames);
 
   return {
     stepLength: minDelay,
     width,
     height,
-    length: frames.length,
+    length: pixel.length,
     duration,
     getMatrixPart: createGetMatrixPart({
-      numParts,
       frameParts,
       minDelay,
-      mimetype,
       width,
       height,
       channels,
     }),
-    numParts,
+    getMatrixPartThreaded: createGetMatrixPartThreaded({
+      frameParts,
+      minDelay,
+      width,
+      height,
+      channels,
+    }),
+    numParts: frameParts.length,
   };
 };
 

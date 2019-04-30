@@ -3,8 +3,9 @@ import rasterize, { createGetMatrixPart } from './rasterize';
 import { setConstant } from './rasterisationConstants';
 import Mimetypes from './mimetypes';
 import { FrameData, DEFAULT_DELAY } from './getFrames';
-import { splitToSize, Matrix } from './rasterization';
+import { splitToSize, ClientMatrix } from './rasterization';
 import TEST_PNG from './__testdata__/png';
+import { mapFramesToPixelGrid } from './getPixelsFromFrame';
 
 const createData: (length: number) => Promise<FrameData[]> = async (
   length: number,
@@ -38,25 +39,25 @@ test('rasterize: it returns correct rasterizationData', async t => {
 
   // eslint-disable-next-line guard-for-in
   for (const key in expected) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     t.is((data as any)[key], (expected as any)[key]);
   }
 });
 
 test('createGetMatrixPart: it returns the correct matrix', async t => {
   const data: FrameData[] = await createData(1);
-  const frameParts = splitToSize(data, 5);
+  const pixel = await mapFramesToPixelGrid(data, Mimetypes.PNG);
+  const frameParts = splitToSize(pixel, 5);
 
   const generateMatrix = createGetMatrixPart({
     frameParts,
-    mimetype: Mimetypes.PNG,
     minDelay: 200,
-    numParts: frameParts.length,
     width: 2,
     height: 3,
     channels: 4,
   });
 
-  const expected: Matrix = [
+  const expected: ClientMatrix = [
     [['#000000', 1]],
     [['#ffffff', 1]],
     [['#888888', 1]],
