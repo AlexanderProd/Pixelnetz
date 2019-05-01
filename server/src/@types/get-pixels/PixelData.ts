@@ -1,5 +1,5 @@
 interface PixelData {
-  data: number[];
+  data: Uint8Array;
   shape: [number, number, number];
 }
 
