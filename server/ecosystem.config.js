@@ -15,6 +15,8 @@ module.exports = {
         JWT_SECRET:
           '2psPxwr0n3z4R95vIocgRabt1AJZ9jH6bJHrZUoR6V9Mq0poilWbFqkddbYq7Upf',
         SALT_ROUNDS: '10',
+        RASTERIZATION_RESOLUTION: 100,
+        RASTERIZATION_MAX_FRAMES: 5,
       },
     },
   ],
