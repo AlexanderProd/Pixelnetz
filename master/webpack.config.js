@@ -20,8 +20,8 @@ module.exports = (env, argv) => {
   let port;
   switch (localBuild) {
     case 'prod':
-      hostname = 'bepartoftheshow.de';
-      port = '';
+      hostname = process.env.SERVER_HOSTNAME || 'bepartoftheshow.de';
+      port = process.env.SERVER_PORT || '';
       break;
     case 'build':
       hostname = localIP();
@@ -44,31 +44,36 @@ module.exports = (env, argv) => {
       quiet: true,
     },
     module: {
-      rules: [{
-        test: /\.js$/,
-        use: ['babel-loader'],
-      }, {
-        test: /\.sass$/,
-        use: [
-          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader',
-          'resolve-url-loader',
-          'postcss-loader',
-          'sass-loader',
-        ],
-      }, {
-        test: /\.css$/,
-        use: [
-          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader',
-          'resolve-url-loader',
-          'postcss-loader',
-        ],
-      }, {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
-        exclude: /node_modules/,
-        loader: 'file-loader',
-      }],
+      rules: [
+        {
+          test: /\.js$/,
+          use: ['babel-loader'],
+        },
+        {
+          test: /\.sass$/,
+          use: [
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'resolve-url-loader',
+            'postcss-loader',
+            'sass-loader',
+          ],
+        },
+        {
+          test: /\.css$/,
+          use: [
+            isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'resolve-url-loader',
+            'postcss-loader',
+          ],
+        },
+        {
+          test: /\.(eot|svg|ttf|woff|woff2)$/,
+          exclude: /node_modules/,
+          loader: 'file-loader',
+        },
+      ],
     },
     plugins: [
       new FriendlyErrorsPlugin(),

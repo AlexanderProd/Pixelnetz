@@ -25,8 +25,12 @@ if (envResult.error) throw envResult.error;
 
 const app = express();
 const server = http.createServer({}, app);
-const PORT = isProd() ? 3080 : 3000;
-const localHostname = isProd() ? 'bepartoftheshow.de' : localIP();
+const PORT = isProd()
+  ? Number(process.env.SERVER_PORT) || 3080
+  : 3000;
+const localHostname = isProd()
+  ? process.env.SERVER_HOSTNAME || 'bepartoftheshow.de'
+  : localIP();
 const masterPool = new MasterPool(server);
 const clientPool = new ClientPool(server);
 const userDB = new UserDB();
