@@ -1,22 +1,21 @@
 import FrameQueue from '../FrameQueue';
 
-const createAnimationController = (frameHandler) => {
+const createAnimationController = frameHandler => {
   let sequenceRunning = false;
-  let repeat = null;
+  let sequence;
   let frameQueue = null;
   let hasSequence = false;
 
-  const setSequence = (_sequence) => {
-    ({ repeat } = _sequence);
-
-    frameQueue = new FrameQueue(_sequence);
-
+  const setSequence = _sequence => {
+    sequence = _sequence;
     sequenceRunning = false;
     hasSequence = true;
   };
 
-  const start = (startTime) => {
+  const start = startTime => {
     if (!hasSequence) return;
+
+    frameQueue = new FrameQueue(sequence);
 
     sequenceRunning = true;
 
@@ -26,7 +25,7 @@ const createAnimationController = (frameHandler) => {
 
     const setStep = () => {
       currentStep = frameQueue.dequeue();
-      if (repeat) {
+      if (sequence.repeat) {
         frameQueue.appendFrame(currentStep);
       }
     };
@@ -48,7 +47,7 @@ const createAnimationController = (frameHandler) => {
           frameHandler(frame);
           currentStep.executed = true;
         }
-      } else if (repeat) {
+      } else if (sequence.repeat) {
         // Maybe this will be neccessary when appending sequences
         // startTime = Date.now();
         // frameQueue = new Queue(expandFrames(frames, stepLength));
@@ -63,19 +62,16 @@ const createAnimationController = (frameHandler) => {
     };
 
     // start loop
-    setTimeout(
-      () => requestAnimationFrame(loop),
-      startTime - Date.now(),
-    );
+    setTimeout(() => requestAnimationFrame(loop), startTime - Date.now());
   };
 
   const stop = () => {
     sequenceRunning = false;
   };
 
-  const appendSequence = (sequence) => {
-    if (sequence) {
-      frameQueue.appendSequence(sequence);
+  const appendSequence = _sequence => {
+    if (_sequence) {
+      sequence.frames = sequence.frames.concat(_sequence.frames);
     }
   };
 
