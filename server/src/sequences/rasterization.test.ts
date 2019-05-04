@@ -46,9 +46,8 @@ test(
 test('prepareMatrix: it returns an empty matrix with correct dimensions', t => {
   const width = 3;
   const height = 2;
-  const frameLength = 2;
-  const matrix = prepareMatrix(width, height, frameLength);
-  const f = new Array(frameLength);
+  const matrix = prepareMatrix<string>(width, height);
+  const f: [string, number][] = [];
   const actual = [f, f, f, f, f, f];
   t.deepEqual(matrix, actual);
 });

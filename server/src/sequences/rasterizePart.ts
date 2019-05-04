@@ -3,35 +3,27 @@ import {
   prepareMatrix,
   PixelGrid,
 } from './rasterization';
-import { roundFloat, toHex } from '../util/numbers';
-import { MAX_FRAMES } from './rasterisationConstants';
+import { roundFloat } from '../util/numbers';
+import { encodeColor } from '../util/colors';
 
 export interface PartRasterizationInput {
   frames: PixelGrid[];
   minDelay: number;
-  offsetIndex: number;
   width: number;
   height: number;
   channels: number;
-  maxFrames?: number;
 }
 
 async function rasterizePart({
   frames,
   minDelay,
-  offsetIndex,
   width,
   height,
   channels,
-  maxFrames = MAX_FRAMES,
 }: PartRasterizationInput): Promise<ClientMatrix> {
-  const matrix: ClientMatrix = prepareMatrix(
-    width,
-    height,
-    frames.length,
-  );
+  const matrix: ClientMatrix = prepareMatrix(width, height);
 
-  frames.forEach(({ delay, index, data, shape }) => {
+  for (const { delay, data, shape } of frames) {
     const delayFactor = roundFloat(delay / minDelay, 2);
     const [imageWidth, imageHeight, colorChannels] = shape;
     if (
@@ -48,18 +40,23 @@ async function rasterizePart({
       const r = data[pos];
       const g = data[pos + 1];
       const b = data[pos + 2];
-      const col = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+      const color = encodeColor(r, g, b);
 
       const i = pos / channels;
       const x = i % width;
       const y = Math.floor(i / width);
 
       const gridCoord = width * y + x;
-      const frameIndex = index - offsetIndex * maxFrames;
+      const stack = matrix[gridCoord];
+      const prev = stack[stack.length - 1];
 
-      matrix[gridCoord][frameIndex] = [col, delayFactor];
+      if (prev && prev[0] === color) {
+        prev[1] += delayFactor;
+      } else {
+        stack.push([color, delayFactor]);
+      }
     }
-  });
+  }
 
   return matrix;
 }

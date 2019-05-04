@@ -37,14 +37,12 @@ export const createGetMatrixPart = ({
   width,
   height,
   channels,
-  maxFrames,
 }: {
   frameParts: PixelGrid[][];
   minDelay: number;
   width: number;
   height: number;
   channels: number;
-  maxFrames?: number;
 }) =>
   async function* getMatrixPart() {
     // eslint-disable-next-line no-plusplus
@@ -53,11 +51,9 @@ export const createGetMatrixPart = ({
       const input: PartRasterizationInput = {
         frames: part,
         minDelay,
-        offsetIndex: i,
         width,
         height,
         channels,
-        maxFrames,
       };
       yield {
         // eslint-disable-next-line no-await-in-loop
@@ -73,14 +69,12 @@ export const createGetMatrixPartThreaded = ({
   width,
   height,
   channels,
-  maxFrames,
 }: {
   frameParts: PixelGrid[][];
   minDelay: number;
   width: number;
   height: number;
   channels: number;
-  maxFrames?: number;
 }) =>
   async function getMatrixPart() {
     const pool = new ThreadPool<
@@ -99,11 +93,9 @@ export const createGetMatrixPartThreaded = ({
       const input: PartRasterizationInput = {
         frames: part,
         minDelay,
-        offsetIndex: i,
         width,
         height,
         channels,
-        maxFrames,
       };
       pool.performAction({ input, index: i });
     }

@@ -27,13 +27,12 @@ export const getSharpMimetype = (type: Mimetypes): Mimetypes => {
 export function prepareMatrix<FrameType>(
   width: number,
   height: number,
-  frameLength: number,
 ): Matrix<FrameType> {
   const matrix = new Array(width * height);
 
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < width * height; i++) {
-    matrix[i] = new Array(frameLength);
+    matrix[i] = [];
   }
 
   return matrix;
