@@ -7,7 +7,7 @@ export type Matrix<FrameType> = Frame<FrameType>[][];
 export type ClientFrame = Frame<string>;
 export type ClientMatrix = Matrix<string>;
 
-export type MasterFrame = Frame<string[]>;
+export type MasterFrame = Frame<(string | number)[]>;
 export type MasterMatrix = MasterFrame[];
 
 export interface PixelGrid extends PixelData {

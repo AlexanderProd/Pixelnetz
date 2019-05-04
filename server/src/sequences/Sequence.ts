@@ -293,9 +293,13 @@ class Sequence {
 
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < length; i++) {
-      const frame: string[] = new Array(gWidth * gHeight);
+      const frame: (string | number)[] = [];
       matrix[i] = [frame, 1];
     }
+
+    const currentGrid: (string | null)[] = new Array(
+      gWidth * gHeight,
+    ).fill(null);
 
     // eslint-disable-next-line no-plusplus
     for (let y = 0; y < gHeight; y++) {
@@ -306,14 +310,25 @@ class Sequence {
         const frameStack = this.getFrames(gx, gy);
 
         let i = 0;
-        frameStack.forEach(([pixelCol, stepLength]) => {
+        for (const [pixelCol, stepLength] of frameStack) {
           // eslint-disable-next-line no-plusplus
           for (let step = 0; step < stepLength; step++) {
-            const level = matrix[i + step];
-            level[0][gWidth * y + x] = pixelCol;
+            const frame = matrix[i + step][0];
+            const prevIndex = frame.length - 1;
+            const gridIndex = gWidth * y + x;
+            if (pixelCol === currentGrid[gridIndex]) {
+              if (typeof frame[prevIndex] === 'number') {
+                (frame[prevIndex] as number) += 1;
+              } else {
+                frame.push(1);
+              }
+            } else {
+              currentGrid[gridIndex] = pixelCol;
+              frame.push(pixelCol);
+            }
           }
           i += stepLength;
-        });
+        }
       }
     }
 

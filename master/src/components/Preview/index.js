@@ -25,22 +25,29 @@ const getWidth = elem =>
 const setHeight = (elem, val) =>
   elem.style.setProperty('height', `${val}px`);
 
-const createFrameHandler = (canvas, dimensions) => {
+const createFrameHandler = (
+  canvas,
+  { width: gWidth, height: gHeight },
+) => {
   const ctx = canvas.getContext('2d');
   ctx.strokeStyle = '#434343';
 
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  const blockScaling = canvas.width / dimensions.width;
+  const blockScaling = canvas.width / gWidth;
   // eslint-disable-next-line no-param-reassign
-  canvas.height = blockScaling * dimensions.height;
+  canvas.height = blockScaling * gHeight;
 
   return frame => {
-    for (let y = 0; y < dimensions.height; y++) {
-      for (let x = 0; x < dimensions.width; x++) {
-        const encodedColor = frame[dimensions.width * y + x];
-        const [r, g, b] = decodeColor(encodedColor);
+    let i = 0;
+    for (const item of frame) {
+      if (typeof item === 'number') {
+        i += item;
+      } else {
+        const x = i % gWidth;
+        const y = Math.floor(i / gWidth);
+        const [r, g, b] = decodeColor(item);
         const color = `rgb(${r}, ${g}, ${b})`;
         ctx.fillStyle = color;
         ctx.fillRect(
@@ -55,6 +62,7 @@ const createFrameHandler = (canvas, dimensions) => {
           blockScaling,
           blockScaling,
         );
+        i++;
       }
     }
   };
