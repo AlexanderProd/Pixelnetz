@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d dist --source-maps",
+    "build:babel": "babel src -d dist --source-maps",
+    "build": "tsc",
     "start": "node watchDir.js"
   },
   "devDependencies": {
@@ -12,6 +13,8 @@
     "@babel/node": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
     "chokidar": "^2.0.4",
@@ -23,6 +26,7 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.13.0",
     "eslint-plugin-react-hooks": "^1.6.0",
-    "prettier": "^1.17.0"
+    "prettier": "^1.17.0",
+    "typescript": "^3.4.5"
   }
 }
