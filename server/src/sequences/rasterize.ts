@@ -29,6 +29,7 @@ export interface RasterizationData {
   length: number;
   duration: number;
   numParts: number;
+  maxFramesPerPart: number;
 }
 
 export const createGetMatrixPart = ({
@@ -171,6 +172,7 @@ const rasterize = async (
       channels,
     }),
     numParts: frameParts.length,
+    maxFramesPerPart: maxFrames,
   };
 };
 

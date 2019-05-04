@@ -8,7 +8,7 @@ import { isSafeFileName } from '../util/userInput';
 import Sequence from '../sequences/Sequence';
 import Socket from '../ws/Socket';
 import Pool from '../ws/Pool';
-import ClientPool from '../ws/ClientPool';
+import ClientPool, { GridDimensions } from '../ws/ClientPool';
 
 const setSequence = (
   clientPool: ClientPool,
@@ -37,7 +37,7 @@ const setSequence = (
     return;
   }
 
-  let dimensions;
+  let dimensions: GridDimensions;
   try {
     dimensions = clientPool.dimensions();
   } catch (e) {
@@ -54,7 +54,7 @@ const setSequence = (
   });
 
   for await (const { index } of sequence.loadMatrices()) {
-    const masterMatrix = sequence.getMasterMatrix();
+    const masterMatrix = sequence.getMasterMatrix(index);
     const sequenceInfo = {
       ...sequence.info,
       repeat,

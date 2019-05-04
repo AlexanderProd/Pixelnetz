@@ -7,6 +7,7 @@ import {
   ClientMatrix,
 } from './rasterization';
 import Mimetypes from './mimetypes';
+import { GridDimensions } from '../ws/ClientPool';
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -21,13 +22,6 @@ interface FileInput {
     name: string;
   };
   repeat: boolean;
-}
-
-interface Dimensions {
-  xOffset: number;
-  yOffset: number;
-  width: number;
-  height: number;
 }
 
 interface Scaling {
@@ -114,6 +108,8 @@ class Sequence {
 
   private _numParts: number;
 
+  private _maxFramesPerPart: number;
+
   private _matrix: ClientMatrix | undefined;
 
   private _scaling: Scaling | undefined;
@@ -127,6 +123,7 @@ class Sequence {
     length,
     duration,
     numParts,
+    maxFramesPerPart,
     matrix = undefined,
   }: {
     name: string;
@@ -137,6 +134,7 @@ class Sequence {
     length: number;
     duration: number;
     numParts: number;
+    maxFramesPerPart: number;
     matrix?: ClientMatrix;
   }) {
     this._name = name;
@@ -148,6 +146,7 @@ class Sequence {
     this._duration = duration;
     this._matrix = matrix;
     this._numParts = numParts;
+    this._maxFramesPerPart = maxFramesPerPart;
     this._scaling = undefined;
   }
 
@@ -161,6 +160,7 @@ class Sequence {
       length: this._length,
       duration: this._duration,
       numParts: this._numParts,
+      maxFramesPerPart: this._maxFramesPerPart,
     };
   }
 
@@ -194,6 +194,10 @@ class Sequence {
 
   get numParts() {
     return this._numParts;
+  }
+
+  get maxFramesPerPart() {
+    return this._maxFramesPerPart;
   }
 
   __loadMatrix(): Promise<ClientMatrix> {
@@ -266,7 +270,7 @@ class Sequence {
     return this._matrix[this._width * my + mx];
   }
 
-  getMasterMatrix(): MasterMatrix {
+  getMasterMatrix(index: number): MasterMatrix {
     if (!this._scaling) {
       throw new ReferenceError(
         'Scaling has not been set on Sequence',
@@ -280,10 +284,15 @@ class Sequence {
 
     const { gxOffset, gyOffset, gWidth, gHeight } = this._scaling;
 
-    const matrix: MasterMatrix = new Array(this._matrix.length);
+    const length = Math.min(
+      this._maxFramesPerPart,
+      this._length - index * this._maxFramesPerPart,
+    );
+
+    const matrix: MasterMatrix = new Array(length);
 
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < this._matrix.length; i++) {
+    for (let i = 0; i < length; i++) {
       const frame: string[] = new Array(gWidth * gHeight);
       matrix[i] = [frame, 1];
     }
@@ -306,7 +315,7 @@ class Sequence {
     return matrix;
   }
 
-  scale(dimensions: Dimensions) {
+  scale(dimensions: GridDimensions) {
     const width = this._width;
     const height = this._height;
     const gxOffset = dimensions.xOffset;

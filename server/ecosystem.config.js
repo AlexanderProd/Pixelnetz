@@ -6,7 +6,7 @@ module.exports = {
       script: 'dist/server/src/index.js',
 
       // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
-      instances: 'max',
+      instances: 1,
       autorestart: true,
       watch: false,
       env: {
@@ -16,7 +16,7 @@ module.exports = {
           '2psPxwr0n3z4R95vIocgRabt1AJZ9jH6bJHrZUoR6V9Mq0poilWbFqkddbYq7Upf',
         SALT_ROUNDS: '10',
         RASTERIZATION_RESOLUTION: 100,
-        RASTERIZATION_MAX_FRAMES: 5,
+        RASTERIZATION_MAX_FRAMES: 100,
       },
     },
   ],
