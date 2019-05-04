@@ -9,10 +9,8 @@
     "start:prod": "yarn build && cross-env NODE_ENV=production node dist/server/src/index.js",
     "start:dev": "nodemon",
     "start:dev:static": "yarn build && cross-env NODE_ENV=development node dist/server/src/index.js",
-    "test": "mocha --reporter spec testSetup.js \"src/**/*.test.js\"",
-    "test:watch": "mocha --reporter spec testSetup.js \"src/**/*.test.js\" --watch",
-    "ava": "ava",
-    "ava:watch": "ava --watch"
+    "test": "ava --verbose",
+    "test:watch": "ava --verbose --watch"
   },
   "dependencies": {
     "@types/dotenv": "^6.1.1",
