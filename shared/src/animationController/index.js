@@ -41,10 +41,8 @@ const createAnimationController = frameHandler => {
       }
 
       if (currentStep && frameQueue.size() >= 0) {
-        const { frame, executed } = currentStep;
-
-        if (!executed) {
-          frameHandler(frame);
+        if (!currentStep.executed) {
+          frameHandler(currentStep.frame);
           currentStep.executed = true;
         }
       } else if (sequence.repeat) {
@@ -62,7 +60,10 @@ const createAnimationController = frameHandler => {
     };
 
     // start loop
-    setTimeout(() => requestAnimationFrame(loop), startTime - Date.now());
+    setTimeout(
+      () => requestAnimationFrame(loop),
+      startTime - Date.now(),
+    );
   };
 
   const stop = () => {
