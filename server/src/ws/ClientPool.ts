@@ -2,6 +2,13 @@ import { Server } from 'http';
 import { POSITION } from '../../../shared/dist/util/socketActionTypes';
 import Pool from './Pool';
 
+export interface GridDimensions {
+  xOffset: number;
+  yOffset: number;
+  width: number;
+  height: number;
+}
+
 class ClientPool extends Pool {
   constructor(server: Server) {
     super({ server, path: '/' });
@@ -27,7 +34,7 @@ class ClientPool extends Pool {
     });
   }
 
-  dimensions() {
+  dimensions(): GridDimensions {
     const dimensions = {
       minX: Infinity,
       minY: Infinity,
