@@ -4,7 +4,10 @@ import {
   PixelGrid,
 } from './rasterization';
 import { roundFloat } from '../util/numbers';
-import { encodeColor } from '../util/colors';
+import {
+  encodeColor,
+  toRGBColor,
+} from '../../../shared/src/util/colors';
 
 export interface PartRasterizationInput {
   frames: PixelGrid[];
@@ -40,7 +43,8 @@ async function rasterizePart({
       const r = data[pos];
       const g = data[pos + 1];
       const b = data[pos + 2];
-      const color = encodeColor(r, g, b);
+      const rgbColor = toRGBColor(r, g, b);
+      const color = encodeColor(rgbColor);
 
       const i = pos / channels;
       const x = i % width;

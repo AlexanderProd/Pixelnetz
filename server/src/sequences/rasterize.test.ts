@@ -6,6 +6,10 @@ import { FrameData, DEFAULT_DELAY } from './getFrames';
 import { splitToSize, ClientMatrix } from './rasterization';
 import TEST_PNG from './__testdata__/png';
 import { mapFramesToPixelGrid } from './getPixelsFromFrame';
+import {
+  encodeColor,
+  toRGBColor,
+} from '../../../shared/src/util/colors';
 
 const createData: (length: number) => Promise<FrameData[]> = async (
   length: number,
@@ -58,12 +62,12 @@ test('createGetMatrixPart: it returns the correct matrix', async t => {
   });
 
   const expected: ClientMatrix = [
-    [['#000000', 1]],
-    [['#ffffff', 1]],
-    [['#888888', 1]],
-    [['#00ff00', 1]],
-    [['#0000ff', 1]],
-    [['#ff0000', 1]],
+    [[encodeColor(toRGBColor(0, 0, 0)), 1]],
+    [[encodeColor(toRGBColor(255, 255, 255)), 1]],
+    [[encodeColor(toRGBColor(136, 136, 136)), 1]],
+    [[encodeColor(toRGBColor(0, 255, 0)), 1]],
+    [[encodeColor(toRGBColor(0, 0, 255)), 1]],
+    [[encodeColor(toRGBColor(255, 0, 0)), 1]],
   ];
 
   const { matrix, index } = (await generateMatrix().next()).value;

@@ -304,10 +304,15 @@ class Sequence {
         const gx = x + gxOffset;
         const gy = y + gyOffset;
         const frameStack = this.getFrames(gx, gy);
-        frameStack.forEach(([pixelCol, stepLength], i) => {
-          const level = matrix[i];
-          level[0][gWidth * y + x] = pixelCol;
-          level[1] = stepLength;
+
+        let i = 0;
+        frameStack.forEach(([pixelCol, stepLength]) => {
+          // eslint-disable-next-line no-plusplus
+          for (let step = 0; step < stepLength; step++) {
+            const level = matrix[i + step];
+            level[0][gWidth * y + x] = pixelCol;
+          }
+          i += stepLength;
         });
       }
     }

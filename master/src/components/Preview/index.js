@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { dimensionsType, sequenceType } from '../../types';
 import createAnimationController from '../../../../shared/dist/animationController';
+import { decodeColor } from '../../../../shared/dist/util/colors';
 import { Button } from '../ui';
 import './Preview.sass';
 
@@ -38,8 +39,10 @@ const createFrameHandler = (canvas, dimensions) => {
   return frame => {
     for (let y = 0; y < dimensions.height; y++) {
       for (let x = 0; x < dimensions.width; x++) {
-        const col = frame[dimensions.width * y + x];
-        ctx.fillStyle = col;
+        const encodedColor = frame[dimensions.width * y + x];
+        const [r, g, b] = decodeColor(encodedColor);
+        const color = `rgb(${r}, ${g}, ${b})`;
+        ctx.fillStyle = color;
         ctx.fillRect(
           x * blockScaling,
           y * blockScaling,

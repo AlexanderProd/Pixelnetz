@@ -14,10 +14,14 @@ import appendSequence from './appendSequence';
 import position from './position';
 import createAnimationController from '../../../shared/dist/animationController';
 import { sosAnimation } from '../../../shared/dist/util/sequence';
+import { decodeColor } from '../../../shared/dist/util/colors';
 
-const setColor = col => document.body.style.backgroundColor = col;
+const setColor = encodedColor => {
+  const [r, g, b] = decodeColor(encodedColor);
+  document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+};
 
-const createActionRunner = (send) => {
+const createActionRunner = send => {
   const animationController = createAnimationController(setColor);
   animationController.setSequence(sosAnimation);
 
@@ -30,7 +34,7 @@ const createActionRunner = (send) => {
     [POSITION]: position(send),
   };
 
-  return (message) => {
+  return message => {
     const { actionType } = message;
     actions[actionType](message);
   };

@@ -58,41 +58,13 @@ export const COLOR_SHAPE: ReadonlyArray<number> = [
   BIT_DEPTH,
 ];
 
-export function toRGBColor(
-  r: number,
-  g: number,
-  b: number,
-): RGBColor {
-  const rgbColor: RGBColor = new Uint8Array(COLOR_CHANNELS);
-  rgbColor[RGBColorIndecies.R] = r;
-  rgbColor[RGBColorIndecies.G] = g;
-  rgbColor[RGBColorIndecies.B] = b;
-  return rgbColor;
-}
-
 const colorBitFieldEncoder = createBitFieldEncoder(COLOR_SHAPE);
 
 export const encodeBitField = colorBitFieldEncoder.encode;
 
 export const decodeBitField = colorBitFieldEncoder.decode;
 
-// eslint-disable-next-line import/export
-export function encodeColor(color: RGBColor): string;
-// eslint-disable-next-line import/export
-export function encodeColor(r: number, g: number, b: number): string;
-
-// eslint-disable-next-line import/export
-export function encodeColor(
-  r: RGBColor | number,
-  g?: number,
-  b?: number,
-): string {
-  let color: RGBColor;
-  if (typeof r === 'number' && g && b) {
-    color = toRGBColor(r, g, b);
-  } else {
-    color = r as RGBColor;
-  }
+export function encodeColor(color: RGBColor): string {
   const downSampledColor = color.map(c => Math.floor(c / LOSS));
   const bitField = encodeBitField(downSampledColor);
   return toBase92(bitField);
@@ -110,4 +82,16 @@ export function toUint8Array(arr: number[]): Uint8Array {
     c[i] = n;
   });
   return c;
+}
+
+export function toRGBColor(
+  r: number,
+  g: number,
+  b: number,
+): RGBColor {
+  const rgbColor: RGBColor = new Uint8Array(COLOR_CHANNELS);
+  rgbColor[RGBColorIndecies.R] = r;
+  rgbColor[RGBColorIndecies.G] = g;
+  rgbColor[RGBColorIndecies.B] = b;
+  return rgbColor;
 }
