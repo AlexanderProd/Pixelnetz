@@ -44,7 +44,9 @@ const getFrames = async (
       return {
         frame: imgBuffer,
         index: frameIndex,
-        delay: frameInfo.delay,
+        // frameInfo.delay is the length of a frame in 1/100s
+        // The animationController works with milliseconds though
+        delay: frameInfo.delay * 10,
       };
     }),
   );
