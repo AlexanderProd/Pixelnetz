@@ -55,7 +55,6 @@ test('createGetMatrixPart: it returns the correct matrix', async t => {
 
   const generateMatrix = createGetMatrixPart({
     frameParts,
-    minDelay: 200,
     width: 2,
     height: 3,
     channels: 4,
