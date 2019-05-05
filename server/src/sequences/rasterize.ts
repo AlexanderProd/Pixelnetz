@@ -34,13 +34,11 @@ export interface RasterizationData {
 
 export const createGetMatrixPart = ({
   frameParts,
-  minDelay,
   width,
   height,
   channels,
 }: {
   frameParts: PixelGrid[][];
-  minDelay: number;
   width: number;
   height: number;
   channels: number;
@@ -51,7 +49,6 @@ export const createGetMatrixPart = ({
       const part = frameParts[i];
       const input: PartRasterizationInput = {
         frames: part,
-        minDelay,
         width,
         height,
         channels,
@@ -66,13 +63,11 @@ export const createGetMatrixPart = ({
 
 export const createGetMatrixPartThreaded = ({
   frameParts,
-  minDelay,
   width,
   height,
   channels,
 }: {
   frameParts: PixelGrid[][];
-  minDelay: number;
   width: number;
   height: number;
   channels: number;
@@ -93,7 +88,6 @@ export const createGetMatrixPartThreaded = ({
       const part = frameParts[i];
       const input: PartRasterizationInput = {
         frames: part,
-        minDelay,
         width,
         height,
         channels,
@@ -159,14 +153,12 @@ const rasterize = async (
     duration,
     getMatrixPart: createGetMatrixPart({
       frameParts,
-      minDelay,
       width,
       height,
       channels,
     }),
     getMatrixPartThreaded: createGetMatrixPartThreaded({
       frameParts,
-      minDelay,
       width,
       height,
       channels,

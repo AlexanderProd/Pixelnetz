@@ -3,7 +3,6 @@ import {
   prepareMatrix,
   PixelGrid,
 } from './rasterization';
-import { roundFloat } from '../util/numbers';
 import {
   encodeColor,
   toRGBColor,
@@ -11,7 +10,6 @@ import {
 
 export interface PartRasterizationInput {
   frames: PixelGrid[];
-  minDelay: number;
   width: number;
   height: number;
   channels: number;
@@ -19,15 +17,13 @@ export interface PartRasterizationInput {
 
 async function rasterizePart({
   frames,
-  minDelay,
   width,
   height,
   channels,
 }: PartRasterizationInput): Promise<ClientMatrix> {
   const matrix: ClientMatrix = prepareMatrix(width, height);
 
-  for (const { delay, data, shape } of frames) {
-    const delayFactor = roundFloat(delay / minDelay, 2);
+  for (const { data, shape } of frames) {
     const [imageWidth, imageHeight, colorChannels] = shape;
     if (
       imageWidth !== width ||
@@ -55,9 +51,9 @@ async function rasterizePart({
       const prev = stack[stack.length - 1];
 
       if (prev && prev[0] === color) {
-        prev[1] += delayFactor;
+        prev[1] += 1;
       } else {
-        stack.push([color, delayFactor]);
+        stack.push([color, 1]);
       }
     }
   }
