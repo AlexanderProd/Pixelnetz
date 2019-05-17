@@ -16,6 +16,7 @@
     "@types/dotenv": "^6.1.1",
     "@types/express": "^4.16.1",
     "@types/node": "^11.13.4",
+    "@types/node-fetch": "^2.3.3",
     "@types/sharp": "^0.22.1",
     "@types/ws": "^6.0.1",
     "bcrypt": "^3.0.2",
@@ -30,6 +31,7 @@
     "helmet": "^3.15.0",
     "jsonwebtoken": "^8.3.0",
     "my-local-ip": "^1.0.0",
+    "node-fetch": "^2.5.0",
     "num-cpus": "^1.1.0",
     "sharp": "^0.22.0",
     "ws": "^6.1.0"
