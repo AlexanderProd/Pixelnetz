@@ -47,23 +47,22 @@ class Sequence {
       ...data,
     });
     await writeFile(
-      `${DB_PATH}/${seq.name}.json`,
+      Sequence.getPath(seq.name),
       JSON.stringify(seq.info),
     );
     for await (const { matrix, index } of getMatrixPart()) {
       // eslint-disable-next-line no-await-in-loop
       await writeFile(
-        `${DB_PATH}/${seq.name}.matrix.${index}.json`,
+        Sequence.getMatrixPath(seq.name, index),
         JSON.stringify(matrix),
       );
     }
   }
 
   static async load(name: string) {
-    const info = await readFile(
-      `${DB_PATH}/${name}.json`,
-      'utf-8',
-    ).then(sequence => JSON.parse(sequence));
+    const info = await readFile(Sequence.getPath(name), 'utf-8').then(
+      sequence => JSON.parse(sequence),
+    );
     return new Sequence(info);
   }
 
@@ -85,11 +84,17 @@ class Sequence {
     );
   }
 
-  static delete(name: string) {
-    return Promise.all([
-      unlink(`${DB_PATH}/${name}.matrix.json`),
-      unlink(`${DB_PATH}/${name}.json`),
-    ]);
+  static getPath(name: string) {
+    return `${DB_PATH}/${name}.json`;
+  }
+
+  static getMatrixPath(name: string, index: number) {
+    return `${DB_PATH}/${name}.matrix.${index}.json`;
+  }
+
+  static async delete(name: string): Promise<void[]> {
+    const seq = await Sequence.load(name);
+    return seq.delete();
   }
 
   private _name: string;
@@ -200,25 +205,9 @@ class Sequence {
     return this._maxFramesPerPart;
   }
 
-  __loadMatrix(): Promise<ClientMatrix> {
-    return new Promise((res, rej) => {
-      if (this._matrix) {
-        res(this._matrix);
-      } else {
-        readFile(`${DB_PATH}/${this._name}.matrix.0.json`, 'utf-8')
-          .then(sequenceJSON => {
-            const sequence = JSON.parse(sequenceJSON);
-            this._matrix = sequence;
-            res(sequence);
-          })
-          .catch(rej);
-      }
-    });
-  }
-
   async loadMatrix(index: number): Promise<ClientMatrix> {
     const matrixJSON = await readFile(
-      `${DB_PATH}/${this._name}.matrix.${index}.json`,
+      Sequence.getMatrixPath(this._name, index),
       'utf-8',
     );
     const matrix = JSON.parse(matrixJSON) as ClientMatrix;
@@ -362,23 +351,13 @@ class Sequence {
     };
   }
 
-  save() {
+  delete(): Promise<void[]> {
+    const matricies = [...new Array(this._numParts)].map((x, i) =>
+      unlink(Sequence.getMatrixPath(this._name, i)),
+    );
     return Promise.all([
-      writeFile(
-        `${DB_PATH}/${this._name}.matrix.json`,
-        JSON.stringify(this._matrix),
-      ),
-      writeFile(
-        `${DB_PATH}/${this._name}.json`,
-        JSON.stringify(this.info),
-      ),
-    ]);
-  }
-
-  delete() {
-    return Promise.all([
-      unlink(`${DB_PATH}/${this._name}.matrix.json`),
-      unlink(`${DB_PATH}/${this._name}.json`),
+      ...matricies,
+      unlink(Sequence.getPath(this._name)),
     ]);
   }
 }
