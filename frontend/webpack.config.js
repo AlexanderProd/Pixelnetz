@@ -13,6 +13,8 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const localIP = require('my-local-ip');
+const Fiber = require('fibers');
+const dartSass = require('sass');
 const manifest = require('./public/manifest');
 
 // Find the polyfill chunk
@@ -70,7 +72,13 @@ module.exports = (env, argv) => {
             'css-loader',
             'resolve-url-loader',
             'postcss-loader',
-            'sass-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                implementation: dartSass,
+                fiber: Fiber,
+              },
+            },
           ],
         },
         {

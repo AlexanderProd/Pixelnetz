@@ -10,6 +10,8 @@ const BrotliPlugin = require('brotli-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
+const Fiber = require('fibers');
+const dartSass = require('sass');
 const localIP = require('my-local-ip');
 
 module.exports = (env, argv) => {
@@ -56,7 +58,13 @@ module.exports = (env, argv) => {
             'css-loader',
             'resolve-url-loader',
             'postcss-loader',
-            'sass-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                implementation: dartSass,
+                fiber: Fiber,
+              },
+            },
           ],
         },
         {
