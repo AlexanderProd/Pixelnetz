@@ -17,7 +17,7 @@ import ClientPool from './ws/ClientPool';
 import MasterPool from './ws/MasterPool';
 import withAuth from './util/authMiddleware';
 import setupLiveData from './config/setupLiveData';
-import banner from './banner';
+import createLogMessage from './createLogMessage';
 
 // Check for errors parsing .env file
 const envResult = dotenv.load();
@@ -36,7 +36,7 @@ const clientPool = new ClientPool(server);
 const userDB = new UserDB();
 
 configureUserDB(userDB);
-configureApp(app, express);
+configureApp(app);
 setupLiveData({ masterPool, clientPool });
 
 app.post('/authenticate', authenticate(userDB));
@@ -52,9 +52,5 @@ app.get('/savedFiles', withAuth, savedFiles());
 app.get('/deleteSequence', withAuth, deleteSequence(masterPool));
 
 server.listen(PORT, () =>
-  console.log(
-    '\n' +
-      `${banner}\nClient Seite auf http://${localHostname}:${PORT} aufrufen.\n` +
-      `Steuerung der Animation unter http://${localHostname}:${PORT}/master.\n`,
-  ),
+  console.log(createLogMessage(localHostname, PORT)),
 );

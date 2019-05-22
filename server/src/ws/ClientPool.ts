@@ -1,6 +1,7 @@
 import { Server } from 'http';
 import { POSITION } from '../../../shared/dist/util/socketActionTypes';
 import Pool from './Pool';
+import Socket from './Socket';
 
 export interface GridDimensions {
   xOffset: number;
@@ -32,6 +33,16 @@ class ClientPool extends Pool {
         this.emit('position', socket);
       }
     });
+  }
+
+  on(event: 'position', handler: (socket: Socket) => void): void;
+
+  // eslint-disable-next-line no-dupe-class-members
+  on(event: string, handler: (...data: any[]) => void): void;
+
+  // eslint-disable-next-line no-dupe-class-members
+  on(event: string, handler: (...data: any[]) => void): void {
+    super.on(event, handler);
   }
 
   dimensions(): GridDimensions {

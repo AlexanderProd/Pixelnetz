@@ -1,8 +1,9 @@
+import { Request, Response } from 'express';
 import readSavedFiles from '../util/readSavedFiles';
 
-const savedFiles = () => (req, res) => {
+const savedFiles = () => async (req: Request, res: Response) => {
   try {
-    const fileList = readSavedFiles();
+    const fileList = await readSavedFiles();
     res.status(200).json(fileList);
   } catch (e) {
     res.status(500).json({ error: 'Error reading saved files' });

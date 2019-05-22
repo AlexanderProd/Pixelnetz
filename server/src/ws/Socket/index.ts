@@ -1,6 +1,14 @@
 import WebSocket from 'ws';
 import createSender from '../../util/createSender';
 
+export interface SocketInfo {
+  deltaTime: number;
+  id: string;
+  ip?: string;
+  joinTime: number;
+  properties: any;
+}
+
 class Socket {
   private _socket: WebSocket;
 
@@ -56,7 +64,7 @@ class Socket {
     return this._joinTime;
   }
 
-  info() {
+  info(): SocketInfo {
     return {
       deltaTime: this._deltaTime,
       id: this._id,

@@ -80,6 +80,25 @@ class Pool extends Emitter {
     });
   }
 
+  on(event: 'connection', handler: (socket: Socket) => void): void;
+
+  // eslint-disable-next-line no-dupe-class-members
+  on(
+    event: 'message',
+    handler: (message: any, socket: Socket) => void,
+  ): void;
+
+  // eslint-disable-next-line no-dupe-class-members
+  on(event: 'close', handler: (id: string) => void): void;
+
+  // eslint-disable-next-line no-dupe-class-members
+  on(event: string, handler: (...data: any[]) => void): void;
+
+  // eslint-disable-next-line no-dupe-class-members
+  on(event: string, handler: (...data: any[]) => void): void {
+    super.on(event, handler);
+  }
+
   size() {
     return this._pool.size;
   }

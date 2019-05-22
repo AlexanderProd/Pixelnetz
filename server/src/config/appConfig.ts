@@ -1,10 +1,11 @@
+import express, { Application } from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import compressionMiddleware from '../util/compressionMiddleware';
 import { isDev } from '../util/env';
 
-const configureApp = (app, express) => {
+const configureApp = (app: Application) => {
   app.use(helmet());
 
   compressionMiddleware(app);

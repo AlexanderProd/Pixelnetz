@@ -1,7 +1,8 @@
-import { ALL_SEQUENCES } from '../../../shared/dist/util/socketActionTypes';
+import { ALL_SEQUENCES } from '../../../shared/src/util/socketActionTypes';
 import Sequence from '../sequences/Sequence';
+import Pool from '../ws/Pool';
 
-const sendAllSequences = async (pool) => {
+async function sendAllSequences(pool: Pool) {
   try {
     const sequences = await Sequence.listAvailable();
     pool.sendAll({
@@ -11,6 +12,6 @@ const sendAllSequences = async (pool) => {
   } catch (e) {
     console.error('Failed to send sequence info to master');
   }
-};
+}
 
 export default sendAllSequences;

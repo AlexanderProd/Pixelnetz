@@ -5,10 +5,19 @@ import {
   ALL_SEQUENCES,
 } from '../../../shared/dist/util/socketActionTypes';
 import Sequence from '../sequences/Sequence';
+import MasterPool from '../ws/MasterPool';
+import ClientPool from '../ws/ClientPool';
+import { SocketInfo } from '../ws/Socket';
 
-const setupLiveData = ({ masterPool, clientPool }) => {
+const setupLiveData = ({
+  masterPool,
+  clientPool,
+}: {
+  masterPool: MasterPool;
+  clientPool: ClientPool;
+}) => {
   masterPool.on('connection', async masterSocket => {
-    const currentConnections = [];
+    const currentConnections: SocketInfo[] = [];
     clientPool.forEachSync(client => {
       currentConnections.push(client.info());
     });
@@ -29,8 +38,8 @@ const setupLiveData = ({ masterPool, clientPool }) => {
     }
   });
 
-  let newConnections = [];
-  let closedConnections = [];
+  let newConnections: SocketInfo[] = [];
+  let closedConnections: string[] = [];
 
   clientPool.on('position', clientSocket =>
     newConnections.push(clientSocket.info()),

@@ -1,17 +1,25 @@
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import UserDB from '../UserDB';
 
-const authenticate = userDB => (req, res) => {
+const authenticate = (userDB: UserDB) => (
+  req: Request,
+  res: Response,
+) => {
   const { password } = req.body;
   const username = 'admin';
 
-  userDB.userPasswordMatches({ username, password })
+  userDB
+    .userPasswordMatches({ username, password })
     .then(matches => {
       if (matches) {
         // Issue token
         const token = jwt.sign(
           { username },
-          process.env.JWT_SECRET,
-          { expiresIn: '1h' },
+          process.env.JWT_SECRET as string,
+          {
+            expiresIn: '1h',
+          },
         );
         res
           .status(200)
