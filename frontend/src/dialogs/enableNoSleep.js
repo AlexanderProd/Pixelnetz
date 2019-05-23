@@ -1,4 +1,4 @@
-import NoSleep from 'nosleep.js';
+import NoSleep from 'nosleep.js/dist/NoSleep';
 import dialog from './dialog';
 
 const noSleep = new NoSleep();
