@@ -4,13 +4,6 @@ import createSender from '../../shared/dist/util/createSender';
 import runConfigDialogs from './dialogs';
 import './index.sass';
 
-window.onerror = (...args) => {
-  const err = document.createElement('div');
-  err.style.color = 'white';
-  err.innerText = JSON.stringify(args);
-  document.body.appendChild(err);
-};
-
 const main = async () => {
   runConfigDialogs();
 
