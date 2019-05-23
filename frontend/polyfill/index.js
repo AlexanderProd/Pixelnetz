@@ -1,10 +1,6 @@
-import P from 'es6-promise';
+import 'core-js/features/promise';
+import 'core-js/features/array/from';
+import 'core-js/features/object/assign';
+import 'core-js/features/symbol';
 import 'raf/polyfill';
-import 'iterators-polyfill';
-import './ArrayFrom';
-import './ObjectAssign';
 import './Classlist';
-
-if (Promise in window) {
-  window.Promise = P;
-}
