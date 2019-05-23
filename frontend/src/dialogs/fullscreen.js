@@ -32,7 +32,7 @@ const fullscreenConfig = () => {
     enableButton.style.display = 'inline';
   });
 
-  if (!(/iPhone|iPad|iPod/i.test(navigator.userAgent))) {
+  if (!/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
     document.body.appendChild(enableButton);
     document.body.appendChild(disableButton);
   }
