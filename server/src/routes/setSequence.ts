@@ -14,11 +14,14 @@ const setSequence = (
   clientPool: ClientPool,
   masterPool: Pool,
 ) => async (req: Request, res: Response) => {
-  const { name } = req.query;
+  const { name, test, w, h } = req.query;
+  const isTest = test === 'true';
+  const testWidth = Number(w);
+  const testHeight = Number(h);
   const repeat = req.query.repeat === 'true';
   const stepLength = Number(req.query.stepLength);
 
-  if (clientPool.size() < 1) {
+  if (clientPool.size() < 1 && !isTest) {
     res.status(503).json({ error: 'No pixel clients connected' });
     return;
   }
@@ -39,7 +42,16 @@ const setSequence = (
 
   let dimensions: GridDimensions;
   try {
-    dimensions = clientPool.dimensions();
+    if (isTest) {
+      dimensions = {
+        width: testWidth,
+        height: testHeight,
+        xOffset: 0,
+        yOffset: 0,
+      };
+    } else {
+      dimensions = clientPool.dimensions();
+    }
   } catch (e) {
     console.error(e);
     res.status(503).json({ error: 'No valid pixel coordinates' });

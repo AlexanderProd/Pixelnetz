@@ -8,6 +8,7 @@ import {
 } from './rasterization';
 import Mimetypes from './mimetypes';
 import { GridDimensions } from '../ws/ClientPool';
+import rusterize from './rusterize';
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
@@ -37,6 +38,31 @@ interface Scaling {
 
 class Sequence {
   static async fromFile({
+    file,
+    repeat,
+    bitDepth,
+  }: FileInput): Promise<void> {
+    const mimetype = file.mimetype as Mimetypes;
+    const { matrices, ...data } = await rusterize(
+      file.data,
+      mimetype,
+      bitDepth,
+    );
+    const seq = new Sequence({
+      name: file.name,
+      repeat,
+      ...data,
+    });
+    await writeFile(
+      Sequence.getPath(seq.name),
+      JSON.stringify(seq.info),
+    );
+    matrices.forEach((matrix, index) => {
+      writeFile(Sequence.getMatrixPath(seq.name, index), matrix);
+    });
+  }
+
+  static async fromFileTS({
     file,
     repeat,
     bitDepth,
