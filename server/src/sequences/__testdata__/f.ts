@@ -6,7 +6,7 @@ import png from './large_jpeg';
 // fd.append('data', png);
 
 const gif = fs.readFileSync(
-  `${__dirname}/../../../test_images/mothman.gif`,
+  `${__dirname}/../../../test_images/g.gif`,
 );
 const start = Date.now();
 fetch(
@@ -16,9 +16,12 @@ fetch(
     body: gif,
   },
 )
-  .then(r => r.text())
-  .then(r => {
+  .then(r => r.json())
+  .then(({ matrices, ...data }) => {
     // fs.writeFileSync(`${__dirname}/y.matrix.0.json`, r, 'utf-8');
-    console.log(r.length);
-    console.log(`\n\n>> ${Date.now() - start}`);
+    console.log(`${matrices[0].substring(0, 300)}...`);
+    console.log(data);
+    console.log(
+      `\n\n>> done in ${(Date.now() - start) / 1000} seconds`,
+    );
   });
