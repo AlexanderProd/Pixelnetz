@@ -22,8 +22,8 @@ export interface RasterizationData {
   height: number;
   length: number;
   duration: number;
-  numParts: number;
-  maxFramesPerPart: number;
+  numChunks: number;
+  maxChunkSize: number;
 }
 
 export const createGetMatrixPart = ({
@@ -101,8 +101,8 @@ const rasterize = async (
       channels,
       bitDepth,
     }),
-    numParts: frameParts.length,
-    maxFramesPerPart: maxFrames,
+    numChunks: frameParts.length,
+    maxChunkSize: maxFrames,
   };
 };
 

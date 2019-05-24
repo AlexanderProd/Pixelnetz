@@ -118,9 +118,9 @@ class Sequence {
 
   private _duration: number;
 
-  private _numParts: number;
+  private _numChunks: number;
 
-  private _maxFramesPerPart: number;
+  private _maxChunkSize: number;
 
   private _bitDepth: number;
 
@@ -136,8 +136,8 @@ class Sequence {
     height,
     length,
     duration,
-    numParts,
-    maxFramesPerPart,
+    numChunks,
+    maxChunkSize,
     bitDepth,
     matrix = undefined,
   }: {
@@ -148,8 +148,8 @@ class Sequence {
     height: number;
     length: number;
     duration: number;
-    numParts: number;
-    maxFramesPerPart: number;
+    numChunks: number;
+    maxChunkSize: number;
     bitDepth: number;
     matrix?: ClientMatrix;
   }) {
@@ -161,8 +161,8 @@ class Sequence {
     this._length = length;
     this._duration = duration;
     this._matrix = matrix;
-    this._numParts = numParts;
-    this._maxFramesPerPart = maxFramesPerPart;
+    this._numChunks = numChunks;
+    this._maxChunkSize = maxChunkSize;
     this._bitDepth = bitDepth;
     this._scaling = undefined;
   }
@@ -176,9 +176,9 @@ class Sequence {
       height: this._height,
       length: this._length,
       duration: this._duration,
-      numParts: this._numParts,
+      numChunks: this._numChunks,
       bitDepth: this._bitDepth,
-      maxFramesPerPart: this._maxFramesPerPart,
+      maxChunkSize: this._maxChunkSize,
     };
   }
 
@@ -210,16 +210,16 @@ class Sequence {
     return this._duration;
   }
 
-  get numParts() {
-    return this._numParts;
+  get numChunks() {
+    return this._numChunks;
   }
 
   get bitDepth() {
     return this._bitDepth;
   }
 
-  get maxFramesPerPart() {
-    return this._maxFramesPerPart;
+  get maxChunkSize() {
+    return this._maxChunkSize;
   }
 
   async loadMatrix(index: number): Promise<ClientMatrix> {
@@ -236,7 +236,7 @@ class Sequence {
     index: number;
   }> {
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < this._numParts; i++) {
+    for (let i = 0; i < this._numChunks; i++) {
       this._matrix = undefined;
       // eslint-disable-next-line no-await-in-loop
       this._matrix = await this.loadMatrix(i);
@@ -291,8 +291,8 @@ class Sequence {
     const { gxOffset, gyOffset, gWidth, gHeight } = this._scaling;
 
     const length = Math.min(
-      this._maxFramesPerPart,
-      this._length - index * this._maxFramesPerPart,
+      this._maxChunkSize,
+      this._length - index * this._maxChunkSize,
     );
 
     const matrix: MasterMatrix = new Array(length);
@@ -369,7 +369,7 @@ class Sequence {
   }
 
   delete(): Promise<void[]> {
-    const matricies = [...new Array(this._numParts)].map((x, i) =>
+    const matricies = [...new Array(this._numChunks)].map((x, i) =>
       unlink(Sequence.getMatrixPath(this._name, i)),
     );
     return Promise.all([

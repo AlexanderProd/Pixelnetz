@@ -38,7 +38,7 @@ test('rasterize: it returns correct rasterizationData', async t => {
     height: 3,
     length: 1,
     duration: DEFAULT_DELAY,
-    numParts: 1,
+    numChunks: 1,
   };
 
   // eslint-disable-next-line guard-for-in
