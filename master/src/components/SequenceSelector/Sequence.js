@@ -13,17 +13,32 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
   const [expanded, setExpanded] = useState(false);
   const [repeat, setRepeat] = useState(sequence.repeat);
   const [stepLength, setStepLength] = useState(sequence.stepLength);
+  const [isTest, setIsTest] = useState(false);
+  const [testWidth, setTestWidth] = useState(50);
+  const [testHeight, setTestHeight] = useState(30);
 
   const toggleExpand = () => {
     setExpanded(!expanded);
   };
 
   const toggleRepeat = () => {
-    setRepeat(!repeat);
+    setRepeat(prevState => !prevState);
+  };
+
+  const toggleIsTest = () => {
+    setIsTest(prevState => !prevState);
   };
 
   const handleStepLenghtChange = e => {
     setStepLength(e.target.value);
+  };
+
+  const handleTestWidthChange = e => {
+    setTestWidth(e.target.value);
+  };
+
+  const handleTestHeightChange = e => {
+    setTestHeight(e.target.value);
   };
 
   return (
@@ -50,6 +65,9 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
                 ...sequence,
                 repeat,
                 stepLength,
+                isTest,
+                testWidth,
+                testHeight,
               })
             }
           >
@@ -81,6 +99,34 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
               type="number"
               value={stepLength}
               onChange={handleStepLenghtChange}
+            />
+          </span>
+        </div>
+        <div className="s-d-row">
+          <span className="s-d-title">isTest:</span>
+          <span className="s-d-val">
+            <Toggle value={isTest} onChange={toggleIsTest} />
+          </span>
+        </div>
+        <div className="s-d-row">
+          <span className="s-d-title">testWidth:</span>
+          <span className="s-d-val">
+            <Input
+              className="step-length-input"
+              type="number"
+              value={testWidth}
+              onChange={handleTestWidthChange}
+            />
+          </span>
+        </div>
+        <div className="s-d-row">
+          <span className="s-d-title">testHeight:</span>
+          <span className="s-d-val">
+            <Input
+              className="step-length-input"
+              type="number"
+              value={testHeight}
+              onChange={handleTestHeightChange}
             />
           </span>
         </div>

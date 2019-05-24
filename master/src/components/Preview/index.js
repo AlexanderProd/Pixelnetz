@@ -64,12 +64,14 @@ const createFrameHandler = (
           blockScaling,
           blockScaling,
         );
-        ctx.strokeRect(
-          x * blockScaling,
-          y * blockScaling,
-          blockScaling,
-          blockScaling,
-        );
+        if (!window._nostroke) {
+          ctx.strokeRect(
+            x * blockScaling,
+            y * blockScaling,
+            blockScaling,
+            blockScaling,
+          );
+        }
         i++;
       }
     }

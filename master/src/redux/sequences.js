@@ -4,9 +4,12 @@ import { ALL_SEQUENCES } from '../../../shared/dist/util/socketActionTypes';
 export const SEQUENCE_SET_REQUEST = 'sequences/SEQUENCE_SET_REQUEST';
 export const SEQUENCE_SET_SUCCESS = 'sequences/SEQUENCE_SET_SUCCESS';
 export const SEQUENCE_SET_FAILURE = 'sequences/SEQUENCE_SET_FAILURE';
-export const SEQUENCE_DELETE_REQUEST = 'sequences/SEQUENCE_DELETE_REQUEST';
-export const SEQUENCE_DELETE_SUCCESS = 'sequences/SEQUENCE_DELETE_SUCCESS';
-export const SEQUENCE_DELETE_FAILURE = 'sequences/SEQUENCE_DELETE_FAILURE';
+export const SEQUENCE_DELETE_REQUEST =
+  'sequences/SEQUENCE_DELETE_REQUEST';
+export const SEQUENCE_DELETE_SUCCESS =
+  'sequences/SEQUENCE_DELETE_SUCCESS';
+export const SEQUENCE_DELETE_FAILURE =
+  'sequences/SEQUENCE_DELETE_FAILURE';
 
 // Reducer
 export default (state = [], action) => {
@@ -27,11 +30,18 @@ export const setSequence = ({
   name,
   repeat,
   stepLength,
+  isTest,
+  testWidth,
+  testHeight,
 }) => ({
   fetch: 'GET',
-  endpoint: `/setAnimation?name=${name}&repeat=${repeat}&stepLength=${stepLength}`,
+  endpoint: `/setAnimation?name=${name}&repeat=${repeat}&stepLength=${stepLength}&test=${isTest}&w=${testWidth}&h=${testHeight}`,
   expect: 'text',
-  types: [SEQUENCE_SET_REQUEST, SEQUENCE_SET_SUCCESS, SEQUENCE_SET_FAILURE],
+  types: [
+    SEQUENCE_SET_REQUEST,
+    SEQUENCE_SET_SUCCESS,
+    SEQUENCE_SET_FAILURE,
+  ],
 });
 
 export const deleteSequence = sequence => ({
@@ -39,5 +49,9 @@ export const deleteSequence = sequence => ({
   endpoint: `/deleteSequence?name=${sequence.name}`,
   expect: 'text',
   sequence,
-  types: [SEQUENCE_DELETE_REQUEST, SEQUENCE_DELETE_SUCCESS, SEQUENCE_DELETE_FAILURE],
+  types: [
+    SEQUENCE_DELETE_REQUEST,
+    SEQUENCE_DELETE_SUCCESS,
+    SEQUENCE_DELETE_FAILURE,
+  ],
 });
