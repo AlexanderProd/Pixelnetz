@@ -42,6 +42,9 @@ class Sequence {
     repeat,
     bitDepth,
   }: FileInput): Promise<void> {
+    if (process.env.RASTERIZER !== 'RUSTERIZER') {
+      return Sequence.fromFileTS({ file, repeat, bitDepth });
+    }
     const mimetype = file.mimetype as Mimetypes;
     const { matrices, ...data } = await rusterize(
       file.data,
@@ -57,9 +60,11 @@ class Sequence {
       Sequence.getPath(seq.name),
       JSON.stringify(seq.info),
     );
-    matrices.forEach((matrix, index) => {
-      writeFile(Sequence.getMatrixPath(seq.name, index), matrix);
-    });
+    return Promise.all(
+      matrices.map((matrix, index) =>
+        writeFile(Sequence.getMatrixPath(seq.name, index), matrix),
+      ),
+    ).then();
   }
 
   static async fromFileTS({
