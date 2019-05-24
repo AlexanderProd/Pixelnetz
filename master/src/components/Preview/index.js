@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { dimensionsType, sequenceType } from '../../types';
 import createAnimationController from '../../../../shared/dist/animationController';
-import { decodeColor } from '../../../../shared/dist/util/colors';
+import {
+  createColorEncoder,
+  DEFAULT_BIT_DEPTH,
+} from '../../../../shared/dist/util/colors';
 import { Button } from '../ui';
 import './Preview.sass';
 
@@ -28,6 +31,7 @@ const setHeight = (elem, val) =>
 const createFrameHandler = (
   canvas,
   { width: gWidth, height: gHeight },
+  { bitDepth },
 ) => {
   const ctx = canvas.getContext('2d');
   ctx.strokeStyle = '#434343';
@@ -38,6 +42,10 @@ const createFrameHandler = (
   const blockScaling = canvas.width / gWidth;
   // eslint-disable-next-line no-param-reassign
   canvas.height = blockScaling * gHeight;
+
+  const { decode: decodeColor } = createColorEncoder(
+    bitDepth || DEFAULT_BIT_DEPTH,
+  );
 
   return frame => {
     let i = 0;
@@ -88,7 +96,6 @@ const Preview = ({
   appendedSequence,
 }) => {
   const [canvas] = useState(createCanvas());
-
   const [animationController, setAnimationController] = useState(
     null,
   );
@@ -110,7 +117,7 @@ const Preview = ({
       const blockScaling = cWidth / width;
       setHeight(canvas, blockScaling * height);
       const controller = createAnimationController(
-        createFrameHandler(canvas, dimensions),
+        createFrameHandler(canvas, dimensions, masterSequence),
       );
       controller.setSequence(masterSequence);
       setAnimationController(controller);

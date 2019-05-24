@@ -4,8 +4,8 @@ import {
   PixelGrid,
 } from './rasterization';
 import {
-  encodeColor,
   toRGBColor,
+  RGBColor,
 } from '../../../shared/src/util/colors';
 
 export interface PartRasterizationInput {
@@ -13,6 +13,7 @@ export interface PartRasterizationInput {
   width: number;
   height: number;
   channels: number;
+  encodeColor: (color: RGBColor) => string;
 }
 
 async function rasterizePart({
@@ -20,6 +21,7 @@ async function rasterizePart({
   width,
   height,
   channels,
+  encodeColor,
 }: PartRasterizationInput): Promise<ClientMatrix> {
   const matrix: ClientMatrix = prepareMatrix(width, height);
 

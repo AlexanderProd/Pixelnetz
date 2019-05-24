@@ -22,7 +22,7 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
     setRepeat(!repeat);
   };
 
-  const handleStepLenghtChange = (e) => {
+  const handleStepLenghtChange = e => {
     setStepLength(e.target.value);
   };
 
@@ -45,11 +45,13 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
           <Button
             primary
             className="animation-set-button"
-            onClick={() => onSet({
-              ...sequence,
-              repeat,
-              stepLength,
-            })}
+            onClick={() =>
+              onSet({
+                ...sequence,
+                repeat,
+                stepLength,
+              })
+            }
           >
             Set
           </Button>
@@ -62,14 +64,13 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
           </Button>
         </div>
       </div>
-      <div className={`sequence-details ${expanded ? 'expanded' : ''}`}>
+      <div
+        className={`sequence-details ${expanded ? 'expanded' : ''}`}
+      >
         <div className="s-d-row">
           <span className="s-d-title">repeat:</span>
           <span className="s-d-val">
-            <Toggle
-              value={repeat}
-              onChange={toggleRepeat}
-            />
+            <Toggle value={repeat} onChange={toggleRepeat} />
           </span>
         </div>
         <div className="s-d-row">
@@ -98,6 +99,10 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
         <div className="s-d-row">
           <span className="s-d-title">height:</span>
           <span className="s-d-val">{sequence.height}</span>
+        </div>
+        <div className="s-d-row">
+          <span className="s-d-title">bitDepth:</span>
+          <span className="s-d-val">{sequence.bitDepth}</span>
         </div>
       </div>
     </div>

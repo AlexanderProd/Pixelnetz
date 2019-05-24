@@ -7,7 +7,7 @@ import { splitToSize, ClientMatrix } from './rasterization';
 import TEST_PNG from './__testdata__/png';
 import { mapFramesToPixelGrid } from './getPixelsFromFrame';
 import {
-  encodeColor,
+  createColorEncoder,
   toRGBColor,
 } from '../../../shared/src/util/colors';
 
@@ -31,7 +31,7 @@ test.beforeEach(() => {
 });
 
 test('rasterize: it returns correct rasterizationData', async t => {
-  const data = await rasterize(TEST_PNG, Mimetypes.PNG);
+  const data = await rasterize(TEST_PNG, Mimetypes.PNG, 7);
   const expected = {
     stepLength: DEFAULT_DELAY,
     width: 2,
@@ -52,12 +52,14 @@ test('createGetMatrixPart: it returns the correct matrix', async t => {
   const data: FrameData[] = await createData(1);
   const pixel = await mapFramesToPixelGrid(data, Mimetypes.PNG);
   const frameParts = splitToSize(pixel, 5);
+  const { encode: encodeColor } = createColorEncoder(7);
 
   const generateMatrix = createGetMatrixPart({
     frameParts,
     width: 2,
     height: 3,
     channels: 4,
+    bitDepth: 7,
   });
 
   const expected: ClientMatrix = [

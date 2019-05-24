@@ -1,6 +1,7 @@
 import FrameQueue from '../FrameQueue';
 
-const createAnimationController = frameHandler => {
+const createAnimationController = initialFrameHandler => {
+  let frameHandler = initialFrameHandler;
   let sequenceRunning = false;
   let sequence;
   let frameQueue = null;
@@ -76,11 +77,16 @@ const createAnimationController = frameHandler => {
     }
   };
 
+  const setFrameHandler = _frameHandler => {
+    frameHandler = _frameHandler;
+  };
+
   return {
     setSequence,
     start,
     stop,
     appendSequence,
+    setFrameHandler,
   };
 };
 

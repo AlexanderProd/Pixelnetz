@@ -22,6 +22,7 @@ interface FileInput {
     name: string;
   };
   repeat: boolean;
+  bitDepth: number;
 }
 
 interface Scaling {
@@ -35,15 +36,21 @@ interface Scaling {
 }
 
 class Sequence {
-  static async fromFile({ file, repeat }: FileInput): Promise<void> {
+  static async fromFile({
+    file,
+    repeat,
+    bitDepth,
+  }: FileInput): Promise<void> {
     const mimetype = file.mimetype as Mimetypes;
     const { getMatrixPart, ...data } = await rasterize(
       file.data,
       mimetype,
+      bitDepth,
     );
     const seq = new Sequence({
       name: file.name,
       repeat,
+      bitDepth,
       ...data,
     });
     await writeFile(
@@ -115,6 +122,8 @@ class Sequence {
 
   private _maxFramesPerPart: number;
 
+  private _bitDepth: number;
+
   private _matrix: ClientMatrix | undefined;
 
   private _scaling: Scaling | undefined;
@@ -129,6 +138,7 @@ class Sequence {
     duration,
     numParts,
     maxFramesPerPart,
+    bitDepth,
     matrix = undefined,
   }: {
     name: string;
@@ -140,6 +150,7 @@ class Sequence {
     duration: number;
     numParts: number;
     maxFramesPerPart: number;
+    bitDepth: number;
     matrix?: ClientMatrix;
   }) {
     this._name = name;
@@ -152,6 +163,7 @@ class Sequence {
     this._matrix = matrix;
     this._numParts = numParts;
     this._maxFramesPerPart = maxFramesPerPart;
+    this._bitDepth = bitDepth;
     this._scaling = undefined;
   }
 
@@ -165,6 +177,7 @@ class Sequence {
       length: this._length,
       duration: this._duration,
       numParts: this._numParts,
+      bitDepth: this._bitDepth,
       maxFramesPerPart: this._maxFramesPerPart,
     };
   }
@@ -199,6 +212,10 @@ class Sequence {
 
   get numParts() {
     return this._numParts;
+  }
+
+  get bitDepth() {
+    return this._bitDepth;
   }
 
   get maxFramesPerPart() {

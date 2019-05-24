@@ -10,19 +10,13 @@ import rasterizePart, {
   PartRasterizationInput,
 } from './rasterizePart';
 import { MAX_FRAMES } from './rasterisationConstants';
-import ThreadPool from '../threads/ThreadPool';
+import { createColorEncoder } from '../../../shared/src/util/colors';
 
 export interface RasterizationData {
   getMatrixPart: () => AsyncIterableIterator<{
     matrix: ClientMatrix;
     index: number;
   }>;
-  getMatrixPartThreaded: () => Promise<
-    {
-      matrix: ClientMatrix;
-      index: number;
-    }[]
-  >;
   stepLength: number;
   width: number;
   height: number;
@@ -37,13 +31,16 @@ export const createGetMatrixPart = ({
   width,
   height,
   channels,
+  bitDepth,
 }: {
   frameParts: PixelGrid[][];
   width: number;
   height: number;
   channels: number;
+  bitDepth: number;
 }) =>
   async function* getMatrixPart() {
+    const { encode: encodeColor } = createColorEncoder(bitDepth);
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < frameParts.length; i++) {
       const part = frameParts[i];
@@ -52,6 +49,7 @@ export const createGetMatrixPart = ({
         width,
         height,
         channels,
+        encodeColor,
       };
       yield {
         // eslint-disable-next-line no-await-in-loop
@@ -61,65 +59,10 @@ export const createGetMatrixPart = ({
     }
   };
 
-export const createGetMatrixPartThreaded = ({
-  frameParts,
-  width,
-  height,
-  channels,
-}: {
-  frameParts: PixelGrid[][];
-  width: number;
-  height: number;
-  channels: number;
-}) =>
-  async function getMatrixPart() {
-    const pool = new ThreadPool<
-      { input: PartRasterizationInput; index: number },
-      {
-        matrix: ClientMatrix;
-        index: number;
-      }
-    >({
-      path: `${__dirname}/rasterizeInWorker.js`,
-    });
-
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < frameParts.length; i++) {
-      const part = frameParts[i];
-      const input: PartRasterizationInput = {
-        frames: part,
-        width,
-        height,
-        channels,
-      };
-      pool.performAction({ input, index: i });
-    }
-    return new Promise<
-      {
-        matrix: ClientMatrix;
-        index: number;
-      }[]
-    >(res => {
-      let ops = 0;
-      const results: {
-        matrix: ClientMatrix;
-        index: number;
-      }[] = [];
-      pool.onActionPerformed(({ result }) => {
-        // eslint-disable-next-line no-plusplus
-        ops++;
-        results.push(result);
-        if (ops === frameParts.length) {
-          pool.close();
-          res(results);
-        }
-      });
-    });
-  };
-
 const rasterize = async (
   buffer: Buffer,
   mimetype: Mimetypes,
+  bitDepth: number,
   maxFrames: number = MAX_FRAMES,
 ): Promise<RasterizationData> => {
   const frames = await getFrames(buffer, mimetype);
@@ -156,12 +99,7 @@ const rasterize = async (
       width,
       height,
       channels,
-    }),
-    getMatrixPartThreaded: createGetMatrixPartThreaded({
-      frameParts,
-      width,
-      height,
-      channels,
+      bitDepth,
     }),
     numParts: frameParts.length,
     maxFramesPerPart: maxFrames,

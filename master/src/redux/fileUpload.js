@@ -32,12 +32,17 @@ export default (state = initialState, action) => {
 };
 
 // ActionCreators
-export const upload = ({ data, mimeType, name }) => ({
+export const upload = ({ data, mimeType, name, bitDepth }) => ({
   fetch: 'POST-MULTIPART',
-  endpoint: '/upload',
+  endpoint: `/upload?bit_depth=${bitDepth}`,
   expect: 'text',
   data,
   mimeType,
   name,
-  types: [FILE_UPLOAD_REQUEST, FILE_UPLOAD_SUCCESS, FILE_UPLOAD_FAILURE],
+  bitDepth,
+  types: [
+    FILE_UPLOAD_REQUEST,
+    FILE_UPLOAD_SUCCESS,
+    FILE_UPLOAD_FAILURE,
+  ],
 });

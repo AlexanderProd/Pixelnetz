@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { upload as uploadFile } from '../../redux/fileUpload';
 import { Form, Icon, Button, Input } from '../ui';
+import { DEFAULT_BIT_DEPTH } from '../../../../shared/dist/util/colors';
 import './FileUpload.sass';
 
 const propTypes = {
@@ -20,12 +21,19 @@ const FileUpload = ({ upload }) => {
   const [rejectedFile, setRejectedFile] = useState(null);
   const [multipleDropped, setMultipleDropped] = useState(false);
   const [sequenceName, setSequenceName] = useState('');
+  const [bitDepth, setBitDepth] = useState('');
 
   const handleDrop = ([accepted], rejected) => {
     if (accepted) {
       setFile(accepted);
       setRejectedFile(null);
       setMultipleDropped(false);
+      if (!sequenceName) {
+        const nameParts = accepted.name.split('.');
+        nameParts.pop();
+        const name = nameParts.join('_');
+        setSequenceName(name);
+      }
     }
     if (rejected.length === 1) {
       setFile(null);
@@ -43,6 +51,7 @@ const FileUpload = ({ upload }) => {
     setRejectedFile(null);
     setMultipleDropped(false);
     setSequenceName('');
+    setBitDepth('');
   };
 
   const handleSubmit = () => {
@@ -52,20 +61,34 @@ const FileUpload = ({ upload }) => {
       data: formData,
       mimeType: file.type,
       name: sequenceName,
+      bitDepth: bitDepth || DEFAULT_BIT_DEPTH,
     }).then(handleCancel);
   };
 
-  const handleChange = (e) => {
+  const handleNameChange = e => {
     const { value } = e.target;
     setSequenceName(value);
+  };
+
+  const handleBitDepthChange = e => {
+    const { value } = e.target;
+    setBitDepth(value);
   };
 
   return (
     <Form className="FileUpload" onSubmit={handleSubmit}>
       <Input
         placeholder="please enter sequence name"
-        onChange={handleChange}
+        onChange={handleNameChange}
         value={sequenceName}
+      />
+      <Input
+        placeholder={`Bit depth (default ${DEFAULT_BIT_DEPTH})`}
+        type="number"
+        min="1"
+        max="8"
+        onChange={handleBitDepthChange}
+        value={bitDepth}
       />
       <Dropzone
         className="upload-dropzone"
@@ -82,10 +105,7 @@ const FileUpload = ({ upload }) => {
         </div>
         <div className="browse-for-file">or browse for file</div>
       </Dropzone>
-      <Button
-        type="submit"
-        disabled={!file || !sequenceName}
-      >
+      <Button type="submit" disabled={!file || !sequenceName}>
         Upload
       </Button>
       <Button
@@ -110,11 +130,7 @@ const FileUpload = ({ upload }) => {
             cannot be uploaded.
           </span>
         )}
-        {multipleDropped && (
-          <span>
-            Please only drop one file.
-          </span>
-        )}
+        {multipleDropped && <span>Please only drop one file.</span>}
       </div>
     </Form>
   );
@@ -126,8 +142,15 @@ const mapStateToProps = ({ fileUpload }) => ({
   fileUpload,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  upload: uploadFile,
-}, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      upload: uploadFile,
+    },
+    dispatch,
+  );
 
-export default connect(mapStateToProps, mapDispatchToProps)(FileUpload);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(FileUpload);

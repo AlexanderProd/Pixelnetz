@@ -34,5 +34,6 @@ export const sequenceType = {
   length: number.isRequired,
   width: number.isRequired,
   height: number.isRequired,
+  bitDepth: number.isRequired,
   frames: arrayOf(array),
 };

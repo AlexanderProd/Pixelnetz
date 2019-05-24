@@ -47,31 +47,44 @@ export function createBitFieldEncoding(
 }
 
 export const COLOR_BIT_DEPTH = 8;
-export const BIT_DEPTH = 7;
-export const LOSS = 2 ** (COLOR_BIT_DEPTH - BIT_DEPTH);
+export const DEFAULT_BIT_DEPTH = 7;
 export const COLOR_CHANNELS = 3;
-export const COLOR_SHAPE: ReadonlyArray<number> = [
-  BIT_DEPTH,
-  BIT_DEPTH,
-  BIT_DEPTH,
-];
 
-const colorBitFieldEncoder = createBitFieldEncoding(COLOR_SHAPE);
+export function createColorEncoder(
+  bitDepth: number,
+): {
+  encode: (data: RGBColor) => string;
+  decode: (bitField: string) => RGBColor;
+} {
+  const loss = 2 ** (COLOR_BIT_DEPTH - bitDepth);
+  const colorShape: ReadonlyArray<number> = [
+    bitDepth,
+    bitDepth,
+    bitDepth,
+  ];
 
-export const encodeBitField = colorBitFieldEncoder.encode;
+  const colorBitFieldEncoder = createBitFieldEncoding(colorShape);
 
-export const decodeBitField = colorBitFieldEncoder.decode;
+  const encodeBitField = colorBitFieldEncoder.encode;
 
-export function encodeColor(color: RGBColor): string {
-  const downSampledColor = color.map(c => Math.floor(c / LOSS));
-  const bitField = encodeBitField(downSampledColor);
-  return toBase92(bitField);
-}
+  const decodeBitField = colorBitFieldEncoder.decode;
 
-export function decodeColor(base92BitField: string): RGBColor {
-  const bitField = fromBase92(base92BitField);
-  const downSampledColor = decodeBitField(bitField);
-  return downSampledColor.map(c => c * LOSS);
+  function encode(color: RGBColor): string {
+    const downSampledColor = color.map(c => Math.floor(c / loss));
+    const bitField = encodeBitField(downSampledColor);
+    return toBase92(bitField);
+  }
+
+  function decode(base92BitField: string): RGBColor {
+    const bitField = fromBase92(base92BitField);
+    const downSampledColor = decodeBitField(bitField);
+    return downSampledColor.map(c => c * loss);
+  }
+
+  return {
+    encode,
+    decode,
+  };
 }
 
 export function toUint8Array(arr: number[]): Uint8Array {

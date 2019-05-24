@@ -4,6 +4,7 @@ import sendAllSequences from '../util/sendAllSequences';
 import Sequence from '../sequences/Sequence';
 import Mimetypes from '../sequences/mimetypes';
 import MasterPool from '../ws/MasterPool';
+import { DEFAULT_BIT_DEPTH } from '../../../shared/src/util/colors';
 
 const allowedTypes = [Mimetypes.PNG, Mimetypes.JPEG, Mimetypes.GIF];
 
@@ -11,6 +12,8 @@ const upload = (masterPool: MasterPool) => (
   req: Request,
   res: Response,
 ) => {
+  const bitDepth = Number(req.query.bit_depth) || DEFAULT_BIT_DEPTH;
+
   if (!(req.files && req.files.file)) {
     res.status(400).json({ error: 'No file found' });
     return;
@@ -36,7 +39,7 @@ const upload = (masterPool: MasterPool) => (
   }
 
   const start = Date.now();
-  Sequence.fromFile({ file, repeat: false })
+  Sequence.fromFile({ file, repeat: false, bitDepth })
     .then(() => {
       const seconds = (Date.now() - start) / 1000;
       console.log(`file written successfully in ${seconds} sec`);

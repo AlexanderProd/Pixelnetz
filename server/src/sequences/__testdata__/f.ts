@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import FormData from 'form-data';
 import fs from 'fs';
 import png from './large_jpeg';
 
@@ -7,7 +6,7 @@ import png from './large_jpeg';
 // fd.append('data', png);
 
 const gif = fs.readFileSync(
-  `${__dirname}/../../../test_images/sine.gif`,
+  `${__dirname}/../../../test_images/mothman.gif`,
 );
 const start = Date.now();
 fetch(

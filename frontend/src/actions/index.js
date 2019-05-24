@@ -14,15 +14,9 @@ import appendSequence from './appendSequence';
 import position from './position';
 import createAnimationController from '../../../shared/dist/animationController';
 import { sosAnimation } from '../../../shared/dist/util/sequence';
-import { decodeColor } from '../../../shared/dist/util/colors';
-
-const setColor = encodedColor => {
-  const [r, g, b] = decodeColor(encodedColor);
-  document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-};
 
 const createActionRunner = send => {
-  const animationController = createAnimationController(setColor);
+  const animationController = createAnimationController();
   animationController.setSequence(sosAnimation);
 
   const actions = {
