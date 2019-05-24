@@ -380,8 +380,12 @@ class Sequence {
     const gAspect = gWidth / gHeight;
 
     const scaleRatio = aspect < gAspect ? wScale : hScale;
-    const xOffset = Math.floor((width - gWidth * scaleRatio) / 2);
-    const yOffset = Math.floor((height - gHeight * scaleRatio) / 2);
+    const xOffset = Math.floor(
+      (width - Math.round(gWidth * scaleRatio)) / 2,
+    );
+    const yOffset = Math.floor(
+      (height - Math.round(gHeight * scaleRatio)) / 2,
+    );
 
     this._scaling = {
       scaleRatio,
