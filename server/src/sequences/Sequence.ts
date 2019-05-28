@@ -43,8 +43,10 @@ class Sequence {
     bitDepth,
   }: FileInput): Promise<void> {
     if (process.env.RASTERIZER !== 'RUSTERIZER') {
+      console.log('Using built in rasterzier!');
       return Sequence.fromFileTS({ file, repeat, bitDepth });
     }
+    console.log('Using external rusterizer!');
     const mimetype = file.mimetype as Mimetypes;
     const { matrices, ...data } = await rusterize(
       file.data,
