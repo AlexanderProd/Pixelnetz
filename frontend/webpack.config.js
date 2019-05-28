@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ScriptExtHtmlPlugin = require('script-ext-html-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
@@ -108,6 +109,7 @@ module.exports = (env, argv) => {
             }
           : false,
       }),
+      new CopyPlugin([{ from: 'public/audio', to: 'audio' }]),
       // Set 'nomodule' attribute on plyfill script tag,
       // so newer browsers, which do not need the legacy polyfills,
       // won't download the script
