@@ -18,7 +18,7 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
   const [testHeight, setTestHeight] = useState(30);
 
   const toggleExpand = () => {
-    setExpanded(!expanded);
+    setExpanded(prevState => !prevState);
   };
 
   const toggleRepeat = () => {

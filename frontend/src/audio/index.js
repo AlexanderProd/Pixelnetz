@@ -1,37 +1,60 @@
 import audioFiles from './files';
 
-const playerTag = document.createElement('audio');
-playerTag.loop = true;
-playerTag.controls = false;
+function createPlayer({ src, type, name }) {
+  const playerTag = document.createElement('audio');
+  playerTag.loop = true;
+  playerTag.controls = false;
+  playerTag.src = src;
+  playerTag.type = type;
 
-if (Math.random() < 0.2) {
-  playerTag.src = audioFiles.chewi.src;
-  playerTag.type = audioFiles.chewi.type;
-} else {
-  playerTag.src = audioFiles.birds.src;
-  playerTag.type = audioFiles.birds.type;
+  // eslint-disable-next-line no-shadow
+  function play() {
+    playerTag.play();
+  }
+
+  // eslint-disable-next-line no-shadow
+  function setVolume(vol) {
+    playerTag.volume = vol;
+  }
+
+  function getVolume() {
+    return playerTag.volume;
+  }
+
+  return {
+    name,
+    play,
+    setVolume,
+    getVolume,
+  };
 }
 
+const players = audioFiles.map(file => createPlayer(file));
+let selected = players[0];
+
 function play() {
-  playerTag.play();
+  players.forEach(player => {
+    player.setVolume(0);
+    player.play();
+  });
+}
+
+function selectSound(name) {
+  players.forEach(p => p.setVolume(0));
+  const player = players.find(p => p.name === name);
+  if (player) {
+    selected = player;
+  }
 }
 
 function setVolume(vol) {
-  playerTag.volume = vol;
+  selected.setVolume(vol);
 }
-
-function getVolume() {
-  return playerTag.volume;
-}
-
-setVolume(0);
-
-window.setVolume = setVolume;
 
 const player = {
   play,
+  selectSound,
   setVolume,
-  getVolume,
 };
 
 export default player;

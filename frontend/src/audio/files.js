@@ -1,12 +1,14 @@
-const audioFiles = {
-  birds: {
+const audioFiles = [
+  {
+    name: 'bird',
     src: 'audio/bird.wav',
     type: 'audio/wav',
   },
-  chewi: {
+  {
+    name: 'chewi',
     src: 'audio/chewbacca.mp3',
     type: 'audio/mpeg',
   },
-};
+];
 
 export default audioFiles;
