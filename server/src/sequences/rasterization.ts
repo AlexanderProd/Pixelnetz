@@ -15,6 +15,17 @@ export interface PixelGrid extends PixelData {
   delay: number;
 }
 
+export enum Rasterizer {
+  RUSTERIZER = 'RUSTERIZER',
+  BUILT_IN = 'BUILT_IN',
+}
+
+export function activeRasterizer(): Rasterizer {
+  return process.env.RASTERIZER === 'RUSTERIZER'
+    ? Rasterizer.RUSTERIZER
+    : Rasterizer.BUILT_IN;
+}
+
 export const getSharpMimetype = (type: Mimetypes): Mimetypes => {
   switch (type) {
     case Mimetypes.GIF:

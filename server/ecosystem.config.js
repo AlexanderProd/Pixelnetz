@@ -17,8 +17,9 @@ module.exports = {
         SALT_ROUNDS: '10',
         RASTERIZATION_RESOLUTION: 100,
         RASTERIZATION_MAX_FRAMES: 100,
-        RUSTERIZER_URL: 'http://localhost:4757/rasterize',
-        RASTERIZER: 'RUSTERIZER'
+        RUSTERIZER_URL: 'http://localhost',
+        RUSTERIZER_PORT: 4757,
+        RASTERIZER: 'RUSTERIZER',
       },
     },
   ],

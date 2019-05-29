@@ -5,6 +5,8 @@ import {
   MasterMatrix,
   ClientFrame,
   ClientMatrix,
+  activeRasterizer,
+  Rasterizer,
 } from './rasterization';
 import Mimetypes from './mimetypes';
 import { GridDimensions } from '../ws/ClientPool';
@@ -37,16 +39,17 @@ interface Scaling {
 }
 
 class Sequence {
-  static async fromFile({
+  static async fromFile(fileInput: FileInput): Promise<void> {
+    return activeRasterizer() === Rasterizer.RUSTERIZER
+      ? Sequence.fromFileRust(fileInput)
+      : Sequence.fromFileTS(fileInput);
+  }
+
+  static async fromFileRust({
     file,
     repeat,
     bitDepth,
   }: FileInput): Promise<void> {
-    if (process.env.RASTERIZER !== 'RUSTERIZER') {
-      console.log('Using built in rasterzier!');
-      return Sequence.fromFileTS({ file, repeat, bitDepth });
-    }
-    console.log('Using external rusterizer!');
     const mimetype = file.mimetype as Mimetypes;
     const { matrices, ...data } = await rusterize(
       file.data,

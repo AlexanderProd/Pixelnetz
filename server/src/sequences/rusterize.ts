@@ -26,16 +26,27 @@ async function rusterize(
   mimetype: Mimetypes,
   bitDepth: number,
 ): Promise<RusterizationData> {
-  const rusterizerUrl = process.env.RUSTERIZER_URL;
+  const url = process.env.RUSTERIZER_URL;
+  const port = process.env.RUSTERIZER_PORT;
+  const endpoint = `${url}:${port}/rasterize`;
   const format = typeMap[mimetype];
   return fetch(
-    `${rusterizerUrl}?format=${format}&bit_depth=${bitDepth}&max_width=${RESOLUTION}`,
+    `${endpoint}?format=${format}&bit_depth=${bitDepth}&max_width=${RESOLUTION}`,
     {
       method: 'POST',
       body: buffer,
     },
   )
-    .then(r => r.json())
+    .then(r => {
+      if (r.ok) {
+        return r.json();
+      }
+      return Promise.reject(
+        new Error(
+          'RUSTERIZER: Rasterization failed. The given input data is probably not supported',
+        ),
+      );
+    })
     .then(
       ({
         matrices,
