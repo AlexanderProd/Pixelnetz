@@ -10,7 +10,7 @@ const savedFiles = (masterPool: MasterPool) => async (
   const { name }: { name: string } = req.query;
 
   try {
-    if (!(await Sequence.exists(name))) {
+    if (await Sequence.exists(name)) {
       Sequence.delete(name)
         .then(() => {
           res.sendStatus(204);
