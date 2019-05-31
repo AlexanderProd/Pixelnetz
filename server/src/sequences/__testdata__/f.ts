@@ -6,7 +6,7 @@ import png from './large_jpeg';
 // fd.append('data', png);
 
 const gif = fs.readFileSync(
-  `${__dirname}/../../../test_images/g.gif`,
+  `${__dirname}/../../../test_images/x.gif`,
 );
 const start = Date.now();
 fetch(

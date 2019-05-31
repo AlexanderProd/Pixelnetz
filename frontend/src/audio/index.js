@@ -1,6 +1,6 @@
 import audioFiles from './files';
 
-function createPlayer({ src, type, name }) {
+function createSinglePlayer({ src, type, name }) {
   const playerTag = document.createElement('audio');
   playerTag.loop = true;
   playerTag.controls = false;
@@ -29,32 +29,36 @@ function createPlayer({ src, type, name }) {
   };
 }
 
-const players = audioFiles.map(file => createPlayer(file));
-let selected = players[0];
+function createPlayer(files) {
+  const players = files.map(file => createSinglePlayer(file));
+  let selected = players[0];
 
-function play() {
-  players.forEach(player => {
-    player.setVolume(0);
-    player.play();
-  });
-}
-
-function selectSound(name) {
-  players.forEach(p => p.setVolume(0));
-  const player = players.find(p => p.name === name);
-  if (player) {
-    selected = player;
+  function play() {
+    players.forEach(player => {
+      player.setVolume(0);
+      player.play();
+    });
   }
+
+  function selectSound(name) {
+    players.forEach(p => p.setVolume(0));
+    const player = players.find(p => p.name === name);
+    if (player) {
+      selected = player;
+    }
+  }
+
+  function setVolume(vol) {
+    selected.setVolume(vol);
+  }
+
+  const player = {
+    play,
+    selectSound,
+    setVolume,
+  };
+
+  return player;
 }
 
-function setVolume(vol) {
-  selected.setVolume(vol);
-}
-
-const player = {
-  play,
-  selectSound,
-  setVolume,
-};
-
-export default player;
+export default createPlayer(audioFiles);
