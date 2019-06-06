@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import fetch from 'node-fetch';
+import axios from 'axios';
 import Mimetypes from './mimetypes';
 import { RESOLUTION } from './rasterisationConstants';
 
@@ -30,23 +30,13 @@ async function rusterize(
   const port = process.env.RUSTERIZER_PORT;
   const endpoint = `${url}:${port}/rasterize`;
   const format = typeMap[mimetype];
-  return fetch(
-    `${endpoint}?format=${format}&bit_depth=${bitDepth}&max_width=${RESOLUTION}`,
-    {
-      method: 'POST',
-      body: buffer,
-    },
-  )
-    .then(r => {
-      if (r.ok) {
-        return r.json();
-      }
-      return Promise.reject(
-        new Error(
-          'RUSTERIZER: Rasterization failed. The given input data is probably not supported',
-        ),
-      );
-    })
+  return axios
+    .post(
+      `${endpoint}?format=${format}&bit_depth=${bitDepth}&max_width=${RESOLUTION}`,
+      buffer,
+      { maxContentLength: 100 * 1024 * 1024 },
+    )
+    .then(r => r.data)
     .then(
       ({
         matrices,

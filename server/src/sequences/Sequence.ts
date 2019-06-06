@@ -51,25 +51,30 @@ class Sequence {
     bitDepth,
   }: FileInput): Promise<void> {
     const mimetype = file.mimetype as Mimetypes;
-    const { matrices, ...data } = await rusterize(
-      file.data,
-      mimetype,
-      bitDepth,
-    );
-    const seq = new Sequence({
-      name: file.name,
-      repeat,
-      ...data,
-    });
-    await writeFile(
-      Sequence.getPath(seq.name),
-      JSON.stringify(seq.info),
-    );
-    return Promise.all(
-      matrices.map((matrix, index) =>
-        writeFile(Sequence.getMatrixPath(seq.name, index), matrix),
-      ),
-    ).then();
+    try {
+      const { matrices, ...data } = await rusterize(
+        file.data,
+        mimetype,
+        bitDepth,
+      );
+      const seq = new Sequence({
+        name: file.name,
+        repeat,
+        ...data,
+      });
+      await writeFile(
+        Sequence.getPath(seq.name),
+        JSON.stringify(seq.info),
+      );
+      return Promise.all(
+        matrices.map((matrix, index) =>
+          writeFile(Sequence.getMatrixPath(seq.name, index), matrix),
+        ),
+      ).then();
+    } catch (e) {
+      console.error(e);
+      return Promise.reject(e);
+    }
   }
 
   static async fromFileTS({
