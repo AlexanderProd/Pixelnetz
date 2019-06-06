@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { isSafeFileName } from '../util/userInput';
 import MasterPool from '../ws/MasterPool';
 import AudioMimetypes, { getFileExtension } from '../audio/Mimetypes';
-import { ALL_AUDIO_FILES } from '../../../shared/src/util/socketActionTypes';
+import sendAllAudioFiles from '../util/sendAllAudioFiles';
 
 const writeFile = promisify(fs.writeFile);
 
@@ -53,10 +53,7 @@ const uploadAudio = (masterPool: MasterPool) => (
     .then(() => {
       console.log(`audio file written successfully`);
       res.sendStatus(200);
-      // masterPool.sendAll({
-      //   actionType: ALL_AUDIO_FILES,
-      //   data: 
-      // });
+      sendAllAudioFiles(masterPool);
     })
     .catch(err => {
       console.log(err);

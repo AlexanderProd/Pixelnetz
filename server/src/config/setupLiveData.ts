@@ -2,12 +2,12 @@ import {
   CURRENT_CONNECTIONS,
   NEW_CONNECTIONS,
   CLOSED_CONNECTIONS,
-  ALL_SEQUENCES,
 } from '../../../shared/dist/util/socketActionTypes';
-import Sequence from '../sequences/Sequence';
 import MasterPool from '../ws/MasterPool';
 import ClientPool from '../ws/ClientPool';
 import { SocketInfo } from '../ws/Socket';
+import sendAllAudioFiles from '../util/sendAllAudioFiles';
+import sendAllSequences from '../util/sendAllSequences';
 
 const setupLiveData = ({
   masterPool,
@@ -27,15 +27,8 @@ const setupLiveData = ({
       connections: currentConnections,
     });
 
-    try {
-      const sequences = await Sequence.listAvailable();
-      masterSocket.send({
-        actionType: ALL_SEQUENCES,
-        data: sequences,
-      });
-    } catch (e) {
-      console.error('Failed to send sequence info to master');
-    }
+    sendAllAudioFiles(masterSocket);
+    sendAllSequences(masterSocket);
   });
 
   let newConnections: SocketInfo[] = [];

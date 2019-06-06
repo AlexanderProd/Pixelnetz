@@ -120,6 +120,10 @@ class Pool extends Emitter {
   sendAll(message: any) {
     this.forEach(socket => socket.send(message));
   }
+
+  send(message: any) {
+    this.sendAll(message);
+  }
 }
 
 export default Pool;
