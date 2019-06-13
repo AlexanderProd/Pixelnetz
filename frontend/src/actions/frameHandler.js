@@ -1,8 +1,8 @@
-import { createColorEncoder } from '../../../shared/dist/util/colors';
+import { createColorEncoding } from '../../../shared/dist/util/colors';
 import player from '../audio';
 
 function createFrameHandler(sequence) {
-  const { decode: decodeColor } = createColorEncoder(
+  const { decode: decodeColor } = createColorEncoding(
     sequence.bitDepth,
   );
 

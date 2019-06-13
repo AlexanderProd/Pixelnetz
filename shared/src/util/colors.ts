@@ -50,7 +50,7 @@ export const COLOR_BIT_DEPTH = 8;
 export const DEFAULT_BIT_DEPTH = 7;
 export const COLOR_CHANNELS = 3;
 
-export function createColorEncoder(
+export function createColorEncoding(
   bitDepth: number,
 ): {
   encode: (data: RGBColor) => string;

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { dimensionsType, sequenceType } from '../../types';
 import createAnimationController from '../../../../shared/dist/animationController';
 import {
-  createColorEncoder,
+  createColorEncoding,
   DEFAULT_BIT_DEPTH,
 } from '../../../../shared/dist/util/colors';
 import { Button } from '../ui';
@@ -43,7 +43,7 @@ const createFrameHandler = (
   // eslint-disable-next-line no-param-reassign
   canvas.height = blockScaling * gHeight;
 
-  const { decode: decodeColor } = createColorEncoder(
+  const { decode: decodeColor } = createColorEncoding(
     bitDepth || DEFAULT_BIT_DEPTH,
   );
 

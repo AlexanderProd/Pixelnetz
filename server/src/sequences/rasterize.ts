@@ -10,7 +10,7 @@ import rasterizePart, {
   PartRasterizationInput,
 } from './rasterizePart';
 import { MAX_FRAMES } from './rasterisationConstants';
-import { createColorEncoder } from '../../../shared/src/util/colors';
+import { createColorEncoding } from '../../../shared/src/util/colors';
 
 export interface RasterizationData {
   getMatrixPart: () => AsyncIterableIterator<{
@@ -40,7 +40,7 @@ export const createGetMatrixPart = ({
   bitDepth: number;
 }) =>
   async function* getMatrixPart() {
-    const { encode: encodeColor } = createColorEncoder(bitDepth);
+    const { encode: encodeColor } = createColorEncoding(bitDepth);
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < frameParts.length; i++) {
       const part = frameParts[i];

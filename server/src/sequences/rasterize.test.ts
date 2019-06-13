@@ -7,7 +7,7 @@ import { splitToSize, ClientMatrix } from './rasterization';
 import TEST_PNG from './__testdata__/png';
 import { mapFramesToPixelGrid } from './getPixelsFromFrame';
 import {
-  createColorEncoder,
+  createColorEncoding,
   toRGBColor,
 } from '../../../shared/src/util/colors';
 
@@ -52,7 +52,7 @@ test('createGetMatrixPart: it returns the correct matrix', async t => {
   const data: FrameData[] = await createData(1);
   const pixel = await mapFramesToPixelGrid(data, Mimetypes.PNG);
   const frameParts = splitToSize(pixel, 5);
-  const { encode: encodeColor } = createColorEncoder(7);
+  const { encode: encodeColor } = createColorEncoding(7);
 
   const generateMatrix = createGetMatrixPart({
     frameParts,
