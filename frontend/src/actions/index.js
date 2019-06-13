@@ -5,6 +5,7 @@ import {
   STOP_ANIMATION,
   APPEND_SEQUENCE,
   POSITION,
+  SELECTED_AUDIO_FILES,
 } from '../../../shared/dist/util/socketActionTypes';
 import initTimeSync from './initTimeSync';
 import setSequence from './setSequence';
@@ -12,10 +13,11 @@ import startAnimation from './startAnimation';
 import stopAnimation from './stopAnimation';
 import appendSequence from './appendSequence';
 import position from './position';
+import loadAudioFiles from './loadAudioFiles';
 import createAnimationController from '../../../shared/dist/animationController';
 import { sosAnimation } from '../../../shared/dist/util/sequence';
 
-const createActionRunner = send => {
+function createActionRunner(send) {
   const animationController = createAnimationController();
   animationController.setSequence(sosAnimation);
 
@@ -26,12 +28,20 @@ const createActionRunner = send => {
     [STOP_ANIMATION]: stopAnimation(animationController),
     [APPEND_SEQUENCE]: appendSequence(animationController),
     [POSITION]: position(send),
+    [SELECTED_AUDIO_FILES]: loadAudioFiles(),
   };
 
   return message => {
     const { actionType } = message;
-    actions[actionType](message);
+    if (actionType in actions) {
+      actions[actionType](message);
+    } else {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `No handler registered for ActionType: '${actionType}'. Action will be ignored.`,
+      );
+    }
   };
-};
+}
 
 export default createActionRunner;

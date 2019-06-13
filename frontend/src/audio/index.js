@@ -1,11 +1,12 @@
-import audioFiles from './files';
+import { getAudioMimetype } from '../../../shared/dist/audio/AudioMimetypes';
+import BASE_URL from '../util/baseUrl';
 
-function createSinglePlayer({ src, type, name }) {
+function createSinglePlayer(name) {
   const playerTag = document.createElement('audio');
   playerTag.loop = true;
   playerTag.controls = false;
-  playerTag.src = src;
-  playerTag.type = type;
+  playerTag.src = `http://${BASE_URL}/audiofiles/${name}`;
+  playerTag.type = getAudioMimetype(name);
 
   // eslint-disable-next-line no-shadow
   function play() {
@@ -29,9 +30,14 @@ function createSinglePlayer({ src, type, name }) {
   };
 }
 
-function createPlayer(files) {
-  const players = files.map(file => createSinglePlayer(file));
-  let selected = players[0];
+function createPlayer() {
+  let players = [];
+  let selected = null;
+
+  function setFiles(files) {
+    players = files.map(file => createSinglePlayer(file));
+    [selected] = players;
+  }
 
   function play() {
     players.forEach(player => {
@@ -49,16 +55,21 @@ function createPlayer(files) {
   }
 
   function setVolume(vol) {
-    selected.setVolume(vol);
+    if (selected) {
+      selected.setVolume(vol);
+    }
   }
 
   const player = {
     play,
     selectSound,
     setVolume,
+    setFiles,
   };
 
   return player;
 }
 
-export default createPlayer(audioFiles);
+const player = createPlayer();
+
+export default player;
