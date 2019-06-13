@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ScriptExtHtmlPlugin = require('script-ext-html-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const webpack = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -111,6 +112,7 @@ module.exports = (env, argv) => {
       // Set 'nomodule' attribute on plyfill script tag,
       // so newer browsers, which do not need the legacy polyfills,
       // won't download the script
+      new FaviconsWebpackPlugin(`${__dirname}/public/favicon.png`),
       new ScriptExtHtmlPlugin({
         custom: {
           test: polyfillRegex,
@@ -119,7 +121,6 @@ module.exports = (env, argv) => {
       }),
       // Generate manifest file
       new WebpackPwaManifest(manifest),
-      // new FaviconsWebpackPlugin(path.resolve(__dirname, '/../logo.png'),
       new webpack.DefinePlugin({
         HOSTNAME: JSON.stringify(hostname),
         PORT: JSON.stringify(port),
