@@ -5,7 +5,11 @@ function createSinglePlayer(name) {
   const playerTag = document.createElement('audio');
   playerTag.loop = true;
   playerTag.controls = false;
-  playerTag.src = `http://${BASE_URL}/audiofiles/${name}`;
+  // IS_DEV kommt aus webpack.DefinePlugin
+  // und wird im Buildprozess gesetzt
+  // eslint-disable-next-line no-undef
+  const urlPrefix = IS_DEV ? `http://${BASE_URL}` : '';
+  playerTag.src = `${urlPrefix}/audiofiles/${name}`;
   playerTag.type = getAudioMimetype(name);
 
   // eslint-disable-next-line no-shadow
