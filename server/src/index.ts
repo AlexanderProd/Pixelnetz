@@ -18,6 +18,9 @@ import MasterPool from './ws/MasterPool';
 import withAuth from './util/authMiddleware';
 import setupLiveData from './config/setupLiveData';
 import createLogMessage from './createLogMessage';
+import AudioDB from './audio/AudioDB';
+import uploadAudio from './routes/uploadAudio';
+import deleteAudio from './routes/deleteAudio';
 
 // Check for errors parsing .env file
 const envResult = dotenv.load();
@@ -34,10 +37,11 @@ const localHostname = isProd()
 const masterPool = new MasterPool(server);
 const clientPool = new ClientPool(server);
 const userDB = new UserDB();
+const audioDB = new AudioDB();
 
 configureUserDB(userDB);
 configureApp(app);
-setupLiveData({ masterPool, clientPool });
+setupLiveData({ masterPool, clientPool, audioDB });
 
 app.post('/authenticate', authenticate(userDB));
 app.get('/start', withAuth, start([clientPool, masterPool]));
@@ -48,8 +52,10 @@ app.get(
   setSequence(clientPool, masterPool),
 );
 app.post('/upload', withAuth, upload(masterPool));
+app.post('/uploadAudio', withAuth, uploadAudio(masterPool, audioDB));
 app.get('/savedFiles', withAuth, savedFiles());
 app.get('/deleteSequence', withAuth, deleteSequence(masterPool));
+app.get('/deleteAudio', withAuth, deleteAudio(masterPool, audioDB));
 
 server.listen(PORT, () =>
   console.log(createLogMessage(localHostname, PORT)),

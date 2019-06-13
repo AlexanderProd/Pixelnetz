@@ -1,12 +1,9 @@
-import fs from 'fs';
-import { promisify } from 'util';
 import { Request, Response } from 'express';
 import { isSafeFileName } from '../util/userInput';
 import MasterPool from '../ws/MasterPool';
-import AudioMimetypes, { getFileExtension } from '../audio/Mimetypes';
+import AudioMimetypes from '../../../shared/src/audio/AudioMimetypes';
 import sendAllAudioFiles from '../util/sendAllAudioFiles';
-
-const writeFile = promisify(fs.writeFile);
+import AudioDB from '../audio/AudioDB';
 
 const allowedTypes = [
   AudioMimetypes.MP3,
@@ -14,9 +11,7 @@ const allowedTypes = [
   AudioMimetypes.OGG,
 ];
 
-const DB_PATH = `${__dirname}/../../../../audiodb`;
-
-const uploadAudio = (masterPool: MasterPool) => (
+const uploadAudio = (masterPool: MasterPool, audioDB: AudioDB) => (
   req: Request,
   res: Response,
 ) => {
@@ -44,16 +39,12 @@ const uploadAudio = (masterPool: MasterPool) => (
     return;
   }
 
-  writeFile(
-    `${DB_PATH}/${file.name}.${getFileExtension(
-      file.mimetype as AudioMimetypes,
-    )}`,
-    file.data,
-  )
+  audioDB
+    .save(file.name, file.mimetype as AudioMimetypes, file.data)
     .then(() => {
       console.log(`audio file written successfully`);
       res.sendStatus(200);
-      sendAllAudioFiles(masterPool);
+      sendAllAudioFiles(masterPool, audioDB);
     })
     .catch(err => {
       console.log(err);

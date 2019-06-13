@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import compressionMiddleware from '../util/compressionMiddleware';
 import { isDev } from '../util/env';
+import { AUDIO_DB_PATH } from '../util/dbPath';
 
 const configureApp = (app: Application) => {
   app.use(helmet());
@@ -21,6 +22,8 @@ const configureApp = (app: Application) => {
     '/master',
     express.static(`${__dirname}/../../../../../dist/static/master/`),
   );
+
+  app.use('/audiofiles', express.static(`${AUDIO_DB_PATH}/raw`));
 
   app.use(bodyParser.urlencoded({ extended: false }));
 

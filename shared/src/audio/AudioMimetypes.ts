@@ -16,4 +16,16 @@ export function getFileExtension(type: AudioMimetypes): string {
   }
 }
 
+export function getAudioMimetype(extension: string): AudioMimetypes {
+  switch (extension.toUpperCase()) {
+    case 'MP3':
+      return AudioMimetypes.MP3;
+    case 'OGG':
+      return AudioMimetypes.OGG;
+    case 'WAV':
+    default:
+      return AudioMimetypes.WAV;
+  }
+}
+
 export default AudioMimetypes;

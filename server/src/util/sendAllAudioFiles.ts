@@ -1,20 +1,22 @@
-import fs from 'fs';
-import { promisify } from 'util';
 import { ALL_AUDIO_FILES } from '../../../shared/src/util/socketActionTypes';
 import Pool from '../ws/Pool';
 import Socket from '../ws/Socket';
+import AudioDB from '../audio/AudioDB';
 
-const readdir = promisify(fs.readdir);
-
-const DB_PATH = `${__dirname}/../../../../audiodb`;
-
-async function sendAllAudioFiles(pool: Pool): Promise<void>;
-async function sendAllAudioFiles(socket: Socket): Promise<void>;
+async function sendAllAudioFiles(
+  pool: Pool,
+  audioDB: AudioDB,
+): Promise<void>;
+async function sendAllAudioFiles(
+  socket: Socket,
+  audioDB: AudioDB,
+): Promise<void>;
 async function sendAllAudioFiles(
   poolOrSocket: Pool | Socket,
+  audioDB: AudioDB,
 ): Promise<void> {
   try {
-    const dir = await readdir(DB_PATH);
+    const dir = await audioDB.listAvailable();
     poolOrSocket.send({
       actionType: ALL_AUDIO_FILES,
       data: dir,
