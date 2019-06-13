@@ -8,7 +8,9 @@ import './index.sass';
 const main = async () => {
   runConfigDialogs();
 
-  const createActionRunner = (await import('./actions')).default;
+  const createActionRunner = (await import(
+    /* webpackChunkName: 'actions' */ './actions'
+  )).default;
   const socket = new WebSocket(`ws://${BASE_URL}/`);
   const send = createSender(socket);
   const runAction = createActionRunner(send);

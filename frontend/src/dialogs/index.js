@@ -2,8 +2,12 @@ import screenBrightness from './screenBrightness';
 import './dialog.sass';
 
 const runConfigDialogs = async () => {
-  const enableNoSleepImport = import('./enableNoSleep');
-  const fullscreenConfigImport = import('./fullscreen');
+  const enableNoSleepImport = import(
+    /* webpackChunkName: 'enableNoSleep' */ './enableNoSleep'
+  );
+  const fullscreenConfigImport = import(
+    /* webpackChunkName: 'fullscreen' */ './fullscreen'
+  );
 
   await screenBrightness();
 
