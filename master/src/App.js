@@ -8,6 +8,7 @@ import SequenceSelector from './components/SequenceSelector';
 import ConnectionCounter from './components/ConnectionCounter';
 import ConnectionsList from './components/ConnectionsList';
 import FileUpload from './components/FileUpload';
+import SoundUpload from './components/SoundUpload';
 import Preview from './components/Preview';
 import TitleBar from './components/TitleBar';
 import ErrorMenu from './components/ErrorMenu';
@@ -43,17 +44,20 @@ export const App = ({ auth }) => (
         <Card title="Realtime Preview" spanRows={2}>
           <Preview />
         </Card>
+        <Card title="Upload Sound" spanRows={2}>
+          <SoundUpload />
+        </Card>
         <Card title="Connections List" spanCols={2} spanRows={2}>
           <ConnectionsList />
         </Card>
       </CardGrid>
     ) : (
-      <div className="login-screen">
-        <Card title="Login">
-          <LoginForm />
-        </Card>
-      </div>
-    )}
+        <div className="login-screen">
+          <Card title="Login">
+            <LoginForm />
+          </Card>
+        </div>
+      )}
   </div>
 );
 
