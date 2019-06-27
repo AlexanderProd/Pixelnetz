@@ -1,0 +1,70 @@
+@import '../../styles/vars'
+
+$card-height: 290px
+
+.SoundSelector
+  max-height: $card-height
+  overflow-y: auto
+
+  .Sound
+    background: #fff
+    padding-top: 2px
+    padding-bottom: 2px
+    padding: 0.4rem 0
+    border-top: $border-width solid $light-text-color
+
+    .sound-dropdown-button
+      border: none
+      width: 1em
+      height: 1em
+
+    .sound-controlls
+      display: flex
+      flex-direction: row
+      justify-content: space-between
+      align-items: center
+
+      .Icon
+        transform: rotate(-90deg)
+        transition: transform 150ms ease-in-out
+
+        &.sound-expanded
+          transform: rotate(0deg)
+
+      .sound-group
+        display: flex
+        flex-direction: row
+        align-items: center
+
+        &.dropdown
+          padding: 0.4rem 1rem 0.4rem 0
+          cursor: pointer
+
+    &:first-child
+      border-top: none
+
+    .sound-label
+      padding-left: 10px
+
+    .sound-details.expanded
+      max-height: 400px
+      padding: 0.4rem 0
+
+    .sound-details
+      max-height: 0
+      transition: all 150ms ease-in-out
+      overflow: hidden
+
+      .s-d-row
+        padding: 0.4rem 0.4rem
+        display: flex
+        align-items: center
+        flex-direction: row
+
+        .step-length-input
+          width: 5em
+
+        .s-d-title
+          font-family: Roboto-Bold
+          display: inline-block
+          min-width: 8em

@@ -5,6 +5,7 @@ import { Card, CardGrid } from './components/ui';
 import LoginForm from './components/LoginForm';
 import AnimationControls from './components/AnimationControls';
 import SequenceSelector from './components/SequenceSelector';
+import SoundSelector from './components/SoundSelector';
 import ConnectionCounter from './components/ConnectionCounter';
 import ConnectionsList from './components/ConnectionsList';
 import FileUpload from './components/FileUpload';
@@ -47,17 +48,20 @@ export const App = ({ auth }) => (
         <Card title="Upload Sound" spanRows={2}>
           <SoundUpload />
         </Card>
+        <Card title="Sounds" spanRows={2}>
+          <SoundSelector />
+        </Card>
         <Card title="Connections List" spanCols={2} spanRows={2}>
           <ConnectionsList />
         </Card>
       </CardGrid>
     ) : (
-        <div className="login-screen">
-          <Card title="Login">
-            <LoginForm />
-          </Card>
-        </div>
-      )}
+      <div className="login-screen">
+        <Card title="Login">
+          <LoginForm />
+        </Card>
+      </div>
+    )}
   </div>
 );
 
