@@ -7,6 +7,13 @@ function createFrameHandler(sequence) {
   );
 
   const withSound = !!sequence.soundFile;
+  const [rMin, gMin, bMin] = (sequence.soundCondition || '')
+    .split(';')
+    .filter(str => !!str)
+    .map(str => str.trim())
+    .map(Number)
+    .map(ratio => 255 * ratio)
+    .map(Math.floor);
 
   if (withSound) {
     player.selectSound(sequence.soundFile);
@@ -16,7 +23,7 @@ function createFrameHandler(sequence) {
     const [r, g, b] = decodeColor(encodedColor);
     document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
     if (withSound) {
-      if (r + g + b > (255 * 3) / 2) {
+      if (r >= rMin && g >= gMin && b >= bMin) {
         player.setVolume(1);
       } else {
         player.setVolume(0);

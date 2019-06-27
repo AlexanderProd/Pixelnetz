@@ -14,7 +14,7 @@ const setSequence = (
   clientPool: ClientPool,
   masterPool: Pool,
 ) => async (req: Request, res: Response) => {
-  const { name, test, w, h } = req.query;
+  const { name, test, w, h, soundFile, soundCondition } = req.query;
   const isTest = test === 'true';
   const testWidth = Number(w);
   const testHeight = Number(h);
@@ -71,6 +71,8 @@ const setSequence = (
       ...sequence.info,
       repeat,
       stepLength,
+      soundFile,
+      soundCondition,
     };
 
     masterPool.sendAll({
