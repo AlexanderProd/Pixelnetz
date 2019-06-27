@@ -13,6 +13,12 @@ const readdir = promisify(fs.readdir);
 
 const SELECTION_PATH = `${AUDIO_DB_PATH}/__selection__.json`;
 
+export interface AudioFile {
+  fileName: string;
+  name: string;
+  isSelected: boolean;
+}
+
 class AudioDB {
   private selection: Set<string> = new Set();
 
@@ -49,38 +55,70 @@ class AudioDB {
     process.on('uncaughtException', exitHandler);
   }
 
+  async setSelected(name: string, value: boolean): Promise<void> {
+    return value ? this.addSelected(name) : this.removeSelected(name);
+  }
+
   async addSelected(name: string): Promise<void> {
-    if (await this.exists(name)) {
-      this.selection.add(name);
+    const fileName = await this.findFile(name);
+    if (fileName) {
+      this.selection.add(fileName);
     }
   }
 
   async removeSelected(name: string): Promise<void> {
-    if (await this.exists(name)) {
-      this.selection.delete(name);
+    const fileName = await this.findFile(name);
+    if (fileName) {
+      this.selection.delete(fileName);
     }
   }
 
   // eslint-disable-next-line class-methods-use-this
+  getRawPath(): string {
+    return `${AUDIO_DB_PATH}/raw`;
+  }
+
   getPath(name: string): string {
-    return `${AUDIO_DB_PATH}/raw/${name}`;
+    return `${this.getRawPath()}/${name}`;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  extractName(fileName: string): string {
+    const nameParts = fileName.split('.');
+    nameParts.pop();
+    return nameParts.join('_');
+  }
+
+  findFile(name: string): Promise<string | undefined> {
+    return readdir(this.getRawPath()).then(list =>
+      list.find(fileName => this.extractName(fileName) === name),
+    );
   }
 
   exists(name: string): Promise<boolean> {
-    return exists(this.getPath(name));
+    return this.findFile(name).then(res => !!res);
   }
 
   listSelected(): string[] {
     return [...this.selection];
   }
 
-  isSelected(name: string): boolean {
-    return this.selection.has(name);
+  isSelected(fileName: string): boolean {
+    return this.selection.has(fileName);
   }
 
   // eslint-disable-next-line class-methods-use-this
   listAvailable(): Promise<string[]> {
     return readdir(`${AUDIO_DB_PATH}/raw`);
+  }
+
+  async listAll(): Promise<AudioFile[]> {
+    const fileNames = await this.listAvailable();
+    return fileNames.map(fileName => ({
+      fileName,
+      name: this.extractName(fileName),
+      isSelected: this.isSelected(fileName),
+    }));
   }
 
   save(
@@ -94,11 +132,17 @@ class AudioDB {
     );
   }
 
-  delete(name: string): Promise<void> {
+  async delete(name: string): Promise<void> {
+    const fileName = await this.findFile(name);
+    if (!fileName) {
+      return Promise.reject(
+        new Error(`File "${name}" does not exist`),
+      );
+    }
     if (this.isSelected(name)) {
       this.removeSelected(name);
     }
-    return unlink(this.getPath(name));
+    return unlink(this.getPath(fileName));
   }
 }
 

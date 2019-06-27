@@ -21,6 +21,7 @@ import createLogMessage from './createLogMessage';
 import AudioDB from './audio/AudioDB';
 import uploadAudio from './routes/uploadAudio';
 import deleteAudio from './routes/deleteAudio';
+import toggleAudio from './routes/toggleAudio';
 
 // Check for errors parsing .env file
 const envResult = dotenv.load();
@@ -51,6 +52,7 @@ app.get(
   withAuth,
   setSequence(clientPool, masterPool),
 );
+app.get('/toggleAudio', withAuth, toggleAudio(masterPool, audioDB));
 app.post('/upload', withAuth, upload(masterPool));
 app.post('/uploadAudio', withAuth, uploadAudio(masterPool, audioDB));
 app.get('/savedFiles', withAuth, savedFiles());

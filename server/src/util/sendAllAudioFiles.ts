@@ -16,10 +16,10 @@ async function sendAllAudioFiles(
   audioDB: AudioDB,
 ): Promise<void> {
   try {
-    const dir = await audioDB.listAvailable();
+    const files = await audioDB.listAll();
     poolOrSocket.send({
       actionType: ALL_AUDIO_FILES,
-      data: dir,
+      data: files,
     });
   } catch (e) {
     console.error('Failed to send audio files');
