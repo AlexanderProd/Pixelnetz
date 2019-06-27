@@ -13,8 +13,10 @@ import connections from '../connections';
 import dimensions from '../dimensions';
 import error from '../error';
 import fileUpload from '../fileUpload';
+import soundUpload from '../soundUpload';
 import masterSequence from '../masterSequence';
 import sequences from '../sequences';
+import sounds from '../sounds';
 
 const persistConfig = {
   key: 'root',
@@ -32,24 +34,25 @@ const reducer = combineReducers({
   fileUpload,
   masterSequence,
   sequences,
+  soundUpload,
+  sounds,
 });
 
-const persistedReducer = persistReducer(
-  persistConfig,
-  reducer,
-);
+const persistedReducer = persistReducer(persistConfig, reducer);
 
 const store = createStore(
   persistedReducer,
-  composeWithDevTools(applyMiddleware(
-    thunk,
-    fetchMiddleware({
-      // HOSTNAME & PORT kommen aus webpack.DefinePlugin
-      // und wird im Buildprozess gesetzt
-      // eslint-disable-next-line no-undef
-      baseUrl: `http://${HOSTNAME}${PORT ? ':' : ''}${PORT}`,
-    }),
-  )),
+  composeWithDevTools(
+    applyMiddleware(
+      thunk,
+      fetchMiddleware({
+        // HOSTNAME & PORT kommen aus webpack.DefinePlugin
+        // und wird im Buildprozess gesetzt
+        // eslint-disable-next-line no-undef
+        baseUrl: `http://${HOSTNAME}${PORT ? ':' : ''}${PORT}`,
+      }),
+    ),
+  ),
 );
 
 setStore(store);
