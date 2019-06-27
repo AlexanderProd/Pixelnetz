@@ -1,52 +1,43 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Button, Toggle, Input, Icon } from '../ui';
+import { func, shape, arrayOf, string } from 'prop-types';
+import { Button, Toggle, Input, Icon, Select } from '../ui';
 import { sequenceType } from '../../types';
 
 const propTypes = {
-  onSet: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  sequence: PropTypes.shape(sequenceType).isRequired,
+  onSet: func.isRequired,
+  onDelete: func.isRequired,
+  sequence: shape(sequenceType).isRequired,
+  soundOptions: arrayOf(
+    shape({
+      value: string.isRequired,
+      child: string.isRequired,
+    }),
+  ).isRequired,
 };
 
-const Sequence = ({ sequence, onSet, onDelete }) => {
+const Sequence = ({ sequence, onSet, onDelete, soundOptions }) => {
   const [expanded, setExpanded] = useState(false);
   const [repeat, setRepeat] = useState(sequence.repeat);
   const [stepLength, setStepLength] = useState(sequence.stepLength);
   const [isTest, setIsTest] = useState(false);
   const [testWidth, setTestWidth] = useState(50);
   const [testHeight, setTestHeight] = useState(30);
+  const [sound, setSound] = useState(soundOptions[0]);
+  const [soundCondition, setSoundCondition] = useState(
+    '0.5; 0.5; 0.5',
+  );
 
-  const toggleExpand = () => {
-    setExpanded(prevState => !prevState);
-  };
+  const handleToggle = handler => () =>
+    handler(prevState => !prevState);
 
-  const toggleRepeat = () => {
-    setRepeat(prevState => !prevState);
-  };
-
-  const toggleIsTest = () => {
-    setIsTest(prevState => !prevState);
-  };
-
-  const handleStepLenghtChange = e => {
-    setStepLength(e.target.value);
-  };
-
-  const handleTestWidthChange = e => {
-    setTestWidth(e.target.value);
-  };
-
-  const handleTestHeightChange = e => {
-    setTestHeight(e.target.value);
-  };
+  const handleValueChange = handler => e => handler(e.target.value);
 
   return (
     <div className="Sequence">
       <div className="sequence-controlls">
         <div
           className="sequence-group dropdown"
-          onClick={toggleExpand}
+          onClick={handleToggle(setExpanded)}
           role="button"
           tabIndex={0}
         >
@@ -68,6 +59,8 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
                 isTest,
                 testWidth,
                 testHeight,
+                soundFile: sound,
+                soundCondition,
               })
             }
           >
@@ -88,7 +81,10 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
         <div className="s-d-row">
           <span className="s-d-title">repeat:</span>
           <span className="s-d-val">
-            <Toggle value={repeat} onChange={toggleRepeat} />
+            <Toggle
+              value={repeat}
+              onChange={handleToggle(setRepeat)}
+            />
           </span>
         </div>
         <div className="s-d-row">
@@ -98,14 +94,37 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
               className="step-length-input"
               type="number"
               value={stepLength}
-              onChange={handleStepLenghtChange}
+              onChange={handleValueChange(setStepLength)}
+            />
+          </span>
+        </div>
+        <div className="s-d-row">
+          <span className="s-d-title">sound:</span>
+          <span className="s-d-val">
+            <Select
+              options={soundOptions}
+              value={sound}
+              onChange={setSound}
+            />
+          </span>
+        </div>
+        <div className="s-d-row">
+          <span className="s-d-title">soundCondition:</span>
+          <span className="s-d-val">
+            <Input
+              className="sound-condition-input"
+              value={soundCondition}
+              onChange={handleValueChange(setSoundCondition)}
             />
           </span>
         </div>
         <div className="s-d-row">
           <span className="s-d-title">isTest:</span>
           <span className="s-d-val">
-            <Toggle value={isTest} onChange={toggleIsTest} />
+            <Toggle
+              value={isTest}
+              onChange={handleToggle(setIsTest)}
+            />
           </span>
         </div>
         <div className="s-d-row">
@@ -115,7 +134,7 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
               className="step-length-input"
               type="number"
               value={testWidth}
-              onChange={handleTestWidthChange}
+              onChange={handleValueChange(setTestWidth)}
             />
           </span>
         </div>
@@ -126,7 +145,7 @@ const Sequence = ({ sequence, onSet, onDelete }) => {
               className="step-length-input"
               type="number"
               value={testHeight}
-              onChange={handleTestHeightChange}
+              onChange={handleValueChange(setTestHeight)}
             />
           </span>
         </div>
