@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const webpack = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -89,6 +90,7 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: 'public/index.html',
       }),
+      new FaviconsWebpackPlugin(`${__dirname}/public/favicon.png`),
       new MiniCssExtractPlugin({
         filename: isDev ? '[name].css' : '[name].[hash].css',
         chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
