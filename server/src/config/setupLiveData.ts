@@ -2,19 +2,23 @@ import {
   CURRENT_CONNECTIONS,
   NEW_CONNECTIONS,
   CLOSED_CONNECTIONS,
-  ALL_SEQUENCES,
-} from '../../../shared/dist/util/socketActionTypes';
-import Sequence from '../sequences/Sequence';
+  SELECTED_AUDIO_FILES,
+} from '../../../shared/src/util/socketActionTypes';
 import MasterPool from '../ws/MasterPool';
 import ClientPool from '../ws/ClientPool';
 import { SocketInfo } from '../ws/Socket';
+import sendAllAudioFiles from '../util/sendAllAudioFiles';
+import sendAllSequences from '../util/sendAllSequences';
+import AudioDB from '../audio/AudioDB';
 
 const setupLiveData = ({
   masterPool,
   clientPool,
+  audioDB,
 }: {
   masterPool: MasterPool;
   clientPool: ClientPool;
+  audioDB: AudioDB;
 }) => {
   masterPool.on('connection', async masterSocket => {
     const currentConnections: SocketInfo[] = [];
@@ -27,19 +31,19 @@ const setupLiveData = ({
       connections: currentConnections,
     });
 
-    try {
-      const sequences = await Sequence.listAvailable();
-      masterSocket.send({
-        actionType: ALL_SEQUENCES,
-        data: sequences,
-      });
-    } catch (e) {
-      console.error('Failed to send sequence info to master');
-    }
+    sendAllAudioFiles(masterSocket, audioDB);
+    sendAllSequences(masterSocket);
   });
 
   let newConnections: SocketInfo[] = [];
   let closedConnections: string[] = [];
+
+  clientPool.on('connection', clientSocket =>
+    clientSocket.send({
+      actionType: SELECTED_AUDIO_FILES,
+      fileNames: audioDB.listSelected(),
+    }),
+  );
 
   clientPool.on('position', clientSocket =>
     newConnections.push(clientSocket.info()),

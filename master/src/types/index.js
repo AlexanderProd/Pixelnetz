@@ -37,3 +37,9 @@ export const sequenceType = {
   bitDepth: number.isRequired,
   frames: arrayOf(array),
 };
+
+export const soundType = {
+  fileName: string.isRequired,
+  name: string.isRequired,
+  isSelected: bool.isRequired,
+};

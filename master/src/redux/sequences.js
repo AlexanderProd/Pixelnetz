@@ -25,6 +25,14 @@ export default (state = [], action) => {
   }
 };
 
+function toQueryParams(obj) {
+  const keyValuePairs = Object.entries(obj)
+    .filter(([, value]) => !!value)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+  return `?${keyValuePairs}`;
+}
+
 // ActionCreators
 export const setSequence = ({
   name,
@@ -33,9 +41,20 @@ export const setSequence = ({
   isTest,
   testWidth,
   testHeight,
+  soundFile,
+  soundCondition,
 }) => ({
   fetch: 'GET',
-  endpoint: `/setAnimation?name=${name}&repeat=${repeat}&stepLength=${stepLength}&test=${isTest}&w=${testWidth}&h=${testHeight}`,
+  endpoint: `/setAnimation${toQueryParams({
+    name,
+    repeat,
+    stepLength,
+    test: isTest,
+    w: testWidth,
+    h: testHeight,
+    soundFile,
+    soundCondition,
+  })}`,
   expect: 'text',
   types: [
     SEQUENCE_SET_REQUEST,

@@ -11,3 +11,5 @@ export const CLOSED_CONNECTIONS = 'connections/CLOSED_CONNECTIONS';
 export const CURRENT_CONNECTIONS = 'connections/CURRENT_CONNECTIONS';
 export const ALL_SEQUENCES = 'sequences/ALL_SEQUENCES';
 export const DIMENSIONS = 'dimensions/DIMENSIONS';
+export const ALL_AUDIO_FILES = 'audio/ALL_AUDIO_FILES';
+export const SELECTED_AUDIO_FILES = 'audio/SELECTED_AUDIO_FILES';

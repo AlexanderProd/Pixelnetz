@@ -11,12 +11,11 @@ import {
 import Mimetypes from './mimetypes';
 import { GridDimensions } from '../ws/ClientPool';
 import rusterize from './rusterize';
+import { SEQUENCE_DB_PATH as DB_PATH } from '../util/dbPath';
 
 const writeFile = promisify(fs.writeFile);
 const readFile = promisify(fs.readFile);
 const unlink = promisify(fs.unlink);
-
-const DB_PATH = `${__dirname}/../../../../db`;
 
 interface FileInput {
   file: {

@@ -124,6 +124,7 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         HOSTNAME: JSON.stringify(hostname),
         PORT: JSON.stringify(port),
+        IS_DEV: isDev,
       }),
       new MiniCssExtractPlugin({
         filename: isDev ? '[name].css' : '[name].[hash].css',

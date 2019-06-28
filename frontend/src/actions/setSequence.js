@@ -1,8 +1,8 @@
-import createFrameHanlder from './frameHandler';
+import createFrameHandler from './frameHandler';
 
 const setSequence = animationController => ({ sequence }) => {
   animationController.setSequence(sequence);
-  animationController.setFrameHandler(createFrameHanlder(sequence));
+  animationController.setFrameHandler(createFrameHandler(sequence));
 };
 
 export default setSequence;

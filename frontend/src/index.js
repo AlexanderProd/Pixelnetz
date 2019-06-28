@@ -2,18 +2,18 @@ import 'array-reverse-polyfill';
 import '../runtime';
 import createSender from '../../shared/dist/util/createSender';
 import runConfigDialogs from './dialogs';
+import BASE_URL from './util/baseUrl';
 import './index.sass';
 
 const main = async () => {
+  const actionsImport = import(
+    /* webpackChunkName: 'actions' */ './actions'
+  );
+
   runConfigDialogs();
 
-  const createActionRunner = (await import('./actions')).default;
-  const socket = new WebSocket(
-    // HOSTNAME & PORT kommen aus webpack.DefinePlugin
-    // und wird im Buildprozess gesetzt
-    // eslint-disable-next-line no-undef
-    `ws://${HOSTNAME}${PORT ? ':' : ''}${PORT}/`,
-  );
+  const createActionRunner = (await actionsImport).default;
+  const socket = new WebSocket(`ws://${BASE_URL}/`);
   const send = createSender(socket);
   const runAction = createActionRunner(send);
 
