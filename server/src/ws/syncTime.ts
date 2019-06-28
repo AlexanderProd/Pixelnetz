@@ -1,7 +1,6 @@
 import WebSocket from 'ws';
-import onMessage from './onMessage';
 import createSender from '../util/createSender';
-import { INIT_TIME_SYNC } from '../../../shared/dist/util/socketActionTypes';
+import { INIT_TIME_SYNC } from '../../../shared/src/util/socketActionTypes';
 
 interface TimeStamp {
   serverStart: number;
@@ -9,6 +8,8 @@ interface TimeStamp {
   clientReceive: number;
 }
 
+const NUM_RUNS = 3;
+const WAIT_TIME = 300;
 const MAX_INIT_COUNTER = 16;
 
 const createPingAndSaveTime = (send: (data: any) => void) => (
@@ -19,7 +20,7 @@ const createPingAndSaveTime = (send: (data: any) => void) => (
   return { serverStart: timeStamp };
 };
 
-function syncTime(socket: WebSocket): Promise<number> {
+function syncTimeOnce(socket: WebSocket): Promise<number> {
   return new Promise(resolve => {
     const send = createSender(socket);
     const pingAndSaveTime = createPingAndSaveTime(send);
@@ -31,7 +32,8 @@ function syncTime(socket: WebSocket): Promise<number> {
     timeStamps.push(pingAndSaveTime(initCounter, Date.now()));
     initCounter += 1;
 
-    onMessage(socket, message => {
+    const handler = (json: string) => {
+      const message = JSON.parse(json);
       const isInitMessage = message.actionType === INIT_TIME_SYNC;
 
       if (isInitMessage && message.initCounter < MAX_INIT_COUNTER) {
@@ -58,10 +60,28 @@ function syncTime(socket: WebSocket): Promise<number> {
           .reduce((acc, diff) => acc + diff, 0);
 
         const deltaTime = sum / timeStamps.length;
+        socket.off('message', handler);
         resolve(deltaTime);
       }
-    });
+    };
+
+    socket.on('message', handler);
   });
+}
+
+async function syncTime(socket: WebSocket): Promise<number> {
+  const diffs = [];
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < NUM_RUNS; i++) {
+    if (i !== 0) {
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(res => setTimeout(res, WAIT_TIME));
+    }
+    // eslint-disable-next-line no-await-in-loop
+    const diff = await syncTimeOnce(socket);
+    diffs.push(diff);
+  }
+  return diffs.sort((a, b) => a - b)[Math.floor(NUM_RUNS / 2)];
 }
 
 export default syncTime;
