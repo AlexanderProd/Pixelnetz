@@ -1,4 +1,5 @@
 import fullscreen from 'fullscreen';
+import { isIOSSafari } from '../util/userAgent';
 
 const fs = fullscreen(document.documentElement);
 
@@ -32,7 +33,7 @@ const fullscreenConfig = () => {
     enableButton.style.display = 'inline';
   });
 
-  if (!/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+  if (!isIOSSafari()) {
     document.body.appendChild(enableButton);
     document.body.appendChild(disableButton);
   }

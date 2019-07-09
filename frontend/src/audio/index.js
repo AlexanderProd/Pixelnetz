@@ -1,5 +1,6 @@
 import { getAudioMimetype } from '../../../shared/dist/audio/AudioMimetypes';
 import BASE_URL from '../util/baseUrl';
+import { isIOSSafari } from '../util/userAgent';
 
 function createSinglePlayer(name) {
   const playerTag = document.createElement('audio');
@@ -39,6 +40,7 @@ function createPlayer() {
   let selected = null;
 
   function setFiles(files) {
+    if (isIOSSafari()) return;
     players = files.map(file => createSinglePlayer(file));
     [selected] = players;
   }
