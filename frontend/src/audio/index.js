@@ -1,30 +1,36 @@
 import { getAudioMimetype } from '../../../shared/dist/audio/AudioMimetypes';
 import BASE_URL from '../util/baseUrl';
-import { isIOSSafari } from '../util/userAgent';
+
+const AudioContext = window.AudioContext || window.webkitAudioContext;
 
 function createSinglePlayer(name) {
-  const playerTag = document.createElement('audio');
-  playerTag.loop = true;
-  playerTag.controls = false;
+  const audioTag = document.createElement('audio');
+  audioTag.loop = true;
   // IS_DEV kommt aus webpack.DefinePlugin
   // und wird im Buildprozess gesetzt
   // eslint-disable-next-line no-undef
   const urlPrefix = IS_DEV ? `http://${BASE_URL}` : '';
-  playerTag.src = `${urlPrefix}/audiofiles/${name}`;
-  playerTag.type = getAudioMimetype(name);
+  audioTag.src = `${urlPrefix}/audiofiles/${name}`;
+  audioTag.type = getAudioMimetype(name);
 
-  // eslint-disable-next-line no-shadow
+  const audioContext = new AudioContext();
+  const gainNode = audioContext.createGain();
+  const track = audioContext.createMediaElementSource(audioTag);
+  track.connect(gainNode).connect(audioContext.destination);
+
   function play() {
-    playerTag.play();
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+    audioTag.play();
   }
 
-  // eslint-disable-next-line no-shadow
   function setVolume(vol) {
-    playerTag.volume = vol;
+    gainNode.gain.value = vol;
   }
 
   function getVolume() {
-    return playerTag.volume;
+    return gainNode.gain.value;
   }
 
   return {
@@ -40,7 +46,6 @@ function createPlayer() {
   let selected = null;
 
   function setFiles(files) {
-    if (isIOSSafari()) return;
     players = files.map(file => createSinglePlayer(file));
     [selected] = players;
   }
