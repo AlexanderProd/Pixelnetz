@@ -1,18 +1,12 @@
-import screenBrightness from './screenBrightness';
+import runWelcomeDialog from './runWelcomeDialog';
 import './dialog.sass';
 
 const runConfigDialogs = async () => {
-  const enableNoSleepImport = import(
-    /* webpackChunkName: 'enableNoSleep' */ './enableNoSleep'
-  );
   const fullscreenConfigImport = import(
     /* webpackChunkName: 'fullscreen' */ './fullscreen'
   );
 
-  await screenBrightness();
-
-  const enableNoSleep = (await enableNoSleepImport).default;
-  await enableNoSleep();
+  await runWelcomeDialog();
 
   const fullscreenConfig = (await fullscreenConfigImport).default;
   fullscreenConfig();
