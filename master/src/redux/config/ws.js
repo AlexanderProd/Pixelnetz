@@ -1,7 +1,11 @@
-import { INIT_TIME_SYNC } from '../../../../shared/dist/util/socketActionTypes';
+import {
+  INIT_TIME_SYNC,
+  PING,
+  PONG,
+} from '../../../../shared/dist/util/socketActionTypes';
 import createSender from '../../../../shared/dist/util/createSender';
 
-const connectStoreToWS = (store) => {
+const connectStoreToWS = store => {
   const socket = new WebSocket(
     // HOSTNAME & PORT kommen aus webpack.DefinePlugin
     // und wird im Buildprozess gesetzt
@@ -19,6 +23,8 @@ const connectStoreToWS = (store) => {
         initCounter: message.initCounter,
         clientReceive: Date.now(),
       });
+    } else if (actionType === PING) {
+      send({ actionType: PONG });
     } else {
       store.dispatch({
         type: actionType,

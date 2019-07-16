@@ -4,6 +4,11 @@ import { Server } from 'http';
 import Emitter from '../Emitter';
 import Socket from '../Socket';
 import syncTime from '../syncTime';
+import createSender from '../../util/createSender';
+import {
+  PING,
+  PONG,
+} from '../../../../shared/src/util/socketActionTypes';
 
 const generateKey = () =>
   `${Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)}`.padStart(
@@ -11,73 +16,110 @@ const generateKey = () =>
     '0',
   );
 
+const CHECK_FOR_DEAD_INTERVAL = 30000;
+const REMOVE_DEAD_TIMEOUT = 10000;
+
+interface PoolOptions {
+  port?: number;
+  server?: Server;
+  path?: string;
+}
+
 class Pool extends Emitter {
   private _wsServer: WebSocket.Server;
 
   private _pool: Map<string, Socket>;
 
-  constructor({
-    port,
-    server,
-    path,
-  }: {
-    port?: number;
-    server?: Server;
-    path?: string;
-  }) {
+  constructor(options: PoolOptions) {
     super(['connection', 'message', 'close']);
-    if (port) {
-      this._wsServer = new WebSocket.Server({ port });
-    } else if (server && path) {
-      this._wsServer = new WebSocket.Server({ noServer: true });
-      server.on('upgrade', (req, socket, head) => {
-        const { pathname } = url.parse(req.url);
-        if (pathname === path) {
-          this._wsServer.handleUpgrade(req, socket, head, ws =>
-            this._wsServer.emit('connection', ws, req),
-          );
-        }
-      });
-    } else {
-      throw new Error(
-        'Either port or server and path have to be specified',
-      );
-    }
-
+    this._wsServer = this.createServer(options);
     this._pool = new Map<string, Socket>();
-
     this._wsServer.on('connection', (socket: WebSocket, req) => {
       const id = generateKey();
       const ip = req.connection.remoteAddress;
       // eslint-disable-next-line no-param-reassign
       (socket as any).isOpen = true;
-
-      syncTime(socket).then(deltaTime => {
-        const syncedSocket = new Socket({
-          socket,
-          id,
-          ip,
-          deltaTime,
-        });
-        this._pool.set(id, syncedSocket);
-        this.emit('connection', syncedSocket);
-      });
-
-      socket.on('message', message => {
-        this.emit(
-          'message',
-          JSON.parse(message as string),
-          this._pool.get(id),
-        );
-      });
-
-      socket.on('close', () => {
-        // eslint-disable-next-line no-param-reassign
-        (socket as any).isOpen = false;
-        this._pool.delete(id);
-        this.emit('close', id);
-      });
+      this.syncSocket(socket, id, ip);
+      this.handleQuietDeath(socket);
+      socket.on('message', this.handleMessage(id));
+      socket.on('close', this.handleClose(socket, id));
     });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private createServer({
+    port,
+    server,
+    path,
+  }: PoolOptions): WebSocket.Server {
+    if (port) {
+      return new WebSocket.Server({ port });
+    }
+    if (server && path) {
+      const wsServer = new WebSocket.Server({ noServer: true });
+      server.on('upgrade', (req, socket, head) => {
+        const { pathname } = url.parse(req.url);
+        if (pathname === path) {
+          wsServer.handleUpgrade(req, socket, head, ws =>
+            wsServer.emit('connection', ws, req),
+          );
+        }
+      });
+      return wsServer;
+    }
+    throw new Error(
+      'Either port or server and path have to be specified',
+    );
+  }
+
+  private syncSocket(
+    socket: WebSocket,
+    id: string,
+    ip?: string,
+  ): Promise<void> {
+    return syncTime(socket).then(deltaTime => {
+      const syncedSocket = new Socket({
+        socket,
+        id,
+        ip,
+        deltaTime,
+      });
+      this._pool.set(id, syncedSocket);
+      this.emit('connection', syncedSocket);
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private handleQuietDeath(socket: WebSocket) {
+    const send = createSender(socket);
+    let timeout: NodeJS.Timeout;
+    const interval = setInterval(() => {
+      send({ actionType: PING });
+      timeout = setTimeout(() => {
+        socket.terminate();
+        clearInterval(interval);
+      }, REMOVE_DEAD_TIMEOUT);
+    }, CHECK_FOR_DEAD_INTERVAL);
+    socket.on('message', (message: string) => {
+      const { actionType } = JSON.parse(message);
+      if (actionType === PONG) {
+        clearTimeout(timeout);
+      }
+    });
+  }
+
+  private handleMessage(id: string) {
+    return (message: string) =>
+      this.emit('message', JSON.parse(message), this._pool.get(id));
+  }
+
+  private handleClose(socket: WebSocket, id: string) {
+    return () => {
+      // eslint-disable-next-line no-param-reassign
+      (socket as any).isOpen = false;
+      this._pool.delete(id);
+      this.emit('close', id);
+    };
   }
 
   on(event: 'connection', handler: (socket: Socket) => void): void;

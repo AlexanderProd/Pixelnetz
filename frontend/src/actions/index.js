@@ -6,6 +6,7 @@ import {
   APPEND_SEQUENCE,
   POSITION,
   SELECTED_AUDIO_FILES,
+  PING,
 } from '../../../shared/dist/util/socketActionTypes';
 import initTimeSync from './initTimeSync';
 import setSequence from './setSequence';
@@ -14,6 +15,7 @@ import stopAnimation from './stopAnimation';
 import appendSequence from './appendSequence';
 import position from './position';
 import loadAudioFiles from './loadAudioFiles';
+import pong from './pong';
 import createAnimationController from '../../../shared/dist/animationController';
 import { sosAnimation } from '../../../shared/dist/util/sequence';
 
@@ -29,6 +31,7 @@ function createActionRunner(send) {
     [APPEND_SEQUENCE]: appendSequence(animationController),
     [POSITION]: position(send),
     [SELECTED_AUDIO_FILES]: loadAudioFiles(),
+    [PING]: pong(send),
   };
 
   return message => {
