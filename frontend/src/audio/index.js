@@ -16,7 +16,8 @@ function createSinglePlayer(name) {
   const audioContext = new AudioContext();
   const gainNode = audioContext.createGain();
   const track = audioContext.createMediaElementSource(audioTag);
-  track.connect(gainNode).connect(audioContext.destination);
+  track.connect(gainNode);
+  gainNode.connect(audioContext.destination);
 
   function play() {
     if (audioContext.state === 'suspended') {
@@ -46,7 +47,7 @@ function createPlayer() {
   let selected = null;
 
   function setFiles(files) {
-    players = files.map(file => createSinglePlayer(file));
+    players = files.map(createSinglePlayer);
     [selected] = players;
   }
 
