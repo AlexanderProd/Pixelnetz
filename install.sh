@@ -7,6 +7,7 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo
 
 cd shared
+rm -rf node_modules
 yarn install
 
 echo
@@ -16,6 +17,7 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo
 
 cd ../frontend
+rm -rf node_modules
 yarn install
 
 echo
@@ -25,6 +27,7 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo
 
 cd ../master
+rm -rf node_modules
 yarn install
 
 echo
