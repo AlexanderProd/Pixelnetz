@@ -109,7 +109,7 @@ module.exports = (env, argv) => {
             }
           : false,
       }),
-      new FaviconsWebpackPlugin(`${__dirname}/public/favicon.png`),
+      // new FaviconsWebpackPlugin(`${__dirname}/public/favicon.png`),
       // Set 'nomodule' attribute on plyfill script tag,
       // so newer browsers, which do not need the legacy polyfills,
       // won't download the script
