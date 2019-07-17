@@ -90,7 +90,7 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: 'public/index.html',
       }),
-      new FaviconsWebpackPlugin(`${__dirname}/public/favicon.png`),
+      // new FaviconsWebpackPlugin(`${__dirname}/public/favicon.png`),
       new MiniCssExtractPlugin({
         filename: isDev ? '[name].css' : '[name].[hash].css',
         chunkFilename: isDev ? '[id].css' : '[id].[hash].css',

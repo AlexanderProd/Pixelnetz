@@ -3,20 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build:babel": "babel src -d dist --source-maps",
     "build": "tsc",
     "start": "node watchDir.js"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/node": "^7.0.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
-    "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.0.4",
     "chokidar": "^2.0.4",
     "eslint": "^5.8.0",
     "eslint-config-airbnb": "^17.1.0",
