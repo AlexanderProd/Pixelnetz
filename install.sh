@@ -37,4 +37,5 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo
 
 cd ../server
+rm -rf node_modules
 yarn install
