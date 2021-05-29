@@ -40,7 +40,7 @@
     "node-fetch": "^2.5.0",
     "num-cpus": "^1.1.0",
     "sharp": "^0.22.0",
-    "ws": "^6.1.0"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@types/mock-fs": "^3.6.30",
