@@ -39,7 +39,7 @@
     "my-local-ip": "^1.0.0",
     "node-fetch": "^2.5.0",
     "num-cpus": "^1.1.0",
-    "sharp": "^0.22.0",
+    "sharp": "^0.30.5",
     "ws": "^6.1.0"
   },
   "devDependencies": {
