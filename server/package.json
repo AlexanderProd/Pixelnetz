@@ -35,7 +35,7 @@
     "get-pixels": "^3.3.2",
     "gif-frames": "^1.0.1",
     "helmet": "^3.15.0",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "my-local-ip": "^1.0.0",
     "node-fetch": "^2.5.0",
     "num-cpus": "^1.1.0",
